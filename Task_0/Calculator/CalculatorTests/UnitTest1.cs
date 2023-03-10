@@ -1,5 +1,4 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using Calculator;
 
 namespace Calculator.CalculatorTests
@@ -15,7 +14,7 @@ namespace Calculator.CalculatorTests
 
             Calculator c = new Calculator();
 
-            Assert.AreEqual(x + y,c.Add(x, y));
+            Assert.AreEqual(x + y, c.Add(x, y));
         }
 
         [TestMethod]

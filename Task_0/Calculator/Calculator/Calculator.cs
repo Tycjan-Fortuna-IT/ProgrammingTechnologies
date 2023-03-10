@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Calculator
+﻿namespace Calculator
 {
     public class Calculator
     {
@@ -10,7 +8,7 @@ namespace Calculator
         }
 
         public int Subtract(int x, int y)
-        { 
+        {
             return x - y;
         }
 
@@ -29,17 +27,6 @@ namespace Calculator
             {
                 throw new ArgumentException("You cannot divide by zero!");
             }
-        }
-    }
-}
-
-namespace Program
-{
-    public class Program
-    {
-        public static void Main()
-        {
-
         }
     }
 }
