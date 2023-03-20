@@ -4,7 +4,7 @@ using Calculator;
 namespace Calculator.CalculatorTests
 {
     [TestClass]
-    public class UnitTest1
+    public class CalculatorTests
     {
         [TestMethod]
         public void AddMethodTest()
