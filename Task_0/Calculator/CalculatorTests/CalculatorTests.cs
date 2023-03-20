@@ -4,7 +4,7 @@ using Calculator;
 namespace Calculator.CalculatorTests
 {
     [TestClass]
-    public class UnitTest1
+    public class CalculatorTests
     {
         [TestMethod]
         public void AddMethodTest()
@@ -14,18 +14,18 @@ namespace Calculator.CalculatorTests
 
             Calculator c = new Calculator();
 
-            Assert.AreEqual(x + y, c.Add(x, y));
+            Assert.AreEqual(25, c.Add(x, y));
         }
 
         [TestMethod]
         public void SubtractMethodTest()
         {
-            int x = 10;
+            int x = 12;
             int y = 11;
 
             Calculator c = new Calculator();
 
-            Assert.AreEqual(x - y, c.Subtract(x, y));
+            Assert.AreEqual(1, c.Subtract(x, y));
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace Calculator.CalculatorTests
 
             Calculator c = new Calculator();
 
-            Assert.AreEqual(x * y, c.Multiply(x, y));
+            Assert.AreEqual(30, c.Multiply(x, y));
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace Calculator.CalculatorTests
 
             Calculator c = new Calculator();
 
-            Assert.AreEqual(x / y, c.Divide(x, y));
+            Assert.AreEqual(2, c.Divide(x, y));
         }
 
         [TestMethod]
