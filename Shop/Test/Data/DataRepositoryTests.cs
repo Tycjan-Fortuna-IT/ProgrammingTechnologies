@@ -1,6 +1,6 @@
 ﻿using Shop.Data;
 
-namespace Shop.DataTest
+namespace Shop.Test.Data
 {
     [TestClass]
     public class DataRepositoryTests

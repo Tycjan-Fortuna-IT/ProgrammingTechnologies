@@ -1,4 +1,4 @@
-﻿namespace Shop.DataTest
+﻿namespace Shop.Test.Data
 {
     [TestClass]
     public class DataContextTests
