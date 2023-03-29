@@ -14,7 +14,7 @@
             this.PhoneNumber = PhoneNumber;
         }
 
-        public string Guid { get; set; }
+        public string Guid { get; }
 
         public string Name { get; set; }
 

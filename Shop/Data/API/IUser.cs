@@ -2,7 +2,7 @@
 {
     public interface IUser
     {
-        string Guid { get; set; }
+        string Guid { get; }
 
         string Name { get; set; }
 
