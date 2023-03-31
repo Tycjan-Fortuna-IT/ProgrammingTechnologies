@@ -32,7 +32,7 @@ namespace Shop.Test.Data
         {
             IUser User1 = Repository.GetUser(User.Guid);
 
-            ReferenceEquals(User, User1);
+            Assert.ReferenceEquals(User, User1);
 
             Assert.ThrowsException<Exception>(() => Repository.GetUser("NOGUID"));
         }
