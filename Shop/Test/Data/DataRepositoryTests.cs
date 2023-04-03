@@ -5,18 +5,14 @@ namespace Shop.Test.Data
     [TestClass]
     public class DataRepositoryTests
     {
-        private IDataRepository Repository;
-        private IUser User;
+        private IDataRepository Repository = new DataRepository(new DataContext());
+        private IUser User = new User(null, "Michal", "Gapcio", "m_gapcio@gmail.com", 200,
+                new DateTime(2015, 12, 25), 542123567);
 
         [TestInitialize]
         public void Initialize()
         {
-            Repository = new DataRepository(new DataContext());
-
-            User = new User(null, "Michal", "Gapcio", "m_gapcio@gmail.com", 200,
-                new DateTime(2015, 12, 25), 542123567);
-
-            Repository.AddUser(User);
+            this.Repository.AddUser(User);
         }
 
         [TestMethod]

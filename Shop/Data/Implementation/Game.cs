@@ -2,15 +2,12 @@
 {
     public class Game : IProduct
     {
-        public Game(string? Guid, string Name, double Price, int Quantity, IProducer Producer,
-            int Genre, DateTime RelaseDate, int PEGI)
+        public Game(string? Guid, string Name, double Price, int Quantity, DateTime RelaseDate, int PEGI)
         {
             this.Guid = Guid ?? System.Guid.NewGuid().ToString();
             this.Name = Name;
             this.Price = Price;
             this.Quantity = Quantity;
-            this.Producer = Producer;
-            this.Genre = Genre;
             this.RelaseDate = RelaseDate;
             this.PEGI = PEGI;
         }
@@ -23,16 +20,8 @@
 
         public int Quantity { get; set; }
 
-        public IProducer Producer { get; set; }
-
-        public int Genre { get; set; }
-
         public DateTime RelaseDate { get; set; }
 
         public int PEGI { get; set; }
-
-        public string GetGenre() {
-            return Enum.GetName(typeof(GenreEnum), this.Genre);
-        }
     }
 }

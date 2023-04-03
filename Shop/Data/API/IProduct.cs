@@ -10,14 +10,6 @@
 
         int Quantity { get; set; }
 
-        IProducer Producer { get; set; }
-
-        int Genre { get; set; }
-
         DateTime RelaseDate { get; set; }
-
-        int PEGI { get; set; }
-
-        string GetGenre();
     }
 }
