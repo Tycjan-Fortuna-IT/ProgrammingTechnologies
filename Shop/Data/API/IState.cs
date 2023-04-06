@@ -1,9 +1,7 @@
 ﻿namespace Shop.Data
 {
-    public interface IState
+    public interface IState : IElement
     {
-        string Guid { get; }
-
         int ProductQuantity{ get; set; }   
     }
 }

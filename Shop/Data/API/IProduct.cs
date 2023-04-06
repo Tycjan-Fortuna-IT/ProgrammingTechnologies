@@ -1,9 +1,7 @@
 ﻿namespace Shop.Data
 {
-    public interface IProduct
+    public interface IProduct : IElement
     {
-        string Guid { get; }
-
         string Name { get; set; }
 
         double Price { get; set; }

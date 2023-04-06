@@ -9,7 +9,7 @@ namespace Shop.Test
                 User user = new User(null, RandomString(10), RandomString(10), RandomEmail(),
                     RandomNumber<double>(4), RandomDate(), RandomNumber<int>(9));
 
-                Context.Users.Add(user.Guid, user);
+                Context.Elements[typeof(IUser)].Add(user.Guid, user);
             }
         }
 

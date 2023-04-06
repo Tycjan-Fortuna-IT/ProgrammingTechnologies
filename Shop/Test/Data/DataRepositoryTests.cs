@@ -12,25 +12,25 @@ namespace Shop.Test.Data
         [TestInitialize]
         public void Initialize()
         {
-            this.Repository.AddUser(User);
+            this.Repository.Add<IUser>(User);
         }
 
         [TestMethod]
         public void DataRepositoryAddUserTest()
         {
-            Assert.AreEqual(1, Repository.GetUsersCount());
+            Assert.AreEqual(1, Repository.GetCount<IUser>());
 
-            Assert.ThrowsException<Exception>(() => Repository.AddUser(User));
+            Assert.ThrowsException<Exception>(() => Repository.Add<IUser>(User));
         }
 
         [TestMethod]
         public void DataRepositoryGetUserTest()
         {
-            IUser User1 = Repository.GetUser(User.Guid);
+            IUser User1 = Repository.Get<IUser>(User.Guid);
 
             Assert.ReferenceEquals(User, User1);
 
-            Assert.ThrowsException<Exception>(() => Repository.GetUser("NOGUID"));
+            Assert.ThrowsException<Exception>(() => Repository.Get<IUser>("NOGUID"));
         }
 
         [TestMethod]
@@ -43,9 +43,9 @@ namespace Shop.Test.Data
             User.DateOfBirth = new DateTime(2013, 10, 11);
             User.PhoneNumber = 123556677;
 
-            Repository.UpdateUser(User.Guid, User);
+            Repository.Update<IUser>(User.Guid, User);
 
-            IUser User1 = Repository.GetUser(User.Guid);
+            IUser User1 = Repository.Get<IUser>(User.Guid);
 
             Assert.AreEqual("Test", User1.Name);
             Assert.AreEqual("Test", User1.Surname);
@@ -54,17 +54,17 @@ namespace Shop.Test.Data
             Assert.AreEqual(new DateTime(2013, 10, 11), User1.DateOfBirth);
             Assert.AreEqual(123556677, User1.PhoneNumber);
 
-            Assert.ThrowsException<Exception>(() => Repository.UpdateUser("NOGUID", User));
+            Assert.ThrowsException<Exception>(() => Repository.Update<IUser>("NOGUID", User));
         }
 
         [TestMethod]
         public void DataRepositoryDeleteUserTest()
         {
-            Assert.AreEqual(1, Repository.GetUsersCount());
+            Assert.AreEqual(1, Repository.GetCount<IUser>());
 
-            Repository.DeleteUser(User.Guid);
+            Repository.Delete<IUser>(User.Guid);
 
-            Assert.AreEqual(0, Repository.GetUsersCount());
+            Assert.AreEqual(0, Repository.GetCount<IUser>());
         }
     }
 }
