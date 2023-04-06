@@ -7,7 +7,7 @@ namespace Shop.Test
         public void Generate(IDataContext Context) {
             for (int i = 0; i < 20; i++) {
                 User user = new User(null, RandomString(10), RandomString(10), RandomEmail(),
-                    RandomNumber<double>(4), RandomDate(), RandomNumber<int>(9));
+                    RandomNumber<double>(4), RandomDate(), RandomNumber<int>(9), null);
 
                 Context.Elements[typeof(IUser)].Add(user.Guid, user);
             }

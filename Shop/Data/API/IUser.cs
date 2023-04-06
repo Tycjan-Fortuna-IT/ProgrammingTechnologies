@@ -13,5 +13,7 @@
         DateTime DateOfBirth { get; set; }
 
         int PhoneNumber { get; set; }
+
+        Dictionary<string, IProduct> ProductLibrary { get; set; }
     }
 }

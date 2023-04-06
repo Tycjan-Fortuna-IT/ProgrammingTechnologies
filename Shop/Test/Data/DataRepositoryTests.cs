@@ -7,7 +7,7 @@ namespace Shop.Test.Data
     {
         private IDataRepository Repository = new DataRepository(new DataContext());
         private IUser User = new User(null, "Michal", "Gapcio", "m_gapcio@gmail.com", 200,
-                new DateTime(2015, 12, 25), 542123567);
+                new DateTime(2015, 12, 25), 542123567, null);
 
         [TestInitialize]
         public void Initialize()

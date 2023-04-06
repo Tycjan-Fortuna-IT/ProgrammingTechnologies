@@ -9,7 +9,7 @@ namespace Shop.Test.Data
         public void GettersAndSettersTest()
         {
             IUser user = new User(null, "Michal", "Gapcio", "m_gapcio@gmail.com", 200,
-                new DateTime(2015, 12, 25), 542123567);
+                new DateTime(2015, 12, 25), 542123567, null);
 
             Assert.IsNotNull(user.Guid);
 
