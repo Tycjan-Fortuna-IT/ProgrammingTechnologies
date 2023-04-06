@@ -2,9 +2,9 @@
 {
     public interface IEvent : IElement
     {
-        string StateGuid { get; }
+        IState State { get; }
 
-        string UserGuid { get; }
+        IUser User { get; }
 
         DateTime OccurrenceDate { get; }
 

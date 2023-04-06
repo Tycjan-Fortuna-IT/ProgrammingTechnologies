@@ -2,15 +2,15 @@
 {
     public class State : IState
     {
-        public State(string? Guid, string ProductGuid, int ProductQuantity = 0) {
+        public State(string? Guid, IProduct Product, int ProductQuantity = 0) {
             this.Guid = Guid ?? System.Guid.NewGuid().ToString();
-            this.ProductGuid = ProductGuid;
+            this.Product = Product;
             this.ProductQuantity = ProductQuantity;
         }
 
         public string Guid { get; }
 
-        public string ProductGuid { get; }
+        public IProduct Product { get; }
 
         public int ProductQuantity { get; set; }
     }

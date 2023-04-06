@@ -2,18 +2,20 @@ namespace Shop.Data
 {
     public class SellEvent : IEvent
     {
-        public SellEvent(string StateGuid, string UserGuid) {
+        public SellEvent(string? Guid, IState State, IUser User) {
             this.Guid = Guid ?? System.Guid.NewGuid().ToString();
-            this.StateGuid = StateGuid;
-            this.UserGuid = UserGuid;
+            this.State = State;
+            this.User = User;
             this.OccurrenceDate = DateTime.Now;
+
+            this.Action();
         }
 
         public string Guid { get; }
 
-        public string StateGuid { get; }
+        public IState State { get; }
 
-        public string UserGuid { get; }
+        public IUser User { get; }
 
         public DateTime OccurrenceDate { get; }
 
