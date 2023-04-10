@@ -21,12 +21,19 @@ namespace Shop.Data
 
         public void Action()
         {
-            if (!this.User.ProductLibrary.ContainsKey(this.State.Product.Guid))
-                throw new Exception("You dont have this Product!");
+            if (!this.User.ProductLibrary.ContainsValue(this.State.Product))
+                throw new Exception("You do not have this Product!");
 
             this.State.ProductQuantity++;
             this.User.Balance += this.State.Product.Price;
-            this.User.ProductLibrary.Remove(this.State.Product.Guid);
+            foreach (KeyValuePair<string, IProduct> item in this.User.ProductLibrary) 
+                if (item.Value == this.State.Product)
+                {
+                    this.User.ProductLibrary.Remove(item.Key);
+                    break;
+                }
+            
+            //this.User.ProductLibrary.Remove(this.State.Product.Guid);
         }
     }
 }
