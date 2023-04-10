@@ -6,8 +6,6 @@
 
         double Price { get; set; }
 
-        int Quantity { get; set; }
-
-        DateTime RelaseDate { get; set; }
+        DateTime ReleaseDate { get; set; }
     }
 }
