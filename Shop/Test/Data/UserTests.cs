@@ -6,7 +6,7 @@ namespace Shop.Test.Data
     public class UserTests
     {
         [TestMethod]
-        public void GettersAndSettersTest()
+        public void UserGettersAndSettersTest()
         {
             IUser user = new User(null, "Michal", "Gapcio", "m_gapcio@gmail.com", 200,
                 new DateTime(2015, 12, 25), 542123567, null);
@@ -19,6 +19,7 @@ namespace Shop.Test.Data
             Assert.AreEqual(200, user.Balance);
             Assert.AreEqual(new DateTime(2015, 12, 25), user.DateOfBirth);
             Assert.AreEqual(542123567, user.PhoneNumber);
+            Assert.IsNotNull(user.ProductLibrary);                
 
             user.Name = "Antek";
             user.Surname = "Pcimowski";
@@ -26,6 +27,11 @@ namespace Shop.Test.Data
             user.Balance = 850;
             user.DateOfBirth = new DateTime(2015, 12, 26);
             user.PhoneNumber = 495039281;
+            Game game = new Game(null, "Witcher 3", 129.99, new DateTime(2015, 5, 18), 18);
+            Dictionary<string, IProduct> newProductLibrary = new Dictionary<string, IProduct>() {
+                { "1", game }
+            };
+            user.ProductLibrary = newProductLibrary;
 
             Assert.AreEqual("Antek", user.Name);
             Assert.AreEqual("Pcimowski", user.Surname);
@@ -33,6 +39,7 @@ namespace Shop.Test.Data
             Assert.AreEqual(850, user.Balance);
             Assert.AreEqual(new DateTime(2015, 12, 26), user.DateOfBirth);
             Assert.AreEqual(495039281, user.PhoneNumber);
+            Assert.AreEqual(game, user.ProductLibrary["1"]);
         }
     }
 }
