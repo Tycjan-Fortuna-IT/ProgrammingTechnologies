@@ -1,7 +1,9 @@
-﻿namespace Shop.Data
+﻿namespace Data.API
 {
-    public interface IUser : IElement
+    public interface IUser
     {
+        string Guid { get; }
+
         string Name { get; set; }
 
         string Surname { get; set; }

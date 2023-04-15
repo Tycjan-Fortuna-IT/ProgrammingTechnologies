@@ -1,7 +1,9 @@
-﻿namespace Shop.Data
+﻿namespace Data.API
 {
-    public interface IEvent : IElement
+    public interface IEvent
     {
+        string Guid { get; }
+
         IState State { get; }
 
         IUser User { get; }
