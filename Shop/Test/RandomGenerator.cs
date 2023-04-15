@@ -1,4 +1,5 @@
-﻿using Shop.Data;
+﻿using Data.API;
+using Data.Implementation;
 
 namespace Shop.Test
 {
@@ -9,7 +10,7 @@ namespace Shop.Test
                 User user = new User(null, RandomString(10), RandomString(10), RandomEmail(),
                     RandomNumber<double>(4), RandomDate(), RandomNumber<int>(9), null);
 
-                Context.Elements[typeof(IUser)].Add(user.Guid, user);
+                Context.Users.Add(user);
             }
         }
 
