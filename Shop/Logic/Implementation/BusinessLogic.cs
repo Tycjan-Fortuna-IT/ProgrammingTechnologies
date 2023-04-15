@@ -29,6 +29,10 @@ namespace Shop.Logic
             this.Repository.Add<IProduct>(Product);
         }
 
+        public void RegisterState(IState State) { 
+            this.Repository.Add<IState>(State);
+        }
+
         // --- GET ---
         public IUser GetUser(string Guid) {
             return this.Repository.Get<IUser>(Guid);
