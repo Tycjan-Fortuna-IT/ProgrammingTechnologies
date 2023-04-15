@@ -2,11 +2,11 @@
 {
     public class DataRepository : IDataRepository
     {
+        private IDataContext context;
+
         public DataRepository(IDataContext context) {
             this.context = context;
         }
-
-        private IDataContext context;
 
         public void Add<T>(T element) where T : IElement {
             var ContextElements = this.context.Elements[typeof(T)];
@@ -45,9 +45,14 @@
         }
 
         public Dictionary<string, T> GetAll<T>() where T : IElement {
-            var ContextElements = (Dictionary<string, T>)this.context.Elements[typeof(T)];
+            Dictionary<string, T> NewDictionary = new Dictionary<string, T>();
 
-            return ContextElements;
+            foreach (KeyValuePair<string, IElement> kvp in (Dictionary<string, IElement>)this.context.Elements[typeof(T)])
+            {
+                NewDictionary.Add(kvp.Key, (T)kvp.Value);
+            }
+
+            return NewDictionary;
         }
 
         public int GetCount<T>() where T : IElement {
@@ -58,6 +63,19 @@
 
         public IEvent GetLastProductEvent(string ProductGuid) {
             IEvent? LastEvent = null;
+
+
+            //Dictionary<string, IEvent> Events = new Dictionary<string, IEvent>();
+
+            //foreach (KeyValuePair<string, IEvent> kvp in (Dictionary<string, IEvent>)this.context.Elements[typeof(IEvent)])
+            //{
+                //Events.Add(kvp.Key, (IEvent)kvp.Value);
+            //}
+
+            //foreach (KeyValuePair<string, IEvent> Event in Events)
+                //if (Event.Value.State.Product.Guid == ProductGuid)
+                    //if (LastEvent is not null && LastEvent.OccurrenceDate < Event.Value.OccurrenceDate)
+                        //LastEvent = Event.Value;
 
             Dictionary<string, IEvent>.ValueCollection Events = 
                 ((Dictionary<string, IEvent>)this.context.Elements[typeof(IEvent)]).Values;
@@ -87,6 +105,15 @@
         }
 
         public IState GetProductState(string ProductGuid) {
+            
+            //foreach (KeyValuePair<string, IState> kvp in (Dictionary<string, IState>)this.context.Elements[typeof(IState)])
+            //{
+                //if (kvp.Value.Product.Guid == ProductGuid)
+                    //return (IState)kvp.Value;
+                //else
+                    //throw new Exception("There is no State for this Product!");
+            //}
+
             if (this.context.Elements[typeof(IState)].ContainsKey(ProductGuid))
                 return (IState)this.context.Elements[typeof(IState)][ProductGuid];
             else
