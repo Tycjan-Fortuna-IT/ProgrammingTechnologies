@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System.Dynamic;
 
-namespace Shop.Data
+namespace Data.API
 {
-    public abstract class IDataContext
+    public interface IDataContext
     {
-        public Dictionary<Type, IDictionary<string, IElement>> Elements = new Dictionary<Type, IDictionary<string, IElement>>
-        {
-            { typeof(IUser), new Dictionary<string, IElement>() },
-            { typeof(IProduct), new Dictionary<string, IElement>() },
-            { typeof(IEvent), new Dictionary<string, IElement>() },
-            { typeof(IState), new Dictionary<string, IElement>() }
-        };
+        public List<IUser> Users {get; set;}
+
+        public List<IProduct> Products { get; set; }
+
+        public List<IState> States { get; set; }
+
+        public List<IEvent> Events { get; set; }
     }
 }
