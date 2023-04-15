@@ -89,23 +89,23 @@ namespace Shop.Test.Data
 
         }
 
-        //[TestMethod]
-        //public void ReturnGettersTest() 
-        //{
-        //IProduct game = new Game("4ca8c94e-65be-44c8-ab0b-cf6fd73ddb57", "The Sims 3", 109.99, new DateTime(2009, 6, 12), 7);
-        //IState state = new State("0ecfa654-d8e3-4757-a752-17516bf2cf9b", game, 4);
-        //IUser user = new User("02398dfd-d04c-41b7-b71a-fd2ac87a7fc7", "Eivor", "Raventhrope", "e_raventhrope@gmail.com", 100, new DateTime(1996, 12, 25), 542123567, new Dictionary<string, IProduct>() { { "b197a800-f80e-4406-b1ad-5f956cdc1050", game } });
+        [TestMethod]
+        public void ReturnGettersTest() 
+        {
+        IProduct game = new Game("4ca8c94e-65be-44c8-ab0b-cf6fd73ddb57", "The Sims 3", 109.99, new DateTime(2009, 6, 12), 7);
+        IState state = new State("0ecfa654-d8e3-4757-a752-17516bf2cf9b", game, 4);
+        IUser user = new User("02398dfd-d04c-41b7-b71a-fd2ac87a7fc7", "Eivor", "Raventhrope", "e_raventhrope@gmail.com", 100, new DateTime(1996, 12, 25), 542123567, new Dictionary<string, IProduct>() { { "4ca8c94e-65be-44c8-ab0b-cf6fd73ddb57", game } });
 
-        //IEvent Undo = new ReturnEvent(null, state, user);
+        IEvent Undo = new ReturnEvent(null, state, user);
 
-        //Assert.IsNotNull(Undo.Guid);
-        //Assert.AreEqual(state, Undo.State);
-        //Assert.AreEqual(user, Undo.User);
-        //Assert.IsNotNull(Undo.OccurrenceDate);
-        //Assert.AreEqual(209.99, user.Balance);
-        //Assert.AreEqual(5, state.ProductQuantity);
-        //Assert.IsFalse(user.ProductLibrary.ContainsValue(game));
-        //}
+        Assert.IsNotNull(Undo.Guid);
+        Assert.AreEqual(state, Undo.State);
+        Assert.AreEqual(user, Undo.User);
+        Assert.IsNotNull(Undo.OccurrenceDate);
+        Assert.AreEqual(209.99, user.Balance);
+        Assert.AreEqual(5, state.ProductQuantity);
+        Assert.IsFalse(user.ProductLibrary.ContainsValue(game));
+        }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
