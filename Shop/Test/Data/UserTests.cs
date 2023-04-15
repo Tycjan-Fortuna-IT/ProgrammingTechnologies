@@ -29,7 +29,7 @@ namespace Shop.Test.Data
             user.PhoneNumber = 495039281;
             Game game = new Game(null, "Witcher 3", 129.99, new DateTime(2015, 5, 18), 18);
             Dictionary<string, IProduct> newProductLibrary = new Dictionary<string, IProduct>() {
-                { "1", game }
+                { "0a81eb06-db53-11ed-afa1-0242ac120002", game }
             };
             user.ProductLibrary = newProductLibrary;
 
@@ -39,7 +39,7 @@ namespace Shop.Test.Data
             Assert.AreEqual(850, user.Balance);
             Assert.AreEqual(new DateTime(2015, 12, 26), user.DateOfBirth);
             Assert.AreEqual(495039281, user.PhoneNumber);
-            Assert.AreEqual(game, user.ProductLibrary["1"]);
+            Assert.AreEqual(game, user.ProductLibrary["0a81eb06-db53-11ed-afa1-0242ac120002"]);
         }
     }
 }

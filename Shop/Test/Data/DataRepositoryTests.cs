@@ -1,5 +1,4 @@
 ﻿using Shop.Data;
-using System.Runtime.CompilerServices;
 
 namespace Shop.Test.Data
 {
@@ -7,11 +6,11 @@ namespace Shop.Test.Data
     public class DataRepositoryTests
     {
         IDataRepository Repository = new DataRepository(new DataContext());
-        IUser User = new User("1", "Michal", "Gapcio", "m_gapcio@gmail.com", 200,
+        IUser User = new User("c2a0cb1c-38cb-41d8-a9bc-41f3fce7feca", "Michal", "Gapcio", "m_gapcio@gmail.com", 200,
                 new DateTime(2015, 12, 25), 542123567, null);
         IProduct game = new Game(null, "Diablo 3", 339.99, new DateTime(2012, 5, 15), 18);
         IState state = new State(null, new Game(null, "Starcraft", 61.99, new DateTime(1998, 3, 28), 16), 4);
-        IEvent Buy = new PurchaseEvent(null, new State(null, new Game("30", "Hollow Knight", 55.99, new DateTime(2017, 2, 24), 13), 1), new User(null, "Arno", "Dorian", "a_dorian@paris.fr", 100, new DateTime(1990, 4, 5), 758903841, null));
+        IEvent Buy = new PurchaseEvent(null, new State(null, new Game("99ef670b-9a73-432b-b3fd-2f575f56c312", "Hollow Knight", 55.99, new DateTime(2017, 2, 24), 13), 1), new User(null, "Arno", "Dorian", "a_dorian@paris.fr", 100, new DateTime(1990, 4, 5), 758903841, null));
         
         [TestInitialize]
         public void Initialize()
@@ -76,35 +75,39 @@ namespace Shop.Test.Data
             Assert.ThrowsException<Exception>(() => Repository.Delete<IUser>("NOGUID"));
         }
 
-        //[TestMethod]
-        //public void DataRepositoryGetAllTest()
-        //{
-            //var wholeContext = Repository.GetAll<IUser>();
+        [TestMethod]
+        public void DataRepositoryGetAllTest()
+        {
+            var wholeContext = Repository.GetAll<IUser>();
 
-            //Assert.IsNotNull(wholeContext);
-            //Assert.AreEqual(1, Repository.GetCount<IUser>());
-            //Assert.IsTrue(wholeContext.ContainsValue(User));
-        //}
+            Assert.IsNotNull(wholeContext);
+            Assert.AreEqual(1, Repository.GetCount<IUser>());
+            Assert.IsTrue(wholeContext.ContainsValue(User));
+        }
 
-        //[TestMethod]
-        //public void DataRepositoryGetLastProductEventTest()
-        //{
-            //var testEvent = Repository.GetLastProductEvent("30");
+        [TestMethod]
+        public void DataRepositoryGetLastProductEventTest()
+        {
+            var testEvent = Repository.GetLastProductEvent("99ef670b-9a73-432b-b3fd-2f575f56c312");
 
-            //Assert.IsNotNull(testEvent);
-        //}
+            Assert.IsNotNull(testEvent);
+        }
 
         [TestMethod]
         public void DataRepositoryGetProductHistoryTest()
         {
-            var history = Repository.GetProductEventHistory("30");
-            Console.WriteLine(history);
+            var history = Repository.GetProductEventHistory("99ef670b-9a73-432b-b3fd-2f575f56c312");
+
+            Assert.AreEqual(1, history.Count);
         }
 
         [TestMethod]
         public void DataRepositoryGetProductState()
         {
+            var ProductState = Repository.GetProductState("99ef670b-9a73-432b-b3fd-2f575f56c312");
+            IState ExpectedValue = new State(null, new Game("99ef670b-9a73-432b-b3fd-2f575f56c312", "Hollow Knight", 55.99, new DateTime(2017, 2, 24), 13), 0);
 
+            Assert.AreEqual(ExpectedValue, ProductState);
         }
     }
 }
