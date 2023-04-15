@@ -1,8 +1,11 @@
-namespace Shop.Data
+using Data.API;
+
+namespace Data.Implementation
 {
     public class ReturnEvent : IEvent
     {
-        public ReturnEvent(string? Guid, IState State, IUser User) {
+        public ReturnEvent(string? Guid, IState State, IUser User)
+        {
             this.Guid = Guid ?? System.Guid.NewGuid().ToString();
             this.State = State;
             this.User = User;
@@ -22,7 +25,7 @@ namespace Shop.Data
         public void Action()
         {
             if (!this.User.ProductLibrary.ContainsKey(this.State.Product.Guid))
-                throw new Exception("You dont have this Product!");
+                throw new Exception("You do not have this Product!");
 
             this.State.ProductQuantity++;
             this.User.Balance += this.State.Product.Price;

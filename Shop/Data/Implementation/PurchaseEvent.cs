@@ -1,4 +1,6 @@
-namespace Shop.Data
+using Data.API;
+
+namespace Data.Implementation
 {
     public class PurchaseEvent : IEvent
     {
@@ -24,7 +26,7 @@ namespace Shop.Data
                 throw new Exception("You already have this Product!");   
 
             if (this.State.Product is Game)
-                if (DateTime.Now.Year - this.User.DateOfBirth.Year > ((Game)this.State.Product).PEGI)
+                if (DateTime.Now.Year - this.User.DateOfBirth.Year < ((Game)this.State.Product).PEGI)
                     throw new Exception("You are not old enough to purchase this game!");
 
             if (this.State.ProductQuantity == 0)

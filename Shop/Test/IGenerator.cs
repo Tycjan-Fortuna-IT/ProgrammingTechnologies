@@ -1,4 +1,4 @@
-﻿using Shop.Data;
+﻿using Data.API;
 
 namespace Shop.Test
 {

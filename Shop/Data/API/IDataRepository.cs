@@ -1,23 +1,48 @@
-﻿namespace Shop.Data
+﻿using Data.Implementation;
+
+namespace Data.API
 {
     public interface IDataRepository
     {
-        void Add<T>(T element) where T : IElement;
+        static IDataRepository CreateDatabase(IDataContext dataContext)
+        {
+            return new DataRepository(dataContext);
+        }
 
-        T Get<T>(string Guid) where T : IElement;
+        // --- User ---
+        void AddUser(IUser user);
+        IUser GetUser(string guid);
+        bool CheckIfUserExists(string guid);
+        void UpdateUser(IUser user);
+        void DeleteUser(string guid);
+        List<IUser> GetAllUsers();
+        int GetUserCount();
 
-        void Update<T>(string Guid, T element) where T : IElement;
+        // --- Product ---
+        void AddProduct(IProduct product);
+        IProduct GetProduct(string guid);
+        bool CheckIfProductExists(string guid);
+        void UpdateProduct(IProduct product);
+        void DeleteProduct(string guid);
+        List<IProduct> GetAllProducts();
+        int GetProductCount();
 
-        void Delete<T>(string Guid) where T : IElement;
+        // --- State ---
+        void AddState(IState product);
+        IState GetState(string guid);
+        void DeleteState(string guid);
+        List<IState> GetAllStates();
+        int GetStateCount();
 
-        Dictionary<string, T> GetAll<T>() where T : IElement;
+        // --- Event ---
+        void AddEvent(IEvent shopEvent);
+        IEvent GetEvent(string guid);
+        void DeleteEvent(string guid);
+        List<IEvent> GetAllEvents();
+        int GetEventCount();
 
-        int GetCount<T>() where T : IElement;
-
-        IEvent GetLastProductEvent(string ProductGuid);
-
-        List<IEvent> GetProductEventHistory(string ProductGuid);
-
-        IState GetProductState(string ProductGuid);
+        IEvent GetLastProductEvent(string productGuid);
+        List<IEvent> GetProductEventHistory(string productGuid);
+        IState GetProductState(string productGuid);
     }
 }

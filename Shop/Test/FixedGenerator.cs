@@ -1,4 +1,5 @@
-﻿using Shop.Data;
+﻿using Data.API;
+using Data.Implementation;
 
 namespace Shop.Test
 {
@@ -26,17 +27,16 @@ namespace Shop.Test
             User user10 = new User(null, "Stefan", "Zapominalski", "s_zapominalski@gmail.com", 68,
                 new DateTime(2003, 11, 8), 938575039, null);
 
-
-            Context.Elements[typeof(IUser)].Add(user1.Guid, user1);
-            Context.Elements[typeof(IUser)].Add(user2.Guid, user2);
-            Context.Elements[typeof(IUser)].Add(user3.Guid, user3);
-            Context.Elements[typeof(IUser)].Add(user4.Guid, user4);
-            Context.Elements[typeof(IUser)].Add(user5.Guid, user5);
-            Context.Elements[typeof(IUser)].Add(user6.Guid, user6);
-            Context.Elements[typeof(IUser)].Add(user7.Guid, user7);
-            Context.Elements[typeof(IUser)].Add(user8.Guid, user8);
-            Context.Elements[typeof(IUser)].Add(user9.Guid, user9);
-            Context.Elements[typeof(IUser)].Add(user10.Guid, user10);
+            Context.Users.Add(user1);
+            Context.Users.Add(user2);
+            Context.Users.Add(user3);
+            Context.Users.Add(user4);
+            Context.Users.Add(user5);
+            Context.Users.Add(user6);
+            Context.Users.Add(user7);
+            Context.Users.Add(user8);
+            Context.Users.Add(user9);
+            Context.Users.Add(user10);
         }
     }
 }
