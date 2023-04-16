@@ -4,33 +4,33 @@ namespace Data.Implementation
 {
     public class User : IUser
     {
-        public User(string? Guid, string Name, string Surname, string Email,
-            double Balance, DateTime DateOfBirth, int PhoneNumber, Dictionary<string, IProduct>? ProductLibrary)
+        public User(string? guid, string name, string surname, string email,
+            double balance, DateTime dateOfBirth, int phoneNumber, Dictionary<string, IProduct>? productLibrary)
         {
-            this.Guid = Guid ?? System.Guid.NewGuid().ToString();
-            this.Name = Name;
-            this.Surname = Surname;
-            this.Email = Email;
-            this.Balance = Balance;
-            this.DateOfBirth = DateOfBirth;
-            this.PhoneNumber = PhoneNumber;
-            this.ProductLibrary = ProductLibrary ?? new Dictionary<string, IProduct>();
+            this.guid = guid ?? System.Guid.NewGuid().ToString();
+            this.name = name;
+            this.surname = surname;
+            this.email = email;
+            this.balance = balance;
+            this.dateOfBirth = dateOfBirth;
+            this.phoneNumber = phoneNumber;
+            this.productLibrary = productLibrary ?? new Dictionary<string, IProduct>();
         }
 
-        public string Guid { get; }
+        public string guid { get; }
 
-        public string Name { get; set; }
+        public string name { get; set; }
 
-        public string Surname { get; set; }
+        public string surname { get; set; }
 
-        public string Email { get; set; }
+        public string email { get; set; }
 
-        public double Balance { get; set; } = 0;
+        public double balance { get; set; } = 0;
 
-        public DateTime DateOfBirth { get; set; }
+        public DateTime dateOfBirth { get; set; }
 
-        public int PhoneNumber { get; set; }
+        public int phoneNumber { get; set; }
 
-        public Dictionary<string, IProduct> ProductLibrary { get; set; }
+        public Dictionary<string, IProduct> productLibrary { get; set; }
     }
 }

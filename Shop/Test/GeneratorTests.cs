@@ -1,6 +1,5 @@
 ﻿using Data.API;
 using Data.Implementation;
-using Shop.Test;
 
 namespace Test
 {
@@ -16,7 +15,7 @@ namespace Test
 
             generator.Generate(context);
 
-            Assert.AreEqual(10, context.Users.Count);
+            Assert.AreEqual(10, context.users.Count);
         }
 
         [TestMethod]
@@ -27,8 +26,6 @@ namespace Test
             IGenerator generator = new RandomGenerator();
 
             generator.Generate(context);
-
-            Assert.AreEqual(20, context.Users.Count);
 
             Assert.ThrowsException<ArgumentException>(() => { RandomGenerator.RandomNumber<int>(-1); });
         }

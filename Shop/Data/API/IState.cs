@@ -2,10 +2,10 @@
 {
     public interface IState
     {
-        string Guid { get; }
+        string guid { get; }
 
-        IProduct Product { get; }
+        IProduct product { get; }
 
-        int ProductQuantity{ get; set; }   
+        int productQuantity{ get; set; }   
     }
 }

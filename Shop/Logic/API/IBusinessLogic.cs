@@ -5,13 +5,13 @@ namespace Logic.API
 {
     public interface IBusinessLogic
     {
-        static IBusinessLogic CreateLogic(IDataRepository DataRepository)
+        static IBusinessLogic CreateLogic(IDataRepository dataRepository)
         {
-            return new BusinessLogic(DataRepository);
+            return new BusinessLogic(dataRepository);
         }
 
-        void Purchase(IState State, IUser User);
+        void Purchase(IState state, IUser user);
 
-        void Return(IState State, IUser User);
+        void Return(IState state, IUser user);
     }
 }

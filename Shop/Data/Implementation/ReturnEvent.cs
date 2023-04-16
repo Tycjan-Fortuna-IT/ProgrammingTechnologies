@@ -4,32 +4,32 @@ namespace Data.Implementation
 {
     public class ReturnEvent : IEvent
     {
-        public ReturnEvent(string? Guid, IState State, IUser User)
+        public ReturnEvent(string? guid, IState state, IUser user)
         {
-            this.Guid = Guid ?? System.Guid.NewGuid().ToString();
-            this.State = State;
-            this.User = User;
-            this.OccurrenceDate = DateTime.Now;
+            this.guid = guid ?? System.Guid.NewGuid().ToString();
+            this.state = state;
+            this.user = user;
+            this.occurrenceDate = DateTime.Now;
 
             this.Action();
         }
 
-        public string Guid { get; }
+        public string guid { get; }
 
-        public IState State { get; }
+        public IState state { get; }
 
-        public IUser User { get; }
+        public IUser user { get; }
 
-        public DateTime OccurrenceDate { get; }
+        public DateTime occurrenceDate { get; }
 
         public void Action()
         {
-            if (!this.User.ProductLibrary.ContainsKey(this.State.Product.Guid))
+            if (!this.user.productLibrary.ContainsKey(this.state.product.guid))
                 throw new Exception("You do not have this Product!");
 
-            this.State.ProductQuantity++;
-            this.User.Balance += this.State.Product.Price;
-            this.User.ProductLibrary.Remove(this.State.Product.Guid);
+            this.state.productQuantity++;
+            this.user.balance += this.state.product.price;
+            this.user.productLibrary.Remove(this.state.product.guid);
         }
     }
 }

@@ -6,33 +6,33 @@ namespace Shop.Logic
 {
     public class BusinessLogic : IBusinessLogic
     {
-        private IDataRepository Repository;
+        private IDataRepository repository;
 
-        public BusinessLogic(IDataRepository Repository)
+        public BusinessLogic(IDataRepository repository)
         {
-            this.Repository = Repository;
+            this.repository = repository;
         }
 
-        public void Purchase(IState State, IUser User)
+        public void Purchase(IState state, IUser user)
         {
-            if (!this.Repository.CheckIfProductExists(State.Product.Guid))
+            if (!this.repository.CheckIfProductExists(state.product.guid))
                 throw new Exception("This product is not registered in our system!");
 
-            if (!this.Repository.CheckIfUserExists(User.Guid))
+            if (!this.repository.CheckIfUserExists(user.guid))
                 throw new Exception("This user is not registered in our system!");
 
-            this.Repository.AddEvent(new PurchaseEvent(null, State, User));
+            this.repository.AddEvent(new PurchaseEvent(null, state, user));
         }
 
-        public void Return(IState State, IUser User) 
+        public void Return(IState state, IUser user) 
         {
-            if (!this.Repository.CheckIfProductExists(State.Product.Guid))
+            if (!this.repository.CheckIfProductExists(state.product.guid))
                 throw new Exception("This product is not registered in our system!");
 
-            if (!this.Repository.CheckIfUserExists(User.Guid))
+            if (!this.repository.CheckIfUserExists(user.guid))
                 throw new Exception("This user is not registered in our system!");
 
-            this.Repository.AddEvent(new ReturnEvent(null, State, User));
+            this.repository.AddEvent(new ReturnEvent(null, state, user));
         }
     }
 }

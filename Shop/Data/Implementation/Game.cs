@@ -4,23 +4,23 @@ namespace Data.Implementation
 {
     public class Game : IProduct
     {
-        public Game(string? Guid, string Name, double Price, DateTime ReleaseDate, int PEGI)
+        public Game(string? guid, string name, double price, DateTime releaseDate, int pegi)
         {
-            this.Guid = Guid ?? System.Guid.NewGuid().ToString();
-            this.Name = Name;
-            this.Price = Price;
-            this.ReleaseDate = ReleaseDate;
-            this.PEGI = PEGI;
+            this.guid = guid ?? System.Guid.NewGuid().ToString();
+            this.name = name;
+            this.price = price;
+            this.releaseDate = releaseDate;
+            this.pegi = pegi;
         }
 
-        public string Guid { get; }
+        public string guid { get; }
 
-        public string Name { get; set; }
+        public string name { get; set; }
 
-        public double Price { get; set; }
+        public double price { get; set; }
 
-        public DateTime ReleaseDate { get; set; }
+        public DateTime releaseDate { get; set; }
 
-        public int PEGI { get; set; }
+        public int pegi { get; set; }
     }
 }
