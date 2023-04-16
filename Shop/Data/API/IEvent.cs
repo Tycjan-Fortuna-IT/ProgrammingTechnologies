@@ -2,13 +2,13 @@
 {
     public interface IEvent
     {
-        string Guid { get; }
+        string guid { get; }
 
-        IState State { get; }
+        IState state { get; }
 
-        IUser User { get; }
+        IUser user { get; }
 
-        DateTime OccurrenceDate { get; }
+        DateTime occurrenceDate { get; }
 
         void Action();
     }

@@ -5,7 +5,7 @@ namespace Shop.Test
 {
     public class FixedGenerator : IGenerator
     {
-        public void Generate(IDataContext Context) {
+        public void Generate(IDataContext context) {
             User user1 = new User("81c14d82-528e-4933-b64b-a602499b17e7", "Mateusz", "Kowalski", "m_kowalski@gmail.com", 353,
                 new DateTime(2013, 5, 21), 543234567, null);
             User user2 = new User("dc295f09-53ed-4293-876d-c91668fe9f67", "Kamil", "Miglanc", "k_miglanc@gmail.com", 222,
@@ -27,16 +27,16 @@ namespace Shop.Test
             User user10 = new User("9f7005aa-7d18-4a20-bb58-a8f021a12168", "Stefan", "Zapominalski", "s_zapominalski@gmail.com", 68,
                 new DateTime(2003, 11, 8), 938575039, null);
 
-            Context.Users.Add(user1);
-            Context.Users.Add(user2);
-            Context.Users.Add(user3);
-            Context.Users.Add(user4);
-            Context.Users.Add(user5);
-            Context.Users.Add(user6);
-            Context.Users.Add(user7);
-            Context.Users.Add(user8);
-            Context.Users.Add(user9);
-            Context.Users.Add(user10);
+            context.users.Add(user1);
+            context.users.Add(user2);
+            context.users.Add(user3);
+            context.users.Add(user4);
+            context.users.Add(user5);
+            context.users.Add(user6);
+            context.users.Add(user7);
+            context.users.Add(user8);
+            context.users.Add(user9);
+            context.users.Add(user10);
 
             Game game1 = new Game("2f2b5a86-0feb-4ffc-aad2-1ecdae82aa92", "Starcraft", 61.99, new DateTime(1998, 3, 28), 16);
             Game game2 = new Game("7e4d8099-892b-448d-aea7-73ac1df828a3", "Assassin's Creed Valhalla", 239.99, new DateTime(2020, 11, 10), 18);
@@ -45,12 +45,12 @@ namespace Shop.Test
             Game game5 = new Game("07ddb96c-3626-4d0c-82dd-68c51721bbef", "Witcher 3", 129.99, new DateTime(2015, 5, 18), 18);
             Game game6 = new Game("2511c7f3-9bb1-47d5-850b-e34a5d8e8f15", "Diablo 3", 339.99, new DateTime(2012, 5, 15), 18);
 
-            Context.Products.Add(game1);
-            Context.Products.Add(game2);
-            Context.Products.Add(game3);
-            Context.Products.Add(game4);
-            Context.Products.Add(game5);
-            Context.Products.Add(game6);
+            context.products.Add(game1);
+            context.products.Add(game2);
+            context.products.Add(game3);
+            context.products.Add(game4);
+            context.products.Add(game5);
+            context.products.Add(game6);
 
             State state1 = new State("e96eba92-47f0-41dc-9c77-d8929e08691b", game1, 3);
             State state2 = new State("e5a18edc-5cbb-4739-8d81-75d2f69de7da", game2, 10);
@@ -59,12 +59,12 @@ namespace Shop.Test
             State state5 = new State("ff7878ad-6c56-4c7a-8e40-9f560f7deaa2", game5, 6);
             State state6 = new State("41aaece7-a579-464c-8474-dd576834a5e6", game6, 9);
 
-            Context.States.Add(state1);
-            Context.States.Add(state2);
-            Context.States.Add(state3);
-            Context.States.Add(state4);
-            Context.States.Add(state5);
-            Context.States.Add(state6);
+            context.states.Add(state1);
+            context.states.Add(state2);
+            context.states.Add(state3);
+            context.states.Add(state4);
+            context.states.Add(state5);
+            context.states.Add(state6);
 
             PurchaseEvent purchaseEvent1 = new PurchaseEvent("4a93b8f8-a52d-43d6-90fa-3cf4e41c398e", state4, user1);
             PurchaseEvent purchaseEvent2 = new PurchaseEvent("5c362e6f-a3c1-417a-a5de-b077b85e3f44", state4, user2);
@@ -81,20 +81,20 @@ namespace Shop.Test
             ReturnEvent returnEvent3 = new ReturnEvent("fa8b45ba-0589-4e50-b77f-e9774852762b", state1, user10);
             ReturnEvent returnEvent4 = new ReturnEvent("4c47667f-08f3-46da-a4a4-6541d9fc7650", state2, user7);
 
-            Context.Events.Add(purchaseEvent1);
-            Context.Events.Add(purchaseEvent2);
-            Context.Events.Add(purchaseEvent3);
-            Context.Events.Add(purchaseEvent4);
-            Context.Events.Add(purchaseEvent5);
-            Context.Events.Add(purchaseEvent6);
-            Context.Events.Add(purchaseEvent7);
-            Context.Events.Add(purchaseEvent8);
-            Context.Events.Add(purchaseEvent9);
-            Context.Events.Add(purchaseEvent10);
-            Context.Events.Add(returnEvent1);
-            Context.Events.Add(returnEvent2);
-            Context.Events.Add(returnEvent3);
-            Context.Events.Add(returnEvent4);
+            context.events.Add(purchaseEvent1);
+            context.events.Add(purchaseEvent2);
+            context.events.Add(purchaseEvent3);
+            context.events.Add(purchaseEvent4);
+            context.events.Add(purchaseEvent5);
+            context.events.Add(purchaseEvent6);
+            context.events.Add(purchaseEvent7);
+            context.events.Add(purchaseEvent8);
+            context.events.Add(purchaseEvent9);
+            context.events.Add(purchaseEvent10);
+            context.events.Add(returnEvent1);
+            context.events.Add(returnEvent2);
+            context.events.Add(returnEvent3);
+            context.events.Add(returnEvent4);
         }
     }
 }

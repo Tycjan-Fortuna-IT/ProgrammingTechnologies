@@ -4,16 +4,17 @@ namespace Data.Implementation
 {
     public class State : IState
     {
-        public State(string? Guid, IProduct Product, int ProductQuantity = 0) {
-            this.Guid = Guid ?? System.Guid.NewGuid().ToString();
-            this.Product = Product;
-            this.ProductQuantity = ProductQuantity;
+        public State(string? guid, IProduct product, int productQuantity = 0) 
+        {
+            this.guid = guid ?? System.Guid.NewGuid().ToString();
+            this.product = product;
+            this.productQuantity = productQuantity;
         }
 
-        public string Guid { get; }
+        public string guid { get; }
 
-        public IProduct Product { get; }
+        public IProduct product { get; }
 
-        public int ProductQuantity { get; set; }
+        public int productQuantity { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace Test
 
             generator.Generate(context);
 
-            Assert.AreEqual(10, context.Users.Count);
+            Assert.AreEqual(10, context.users.Count);
         }
 
         [TestMethod]
@@ -28,7 +28,7 @@ namespace Test
 
             generator.Generate(context);
 
-            Assert.AreEqual(20, context.Users.Count);
+            Assert.AreEqual(20, context.users.Count);
 
             Assert.ThrowsException<ArgumentException>(() => { RandomGenerator.RandomNumber<int>(-1); });
         }

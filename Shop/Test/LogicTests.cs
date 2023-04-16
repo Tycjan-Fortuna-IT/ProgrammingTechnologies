@@ -76,7 +76,7 @@ namespace Test
             IBusinessLogic logic = IBusinessLogic.CreateLogic(database);
 
             IUser user1 = new User("c2a0cb1c-38cb-41d8-a9bc-41f3fce7feca", "Michal", "Gapcio", "m_gapcio@gmail.com", 200,
-    new DateTime(2010, 12, 25), 542123567, null);
+                new DateTime(2010, 12, 25), 542123567, null);
             IUser user2 = new User("5525ef4a-db53-11ed-afa1-0242ac120002", "Eivor", "Raventhrope", "e_raventhrope@gmail.com", 200,
                 new DateTime(1996, 12, 25), 542123567, null);
             IUser user3 = new User("12790880-9130-47b2-adfb-c1df3d17e7a6", "Sigmund", "Ledercestaire", "s_ledercestaire@gmail.com", 100,

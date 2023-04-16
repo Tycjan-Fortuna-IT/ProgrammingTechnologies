@@ -2,12 +2,12 @@
 {
     public interface IProduct
     {
-        string Guid { get; }
+        string guid { get; }
 
-        string Name { get; set; }
+        string name { get; set; }
 
-        double Price { get; set; }
+        double price { get; set; }
 
-        DateTime ReleaseDate { get; set; }
+        DateTime releaseDate { get; set; }
     }
 }

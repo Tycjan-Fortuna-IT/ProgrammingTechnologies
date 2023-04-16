@@ -2,20 +2,20 @@
 {
     public interface IUser
     {
-        string Guid { get; }
+        string guid { get; }
 
-        string Name { get; set; }
+        string name { get; set; }
 
-        string Surname { get; set; }
+        string surname { get; set; }
 
-        string Email { get; set; }
+        string email { get; set; }
 
-        double Balance { get; set; }
+        double balance { get; set; }
 
-        DateTime DateOfBirth { get; set; }
+        DateTime dateOfBirth { get; set; }
 
-        int PhoneNumber { get; set; }
+        int phoneNumber { get; set; }
 
-        Dictionary<string, IProduct> ProductLibrary { get; set; }
+        Dictionary<string, IProduct> productLibrary { get; set; }
     }
 }

@@ -4,40 +4,42 @@ namespace Data.Implementation
 {
     public class PurchaseEvent : IEvent
     {
-        public PurchaseEvent(string? Guid, IState State, IUser User) {
-            this.Guid = Guid ?? System.Guid.NewGuid().ToString();
-            this.State = State;
-            this.User = User;
-            this.OccurrenceDate = DateTime.Now;
+        public PurchaseEvent(string? guid, IState state, IUser user) 
+        {
+            this.guid = guid ?? System.Guid.NewGuid().ToString();
+            this.state = state;
+            this.user = user;
+            this.occurrenceDate = DateTime.Now;
 
             this.Action();
         }
 
-        public string Guid { get; }
+        public string guid { get; }
 
-        public IState State { get; }
+        public IState state { get; }
 
-        public IUser User { get; }
+        public IUser user { get; }
 
-        public DateTime OccurrenceDate { get; }
+        public DateTime occurrenceDate { get; }
 
-        public void Action() {
-            if (this.User.ProductLibrary.ContainsKey(this.State.Product.Guid))
+        public void Action() 
+        {
+            if (this.user.productLibrary.ContainsKey(this.state.product.guid))
                 throw new Exception("You already have this Product!");   
 
-            if (this.State.Product is Game)
-                if (DateTime.Now.Year - this.User.DateOfBirth.Year < ((Game)this.State.Product).PEGI)
+            if (this.state.product is Game)
+                if (DateTime.Now.Year - this.user.dateOfBirth.Year < ((Game)this.state.product).pegi)
                     throw new Exception("You are not old enough to purchase this game!");
 
-            if (this.State.ProductQuantity == 0)
+            if (this.state.productQuantity == 0)
                 throw new Exception("Product unavailable, please check later!");
 
-            if (this.User.Balance < this.State.Product.Price)
+            if (this.user.balance < this.state.product.price)
                 throw new Exception("Not enough money to purchase this Product!");
 
-            this.State.ProductQuantity--;
-            this.User.Balance -= this.State.Product.Price;
-            this.User.ProductLibrary.Add(this.State.Product.Guid, this.State.Product);
+            this.state.productQuantity--;
+            this.user.balance -= this.state.product.price;
+            this.user.productLibrary.Add(this.state.product.guid, this.state.product);
         }
     }
 }
