@@ -1,62 +1,57 @@
 ﻿using Data.API;
 using Data.Implementation;
-using System.Reflection.Metadata;
 
-namespace Shop.Test
+namespace Test
 {
     public class RandomGenerator : IGenerator
     {
         public void Generate(IDataContext context) 
         {
-            for (int i = 0; i < 20; i++)
-            {
-                User user = new User(null, RandomString(10), RandomString(10), RandomEmail(),
-                    (RandomNumber<double>(4)), RandomDate(), RandomNumber<int>(9), null);
-                context.Users.Add(user);
-
-                Game game = new Game(null, RandomString(7), RandomNumber<double>(4), RandomDate(), RandomPEGI());
-                context.Products.Add(game);
-
-                State state = new State(null, game, RandomNumber<int>(2));
-                context.States.Add(state);
-            }
-
             Random random = new Random();
 
-            for (int i = 0; i < 20; i++)
-            {                
-                User user = (User)context.Users[i];
+            for (int i = 0; i < random.Next(20, 30); i++)
+            {
+                User user = new User(null, RandomString(10), RandomString(10), RandomEmail(), RandomNumber<double>(4),
+                    RandomDate(), RandomNumber<int>(9), null);
+                Game game = new Game(null, RandomString(7), RandomNumber<double>(4), RandomDate(), RandomPEGI());
+                State state = new State(null, game, RandomNumber<int>(2));
 
-                List<IState> availableGamesStates = context.States.FindAll(element => (element.Product.Price < user.Balance && 
-                                                    (((Game)element.Product).PEGI * 365) < (DateTime.Today - user.DateOfBirth).Days) &&
-                                                    !user.ProductLibrary.ContainsKey(element.Product.Guid) &&
-                                                    (element.ProductQuantity > 0));
-
-                if (availableGamesStates is not null && availableGamesStates.Count > 0)
-                    switch (availableGamesStates.Count)
-                    {
-                        case 1:
-                            PurchaseEvent eventPurchase0 = new PurchaseEvent(null, (State)availableGamesStates[0], user);
-                            context.Events.Add(eventPurchase0);
-                            break;
-                        default:
-                            State randomGameToPurchaseState = (State)availableGamesStates[random.Next(0, availableGamesStates.Count - 1)];
-                            PurchaseEvent eventPurchase1 = new PurchaseEvent(null, randomGameToPurchaseState, user);
-                            context.Events.Add(eventPurchase1);
-                            break;
-                    }
+                context.users.Add(user);
+                context.products.Add(game);
+                context.states.Add(state);
             }
 
-            for (int i = 0; i < random.Next(5, 10); i++)
+            foreach (IUser user in context.users)
             {
-                User randomUser = (User)context.Users[random.Next(context.Users.Count - 1)];
+                int age = (DateTime.Today - user.dateOfBirth).Days;
 
-                if (randomUser.ProductLibrary.Count > 0)
+                Func<string, bool> IsProductOwned = (guid) => !user.productLibrary.ContainsKey(guid);
+
+                List<IState> availableGamesStates = context.states.FindAll(
+                    (state) => (
+                        state.product.price < user.balance &&
+                        ((Game)state.product).pegi * 365 < age &&
+                        IsProductOwned(state.product.guid) &&
+                        state.productQuantity > 0
+                    )    
+                );
+
+                foreach (IState availableGameState in availableGamesStates)
                 {
-                    Game purchasedGame = (Game)randomUser.ProductLibrary.First().Value;
-                    State purchasedGameState = (State)context.States.Find(element => element.Product.Guid == purchasedGame.Guid);
-                    ReturnEvent eventReturn = new ReturnEvent(null, purchasedGameState, randomUser);
-                    context.Events.Add(eventReturn);
+                    if (availableGameState.product.price > user.balance)
+                        continue;
+
+                    if (random.NextDouble() < 0.15)
+                        continue;
+
+                    PurchaseEvent purchaseEvent = new PurchaseEvent(null, availableGameState, user);
+                    context.events.Add(purchaseEvent);
+
+                    if (random.NextDouble() < 0.65)
+                        continue;
+
+                    ReturnEvent eventReturn = new ReturnEvent(null, availableGameState, user);
+                    context.events.Add(eventReturn);
                 }
             }
         }
