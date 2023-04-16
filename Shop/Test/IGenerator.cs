@@ -1,6 +1,6 @@
 ﻿using Data.API;
 
-namespace Shop.Test
+namespace Test
 {
     public interface IGenerator
     {

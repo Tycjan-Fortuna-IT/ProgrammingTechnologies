@@ -1,7 +1,7 @@
 ﻿using Data.API;
 using Data.Implementation;
 
-namespace Test.Data
+namespace Test
 {
     [TestClass]
     public class DataTests

@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using Data.API;
+﻿using Data.API;
 using Data.Implementation;
 using Logic.API;
-using Shop.Logic;
 
 namespace Test
 {

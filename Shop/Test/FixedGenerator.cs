@@ -1,7 +1,7 @@
 ﻿using Data.API;
 using Data.Implementation;
 
-namespace Shop.Test
+namespace Test
 {
     public class FixedGenerator : IGenerator
     {
