@@ -1,6 +1,4 @@
-﻿using System.Dynamic;
-
-namespace Data.API
+﻿namespace Data.API
 {
     public interface IDataContext
     {

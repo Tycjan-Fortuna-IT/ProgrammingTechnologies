@@ -1,7 +1,6 @@
 ﻿using Data.API;
 using Data.Implementation;
 using Logic.API;
-using System.Runtime.Intrinsics.X86;
 
 namespace Test
 {
