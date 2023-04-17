@@ -19,6 +19,12 @@ namespace Test
                 context.users.Add(user);
                 context.products.Add(game);
                 context.states.Add(state);
+
+                if (random.Next() < 0.85) // 15% chance of supplying
+                    continue;
+
+                SupplyEvent supplyEvent = new SupplyEvent(null, state, user, random.Next(5,10));
+                context.events.Add(supplyEvent);
             }
 
             foreach (IUser user in context.users)
@@ -41,13 +47,13 @@ namespace Test
                     if (availableGameState.product.price > user.balance)
                         continue;
 
-                    if (random.NextDouble() < 0.15)
+                    if (random.NextDouble() < 0.15) // 85% chance of purchasing
                         continue;
 
                     PurchaseEvent purchaseEvent = new PurchaseEvent(null, availableGameState, user);
                     context.events.Add(purchaseEvent);
 
-                    if (random.NextDouble() < 0.65)
+                    if (random.NextDouble() < 0.65) // 35% chance of returning
                         continue;
 
                     ReturnEvent eventReturn = new ReturnEvent(null, availableGameState, user);

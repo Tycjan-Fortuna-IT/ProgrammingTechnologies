@@ -34,5 +34,16 @@ namespace Shop.Logic
 
             this.repository.AddEvent(new ReturnEvent(null, state, user));
         }
+
+        public void Supply(IState state, IUser user, int quantity)
+        {
+            if (!this.repository.CheckIfProductExists(state.product.guid))
+                throw new Exception("This product is not registered in our system!");
+
+            if (!this.repository.CheckIfUserExists(user.guid))
+                throw new Exception("This user is not registered in our system!");
+
+            this.repository.AddEvent(new SupplyEvent(null, state, user, quantity));
+        }
     }
 }

@@ -16,8 +16,8 @@ namespace Test
                 new DateTime(2001, 10, 1), 236879098, null);
             User user5 = new User("5d82a11a-2d3c-4061-994b-aa857a62afab", "Michal", "Zahenkos", "m_Zahenkos@gmail.com", 1245,
                 new DateTime(1999, 12, 2), 422344789, null);
-            User user6 = new User("4e6ea13b-a3f7-433c-bafc-0303ef70495c", "Andrzej", "Tomislawowski", "a_Tomislawowski@gmail.com", 333,
-                new DateTime(2003, 1, 22), 168332885, null);
+            User user6 = new User("4e6ea13b-a3f7-433c-bafc-0303ef70495c", "Andrzej", "Tomislawowski", "a_Tomislawowski@gmail.com", 333, 
+                new DateTime(2003, 1, 22), 168332885, null);    // employee
             User user7 = new User("979861af-d81f-4217-b465-9eb7bea24077", "Eivor", "Ravensthrope", "e_ravensthrope@ac.no", 500,
                 new DateTime(1996, 11, 10), 849529364, null);
             User user8 = new User("d808b909-c9de-4352-9f07-ed3a76ed8dfb", "Seokjin", "Kim", "s_kim@naver.kr", 100000, 
@@ -95,6 +95,20 @@ namespace Test
             context.events.Add(returnEvent2);
             context.events.Add(returnEvent3);
             context.events.Add(returnEvent4);
+
+            SupplyEvent supplyEvent1 = new SupplyEvent("a12f6a91-e8e1-4e3a-bf0d-8bce65aa4ea9", state1, user6, 10);
+            SupplyEvent supplyEvent2 = new SupplyEvent("a3324ac5-7321-48f1-86b6-72153bf46871", state2, user6, 12);
+            SupplyEvent supplyEvent3 = new SupplyEvent("ab733a46-c282-499f-b99a-6dc757882ac7", state3, user6, 20);
+            SupplyEvent supplyEvent4 = new SupplyEvent("5684415a-5e25-4412-8d5a-cfc3b691dd9b", state4, user6, 7);
+            SupplyEvent supplyEvent5 = new SupplyEvent("edb84553-f700-460f-90d0-fb02610b0d61", state5, user6, 5);
+            SupplyEvent supplyEvent6 = new SupplyEvent("e71f51ed-21cb-41f3-9d40-b21cb46506bd", state6, user6, 9);
+
+            context.events.Add(supplyEvent1);
+            context.events.Add(supplyEvent2);
+            context.events.Add(supplyEvent3);
+            context.events.Add(supplyEvent4);
+            context.events.Add(supplyEvent5);
+            context.events.Add(supplyEvent6);
         }
     }
 }

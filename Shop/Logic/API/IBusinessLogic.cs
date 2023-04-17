@@ -13,5 +13,7 @@ namespace Logic.API
         void Purchase(IState state, IUser user);
 
         void Return(IState state, IUser user);
+
+        void Supply(IState state, IUser user, int quantity);
     }
 }

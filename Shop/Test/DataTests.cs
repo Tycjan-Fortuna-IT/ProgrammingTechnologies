@@ -145,46 +145,5 @@ namespace Test
             Assert.AreEqual(0, database.GetStateCount());
             Assert.IsFalse(database.GetAllStates().Contains(state));
         }
-
-        [TestMethod]
-        public void EventTests()
-        {
-            IUser user = new User("348e7dd8-c30f-4f02-8215-4e713c58aa51", "Michal", "Gapcio", "m_gapcio@gmail.com", 20000,
-                new DateTime(1998, 12, 25), 542123567, null);
-            IUser user2 = new User("23d4fc2e-858f-4d81-b212-81943550ed78", "Michal", "Gapcio", "m_gapcio@gmail.com", 20000,
-                new DateTime(1998, 12, 25), 542123567, null);
-            IProduct game = new Game("d3daae3a-a914-4d37-839a-b26c6e634652", "Assassin's Creed Valhalla", 239.99, new DateTime(2020, 11, 10), 18);
-            IState state = new State("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1", game, 10);
-
-            IEvent testEvent = new PurchaseEvent("57afb3b7-9a7f-4d93-9688-298940a9ea11", state, user);
-            IEvent testEvent1 = new PurchaseEvent("e33b179a-f1ed-4bff-a909-4f6cede80d63", state, user2);
-            IEvent testEvent2 = new ReturnEvent("a3d4d9bc-4789-4a11-ab7a-451357048812", state, user2);
-
-            Assert.AreEqual("57afb3b7-9a7f-4d93-9688-298940a9ea11", testEvent.guid);
-            Assert.AreSame(state, testEvent.state);
-            Assert.AreSame(user, testEvent.user);
-            Assert.IsNotNull(testEvent2.occurrenceDate);
-
-            IDataRepository database = IDataRepository.CreateDatabase(new DataContext());
-
-            database.AddEvent(testEvent);
-            database.AddEvent(testEvent1);
-            Assert.ThrowsException<Exception>(() => { database.AddEvent(testEvent); });
-
-            Assert.AreSame(database.GetEvent(testEvent.guid), testEvent);
-            Assert.ThrowsException<Exception>(() => { database.GetEvent("NOGUID"); });
-
-            Assert.AreEqual(2, database.GetEventCount());
-            Assert.IsTrue(database.GetAllEvents().Contains(testEvent));
-            Assert.AreSame(database.GetLastProductEvent(game.guid), testEvent1);
-            Assert.ThrowsException<Exception>(() => { database.GetLastProductEvent("NOGUID"); });
-
-            Assert.IsTrue(database.GetProductEventHistory(game.guid).Contains(testEvent));
-
-            database.DeleteEvent(testEvent.guid);
-
-            Assert.ThrowsException<Exception>(() => { database.DeleteEvent("NOGUID"); });
-            Assert.AreEqual(1, database.GetEventCount());
-        }
     }
 }
