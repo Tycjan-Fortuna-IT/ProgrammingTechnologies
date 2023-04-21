@@ -4,12 +4,12 @@
     {
         string guid { get; }
 
-        IState state { get; }
+        string stateGuid { get; }
 
-        IUser user { get; }
+        string userGuid { get; }
 
         DateTime occurrenceDate { get; }
 
-        void Action();
+        void Action(IDataRepository dataRepository);
     }
 }

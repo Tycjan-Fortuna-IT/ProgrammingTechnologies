@@ -2,12 +2,12 @@
 {
     public interface IDataContext
     {
-        public List<IUser> users {get; set;}
+        public Dictionary<string, IUser> users { get; set; }
 
-        public List<IProduct> products { get; set; }
+        public Dictionary<string, IProduct> products { get; set; }
 
-        public List<IState> states { get; set; }
+        public Dictionary<string, IState> states { get; set; }
 
-        public List<IEvent> events { get; set; }
+        public Dictionary<string, IEvent> events { get; set; }
     }
 }

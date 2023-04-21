@@ -2,25 +2,25 @@
 
 namespace Data.Implementation
 {
-    public class DataContext : IDataContext
+    internal class DataContext : IDataContext
     {
-        public List<IUser> users { get; set; }
+        public Dictionary<string, IUser> users { get; set; }
 
-        public List<IProduct> products { get; set; }
+        public Dictionary<string, IProduct> products { get; set; }
 
-        public List<IState> states { get; set; }
+        public Dictionary<string, IState> states { get; set; }
 
-        public List<IEvent> events { get; set; }
+        public Dictionary<string, IEvent> events { get; set; }
 
         public DataContext()
         {
-            this.users = new List<IUser>();
+            this.users = new Dictionary<string, IUser>();
 
-            this.products = new List<IProduct>();
+            this.products = new Dictionary<string, IProduct>();
 
-            this.states = new List<IState>();
+            this.states = new Dictionary<string, IState>();
 
-            this.events = new List<IEvent>();
+            this.events = new Dictionary<string, IEvent>();
         }
     }
 }

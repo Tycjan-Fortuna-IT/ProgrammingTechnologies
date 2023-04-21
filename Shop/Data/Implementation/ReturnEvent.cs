@@ -2,34 +2,36 @@ using Data.API;
 
 namespace Data.Implementation
 {
-    public class ReturnEvent : IEvent
+    internal class ReturnEvent : IEvent
     {
-        public ReturnEvent(string? guid, IState state, IUser user)
+        public ReturnEvent(string? guid, string stateGuid, string userGuid)
         {
             this.guid = guid ?? System.Guid.NewGuid().ToString();
-            this.state = state;
-            this.user = user;
+            this.stateGuid = stateGuid;
+            this.userGuid = userGuid;
             this.occurrenceDate = DateTime.Now;
-
-            this.Action();
         }
 
         public string guid { get; }
 
-        public IState state { get; }
+        public string stateGuid { get; }
 
-        public IUser user { get; }
+        public string userGuid { get; }
 
         public DateTime occurrenceDate { get; }
 
-        public void Action()
+        public void Action(IDataRepository dataRepository)
         {
-            if (!this.user.productLibrary.ContainsKey(this.state.product.guid))
+            IUser user = dataRepository.GetUser(this.userGuid);
+            IState state = dataRepository.GetState(this.stateGuid);
+            IProduct product = dataRepository.GetProduct(state.productGuid);
+
+            if (!user.productLibrary.ContainsKey(product.guid))
                 throw new Exception("You do not have this Product!");
 
-            this.state.productQuantity++;
-            this.user.balance += this.state.product.price;
-            this.user.productLibrary.Remove(this.state.product.guid);
+            state.productQuantity++;
+            user.balance += product.price;
+            user.productLibrary.Remove(product.guid);
         }
     }
 }

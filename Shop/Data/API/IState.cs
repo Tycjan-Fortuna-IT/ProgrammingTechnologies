@@ -4,7 +4,7 @@
     {
         string guid { get; }
 
-        IProduct product { get; }
+        string productGuid { get; }
 
         int productQuantity{ get; set; }   
     }

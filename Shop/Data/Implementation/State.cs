@@ -2,18 +2,18 @@
 
 namespace Data.Implementation
 {
-    public class State : IState
+    internal class State : IState
     {
-        public State(string? guid, IProduct product, int productQuantity = 0) 
+        public State(string? guid, string productGuid, int productQuantity = 0) 
         {
             this.guid = guid ?? System.Guid.NewGuid().ToString();
-            this.product = product;
+            this.productGuid = productGuid;
             this.productQuantity = productQuantity;
         }
 
         public string guid { get; }
 
-        public IProduct product { get; }
+        public string productGuid { get; }
 
         public int productQuantity { get; set; }
     }
