@@ -1,6 +1,4 @@
 ﻿using Data.API;
-using System;
-using System.Collections;
 
 namespace Data.Implementation
 {
@@ -90,7 +88,7 @@ namespace Data.Implementation
 
         public bool CheckIfProductExists(string guid)
         {
-            return this._context.users.ContainsKey(guid);
+            return this._context.products.ContainsKey(guid);
         }
 
         public void UpdateProduct(string guid, string name, double price, int pegi) 

@@ -27,7 +27,7 @@ namespace Data.Implementation
             IProduct product = dataRepository.GetProduct(state.productGuid);
 
             if (user.productLibrary.ContainsKey(product.guid))
-                throw new Exception("You already have this Product!");   
+                throw new Exception("You already have this product!");   
 
             if (product is Game)
                 if (DateTime.Now.Year - user.dateOfBirth.Year < ((Game)product).pegi)
@@ -37,7 +37,7 @@ namespace Data.Implementation
                 throw new Exception("Product unavailable, please check later!");
 
             if (user.balance < product.price)
-                throw new Exception("Not enough money to purchase this Product!");
+                throw new Exception("Not enough money to purchase this product!");
 
             state.productQuantity--;
             user.balance -= product.price;

@@ -46,12 +46,12 @@ namespace Test
                     if (random.NextDouble() < 0.15) // 85% chance of purchasing
                         continue;
 
-                    dataRepository.AddEvent(null, availableGameState.guid, availableGameState.productGuid, "PurchaseEvent");
+                    dataRepository.AddEvent(null, availableGameState.guid, user.guid, "PurchaseEvent");
 
                     if (random.NextDouble() < 0.65) // 35% chance of returning
                         continue;
 
-                    dataRepository.AddEvent(null, availableGameState.guid, availableGameState.productGuid, "ReturnEvent");
+                    dataRepository.AddEvent(null, availableGameState.guid, user.guid, "ReturnEvent");
                 }
             }
         }

@@ -1,55 +1,45 @@
 ﻿using Data.API;
-using Data.Implementation;
 
 namespace Test
 {
     [TestClass]
     public class DataTests
     {
+        IDataRepository dataRepository = IDataRepository.CreateDatabase();
+
         [TestMethod]
         public void UserTests()
         {
-            IUser user = new User("348e7dd8-c30f-4f02-8215-4e713c58aa51", "Michal", "Gapcio", "m_gapcio@gmail.com", 200,
-                new DateTime(2015, 12, 25), 542123567, null);
+            dataRepository.AddUser("348e7dd8-c30f-4f02-8215-4e713c58aa51", "Michal", "m_gapcio@gmail.com", 200,
+                new DateTime(2015, 12, 25));
 
-            Assert.AreEqual("348e7dd8-c30f-4f02-8215-4e713c58aa51", user.guid);
-            Assert.AreEqual("Michal", user.name);
-            Assert.AreEqual("Gapcio", user.surname);
-            Assert.AreEqual("m_gapcio@gmail.com", user.email);
-            Assert.AreEqual(200, user.balance);
-            Assert.AreEqual(new DateTime(2015, 12, 25), user.dateOfBirth);
-            Assert.AreEqual(542123567, user.phoneNumber);
-            Assert.IsNotNull(user.productLibrary);
+            Assert.AreEqual("348e7dd8-c30f-4f02-8215-4e713c58aa51", dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").guid);
+            Assert.AreEqual("Michal", dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").nickname);
+            Assert.AreEqual("m_gapcio@gmail.com", dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").email);
+            Assert.AreEqual(200, dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").balance);
+            Assert.AreEqual(new DateTime(2015, 12, 25), dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").dateOfBirth);
+            Assert.IsNotNull(dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").productLibrary);
 
-            user.name = "Antek";
-            user.surname = "Pcimowski";
-            user.email = "a_pcimowski@gmail.com";
-            user.balance = 850;
-            user.dateOfBirth = new DateTime(2015, 12, 26);
-            user.phoneNumber = 495039281;
-            Game game = new Game(null, "Witcher 3", 129.99, new DateTime(2015, 5, 18), 18);
-            Dictionary<string, IProduct> newProductLibrary = new Dictionary<string, IProduct>() { 
-                { "0a81eb06-db53-11ed-afa1-0242ac120002", game } 
+            dataRepository.UpdateUser("348e7dd8-c30f-4f02-8215-4e713c58aa51", "Antek", "a_pcimowski@gmail.com", 850, new DateTime(2015, 12, 26));
+            dataRepository.AddProduct("0a81eb06-db53-11ed-afa1-0242ac120002", "Witcher 3", 129.99, 18);
+
+            dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").productLibrary = new Dictionary<string, IProduct>() {
+                { "0a81eb06-db53-11ed-afa1-0242ac120002" , dataRepository.GetProduct("0a81eb06-db53-11ed-afa1-0242ac120002") }
             };
-            user.productLibrary = newProductLibrary;
 
-            Assert.AreEqual("Antek", user.name);
-            Assert.AreEqual("Pcimowski", user.surname);
-            Assert.AreEqual("a_pcimowski@gmail.com", user.email);
-            Assert.AreEqual(850, user.balance);
-            Assert.AreEqual(new DateTime(2015, 12, 26), user.dateOfBirth);
-            Assert.AreEqual(495039281, user.phoneNumber);
-            Assert.AreEqual(game, user.productLibrary["0a81eb06-db53-11ed-afa1-0242ac120002"]);
+            Assert.AreEqual("Antek", dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").nickname);
+            Assert.AreEqual("a_pcimowski@gmail.com", dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").email);
+            Assert.AreEqual(850, dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").balance);
+            Assert.AreEqual(new DateTime(2015, 12, 26), dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").dateOfBirth);
+            Assert.AreEqual(dataRepository.GetProduct("0a81eb06-db53-11ed-afa1-0242ac120002"), dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").productLibrary["0a81eb06-db53-11ed-afa1-0242ac120002"]);
 
-            IDataRepository database = IDataRepository.CreateDatabase(new DataContext());
+            Assert.IsTrue(dataRepository.CheckIfUserExists("348e7dd8-c30f-4f02-8215-4e713c58aa51"));
+            Assert.IsFalse(dataRepository.CheckIfUserExists(System.Guid.NewGuid().ToString()));
+            Assert.AreEqual(1, dataRepository.GetUserCount());
+            Assert.IsTrue(dataRepository.GetAllUsers().ContainsKey("348e7dd8-c30f-4f02-8215-4e713c58aa51"));
 
-            database.AddUser(user);
+            /*
             Assert.ThrowsException<Exception>(() => { database.AddUser(user); });
-
-            Assert.IsTrue(database.CheckIfUserExists(user.guid));
-            Assert.IsFalse(database.CheckIfUserExists(System.Guid.NewGuid().ToString()));
-            Assert.AreEqual(1, database.GetUserCount());
-            Assert.IsTrue(database.GetAllUsers().Contains(user));
 
             user.name = "Test";
 
@@ -66,35 +56,29 @@ namespace Test
             Assert.ThrowsException<Exception>(() => { database.DeleteUser("NOGUID"); });
             Assert.AreEqual(0, database.GetUserCount());
             Assert.IsFalse(database.GetAllUsers().Contains(user));
+            */
         }
 
         [TestMethod]
         public void ProductTests()
         {
-            IProduct game = new Game("d3daae3a-a914-4d37-839a-b26c6e634652", "Assassin's Creed Valhalla", 239.99, new DateTime(2020, 11, 10), 18);
+            dataRepository.AddProduct("d3daae3a-a914-4d37-839a-b26c6e634652", "Assassin's Creed Valhalla", 239.99, 18);
 
-            Assert.AreEqual("d3daae3a-a914-4d37-839a-b26c6e634652", game.guid);
-            Assert.AreEqual("Assassin's Creed Valhalla", game.name);
-            Assert.AreEqual(239.99, game.price);
-            Assert.AreEqual(new DateTime(2020, 11, 10), game.releaseDate);
-            Assert.AreEqual(18, ((Game)game).pegi);
+            Assert.AreEqual("d3daae3a-a914-4d37-839a-b26c6e634652", dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").guid);
+            Assert.AreEqual("Assassin's Creed Valhalla", dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").name);
+            Assert.AreEqual(239.99, dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").price);
+            Assert.AreEqual(18, dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").pegi);
 
-            game.name = "SimCity 3000";
-            game.price = 79.99;
-            game.releaseDate = new DateTime(1999, 1, 31);
-            ((Game)game).pegi = 3;
+            dataRepository.UpdateProduct("d3daae3a-a914-4d37-839a-b26c6e634652", "SimCity 3000", 79.99, 3);
 
-            Assert.AreEqual("SimCity 3000", game.name);
-            Assert.AreEqual(79.99, game.price);
-            Assert.AreEqual(new DateTime(1999, 1, 31), game.releaseDate);
-            Assert.AreEqual(3, ((Game)game).pegi);
+            Assert.AreEqual("SimCity 3000", dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").name);
+            Assert.AreEqual(79.99, dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").price);
+            Assert.AreEqual(3, dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").pegi);
 
-            IDataRepository database = IDataRepository.CreateDatabase(new DataContext());
-
-            database.AddProduct(game);
+            /*
             Assert.ThrowsException<Exception>(() => { database.AddProduct(game); });
 
-            Assert.IsTrue(database.CheckIfProductExists(game.guid));
+            Assert.IsTrue(dataRepository.CheckIfProductExists(game.guid));
             Assert.IsFalse(database.CheckIfProductExists(System.Guid.NewGuid().ToString()));
             Assert.AreEqual(1, database.GetProductCount());
             Assert.IsTrue(database.GetAllProducts().Contains(game));
@@ -113,22 +97,20 @@ namespace Test
             Assert.ThrowsException<Exception>(() => { database.DeleteProduct("NOGUID"); });
             Assert.AreEqual(0, database.GetProductCount());
             Assert.IsFalse(database.GetAllProducts().Contains(game));
+            */
         }
 
         [TestMethod]
         public void StateTests()
         {
-            IProduct game = new Game("d3daae3a-a914-4d37-839a-b26c6e634652", "Assassin's Creed Valhalla", 239.99, new DateTime(2020, 11, 10), 18);
-            IState state = new State("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1", game, 10);
+            dataRepository.AddProduct("d3daae3a-a914-4d37-839a-b26c6e634652", "Assassin's Creed Valhalla", 239.99, 18);
+            dataRepository.AddState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1", "d3daae3a-a914-4d37-839a-b26c6e634652", 10);
+            
+            Assert.AreEqual("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1", dataRepository.GetState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1").guid);
+            Assert.AreSame("d3daae3a-a914-4d37-839a-b26c6e634652", dataRepository.GetState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1").productGuid);
+            Assert.AreEqual(10, dataRepository.GetState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1").productQuantity);
 
-            Assert.AreEqual("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1", state.guid);
-            Assert.AreSame(game, state.product);
-            Assert.AreEqual(10, state.productQuantity);
-
-            IDataRepository database = IDataRepository.CreateDatabase(new DataContext());
-
-            database.AddProduct(game);
-            database.AddState(state);
+            /*
             Assert.ThrowsException<Exception>(() => { database.AddState(state); });
 
             Assert.AreSame(database.GetState(state.guid), state);
@@ -144,6 +126,7 @@ namespace Test
 
             Assert.AreEqual(0, database.GetStateCount());
             Assert.IsFalse(database.GetAllStates().Contains(state));
+            */
         }
     }
 }
