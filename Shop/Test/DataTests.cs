@@ -98,6 +98,7 @@ namespace Test
             Assert.IsTrue(dataRepository.GetAllStates().ContainsKey("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1"));
 
             Assert.AreSame(dataRepository.GetState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1"), dataRepository.GetProductState("d3daae3a-a914-4d37-839a-b26c6e634652"));
+            Assert.ThrowsException<Exception>(() => { dataRepository.GetProductState("NOGUID"); });
 
             dataRepository.DeleteState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1");
             Assert.AreEqual(0, dataRepository.GetStateCount());

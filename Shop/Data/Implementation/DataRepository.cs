@@ -1,4 +1,5 @@
 ﻿using Data.API;
+using System;
 
 namespace Data.Implementation
 {
@@ -259,6 +260,9 @@ namespace Data.Implementation
 
         public IState GetProductState(string productGuid)
         {
+            if (!this.CheckIfProductExists(productGuid))
+                throw new Exception("This product does not exist!");
+
             IState state = this._context.states
                 .First(
                     kvp => kvp.Value.productGuid == productGuid
