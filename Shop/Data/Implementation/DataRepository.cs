@@ -1,5 +1,4 @@
 ﻿using Data.API;
-using System;
 
 namespace Data.Implementation
 {
@@ -169,8 +168,8 @@ namespace Data.Implementation
         // --- Event ---
         public void AddEvent(string? guid, string stateGuid, string userGuid, string type, int quantity = 0) 
         {
-            if (guid is not null && this.CheckIfStateExists(guid))
-                throw new Exception("This state already exists!");
+            if (guid is not null && this.CheckIfEventExists(guid))
+                throw new Exception("This event already exists!");
 
             IEvent newEvent;
 
@@ -183,7 +182,7 @@ namespace Data.Implementation
                 case "SupplyEvent":
                     newEvent = new SupplyEvent(guid, stateGuid, userGuid, quantity); break;
                 default:
-                    throw new Exception("This event tpe does not exist!");
+                    throw new Exception("This event type does not exist!");
             }
 
             newEvent.Action(this);
@@ -209,7 +208,7 @@ namespace Data.Implementation
             if (!this.CheckIfEventExists(guid))
                 throw new Exception("This event does not exist!");
 
-            this._context.states.Remove(guid);
+            this._context.events.Remove(guid);
         }
 
         public Dictionary<string, IEvent> GetAllEvents() 
