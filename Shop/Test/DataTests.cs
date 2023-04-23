@@ -59,7 +59,7 @@ namespace Test
             Assert.AreEqual(239.99, dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").price);
             Assert.AreEqual(18, dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").pegi);
 
-            Assert.ThrowsException<Exception>(() => { dataRepository.AddProduct("d3daae3a-a914-4d37-839a-b26c6e634652", "Diablo 3", 339.99, 18); });
+            Assert.ThrowsException<Exception>(() => { dataRepository.AddProduct("d3daae3a-a914-4d37-839a-b26c6e634652", "Diablo 3", 339.99, 18); }); // already exists
 
             dataRepository.UpdateProduct("d3daae3a-a914-4d37-839a-b26c6e634652", "SimCity 3000", 79.99, 3);
 
