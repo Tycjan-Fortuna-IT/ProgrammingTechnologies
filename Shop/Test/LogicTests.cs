@@ -34,7 +34,7 @@ namespace Test
             repository.AddProduct("51c7d7ae-102b-4fe2-a38d-840a07a57f3d", "Witcher 3", 129.99, 18);
             repository.AddProduct("7561098b-d062-4ff9-8d73-11326a3eaee5", "Diablo 3", 339.99, 18);
 
-            //repository.AddState("8fac4984-db53-11ed-afa1-0242ac120002", "6701b3e8-db53-11ed-afa1-0242ac120002", 3);
+            repository.AddState("8fac4984-db53-11ed-afa1-0242ac120002", "noguid", 3);
             repository.AddState("0e92eb1a-b8d3-4835-b317-6b348ecc633c", "d3daae3a-a914-4d37-839a-b26c6e634652", 0);
             repository.AddState("1b6bd5b9-b628-4149-b182-f9a05d092167", "22c2a010-dfe4-4da3-8669-c150d0ad6068", 20);
             repository.AddState("0ecfa654-d8e3-4757-a752-17516bf2cf9b", "4ca8c94e-65be-44c8-ab0b-cf6fd73ddb57", 4);
@@ -50,7 +50,7 @@ namespace Test
             Assert.ThrowsException<Exception>(() => { logic.Purchase("b1d90cf0-2633-497f-a065-bdb449854598", "5b25789d-422a-4de7-adb3-d18a5143c8c4"); }); // product already bought
 
             Assert.ThrowsException<Exception>(() => { logic.Purchase("8fac4984-db53-11ed-afa1-0242ac120002", "5b25789d-422a-4de7-adb3-d18a5143c8c4"); }); // product not registered
-            Assert.ThrowsException<Exception>(() => { logic.Purchase("b1d90cf0-2633-497f-a065-bdb449854598", "c2a0cb1c-38cb-41d8-a9bc-41f3fce7feca"); }); // user not registered
+            Assert.ThrowsException<Exception>(() => { logic.Purchase("b1d90cf0-2633-497f-a065-bdb449854598", "noguid"); }); // user not registered
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace Test
             repository.AddProduct("51c7d7ae-102b-4fe2-a38d-840a07a57f3d", "Witcher 3", 129.99, 18);
             repository.AddProduct("7561098b-d062-4ff9-8d73-11326a3eaee5", "Diablo 3", 339.99, 18);
 
-            //repository.AddState("8fac4984-db53-11ed-afa1-0242ac120002", "6701b3e8-db53-11ed-afa1-0242ac120002", 3);
+            repository.AddState("8fac4984-db53-11ed-afa1-0242ac120002", "noguid", 3);
             repository.AddState("0e92eb1a-b8d3-4835-b317-6b348ecc633c", "d3daae3a-a914-4d37-839a-b26c6e634652", 0);
             repository.AddState("1b6bd5b9-b628-4149-b182-f9a05d092167", "22c2a010-dfe4-4da3-8669-c150d0ad6068", 20);
             repository.AddState("0ecfa654-d8e3-4757-a752-17516bf2cf9b", "4ca8c94e-65be-44c8-ab0b-cf6fd73ddb57", 4);
@@ -84,7 +84,7 @@ namespace Test
             logic.Return("b1d90cf0-2633-497f-a065-bdb449854598", "5b25789d-422a-4de7-adb3-d18a5143c8c4");
 
             Assert.ThrowsException<Exception>(() => { logic.Return("8fac4984-db53-11ed-afa1-0242ac120002", "5b25789d-422a-4de7-adb3-d18a5143c8c4"); }); // product not registered
-            Assert.ThrowsException<Exception>(() => { logic.Return("b1d90cf0-2633-497f-a065-bdb449854598", "c2a0cb1c-38cb-41d8-a9bc-41f3fce7feca"); }); // user not registered
+            Assert.ThrowsException<Exception>(() => { logic.Return("b1d90cf0-2633-497f-a065-bdb449854598", "noguid"); }); // user not registered
         }
 
         [TestMethod]
@@ -100,7 +100,7 @@ namespace Test
 
             repository.AddState("8fac4984-db53-11ed-afa1-0242ac120002", "6701b3e8-db53-11ed-afa1-0242ac120002", 3);
             repository.AddState("0e92eb1a-b8d3-4835-b317-6b348ecc633c", "d3daae3a-a914-4d37-839a-b26c6e634652", 0);
-            //repository.AddState("1b6bd5b9-b628-4149-b182-f9a05d092167", "22c2a010-dfe4-4da3-8669-c150d0ad6068", 20);
+            repository.AddState("1b6bd5b9-b628-4149-b182-f9a05d092167", "noguid", 20);
 
             logic.Supply("8fac4984-db53-11ed-afa1-0242ac120002", "c2a0cb1c-38cb-41d8-a9bc-41f3fce7feca", 10);
             logic.Supply("0e92eb1a-b8d3-4835-b317-6b348ecc633c", "c2a0cb1c-38cb-41d8-a9bc-41f3fce7feca", 20);
@@ -108,7 +108,7 @@ namespace Test
             Assert.ThrowsException<Exception>(() => { logic.Supply("8fac4984-db53-11ed-afa1-0242ac120002", "c2a0cb1c-38cb-41d8-a9bc-41f3fce7feca", 0); });
             Assert.ThrowsException<Exception>(() => { logic.Supply("0e92eb1a-b8d3-4835-b317-6b348ecc633c", "c2a0cb1c-38cb-41d8-a9bc-41f3fce7feca", -20); });
             Assert.ThrowsException<Exception>(() => { logic.Supply("1b6bd5b9-b628-4149-b182-f9a05d092167", "c2a0cb1c-38cb-41d8-a9bc-41f3fce7feca", 10); });
-            Assert.ThrowsException<Exception>(() => { logic.Supply("0e92eb1a-b8d3-4835-b317-6b348ecc633c", "5525ef4a-db53-11ed-afa1-0242ac120002", 10); });
+            Assert.ThrowsException<Exception>(() => { logic.Supply("0e92eb1a-b8d3-4835-b317-6b348ecc633c", "noguid", 10); });
         }
 
         [TestMethod]
