@@ -8,19 +8,22 @@ namespace Test
         {
             Random random = new Random();
 
+            const int DAYS = 365; // in a year
+
             for (int i = 0; i < random.Next(20, 30); i++)
             {
-                string productUuid = System.Guid.NewGuid().ToString();
-                string stateUuid = System.Guid.NewGuid().ToString();
+                string userGuid = System.Guid.NewGuid().ToString();
+                string productGuid = System.Guid.NewGuid().ToString();
+                string stateGuid = System.Guid.NewGuid().ToString();
 
-                dataRepository.AddUser(null, RandomString(10), RandomEmail(), RandomNumber<double>(4), RandomDate());
-                dataRepository.AddProduct(productUuid, RandomString(7), RandomNumber<double>(4), RandomPEGI());
-                dataRepository.AddState(stateUuid, productUuid, RandomNumber<int>(2));
+                dataRepository.AddUser(userGuid, RandomString(10), RandomEmail(), RandomNumber<double>(4), RandomDate());
+                dataRepository.AddProduct(productGuid, RandomString(7), RandomNumber<double>(4), RandomPEGI());
+                dataRepository.AddState(stateGuid, productGuid, RandomNumber<int>(2));
 
                 if (random.Next() < 0.85) // 15% chance of supplying
                     continue;
 
-                dataRepository.AddEvent(null, stateUuid, productUuid, "SupplyEvent", random.Next(5,10));
+                dataRepository.AddEvent(null, stateGuid, userGuid, "SupplyEvent", random.Next(5,10));
             }
 
             foreach (IUser user in dataRepository.GetAllUsers().Values)
@@ -29,10 +32,11 @@ namespace Test
 
                 Func<string, bool> IsProductOwned = (guid) => !user.productLibrary.ContainsKey(guid);
 
+                // finding all games and their states that meet the requirements provided by the user (ie, age and balance) and the ones provided by the system (ownership and quantity in the shop)
                 Dictionary<string, IState> availableGamesStates = dataRepository.GetAllStates().Where(
                     (state) => (
                         dataRepository.GetProduct(state.Value.productGuid).price < user.balance &&
-                        dataRepository.GetProduct(state.Value.productGuid).pegi * 365 < age &&
+                        dataRepository.GetProduct(state.Value.productGuid).pegi * DAYS < age &&
                         IsProductOwned(state.Value.productGuid) &&
                         state.Value.productQuantity > 0
                     )    
