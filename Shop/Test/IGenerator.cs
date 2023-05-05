@@ -4,6 +4,6 @@ namespace Test
 {
     public interface IGenerator
     {
-        void Generate(IDataContext context);
+        void Generate(IDataRepository dataRepository);
     }
 }

@@ -1,63 +1,61 @@
 ﻿using Data.API;
-using Data.Implementation;
 
 namespace Test
 {
     public class RandomGenerator : IGenerator
     {
-        public void Generate(IDataContext context) 
+        public void Generate(IDataRepository dataRepository) 
         {
             Random random = new Random();
 
+            const int DAYS = 365; // in a year
+
             for (int i = 0; i < random.Next(20, 30); i++)
             {
-                User user = new User(null, RandomString(10), RandomString(10), RandomEmail(), RandomNumber<double>(4),
-                    RandomDate(), RandomNumber<int>(9), null);
-                Game game = new Game(null, RandomString(7), RandomNumber<double>(4), RandomDate(), RandomPEGI());
-                State state = new State(null, game, RandomNumber<int>(2));
+                string userGuid = System.Guid.NewGuid().ToString();
+                string productGuid = System.Guid.NewGuid().ToString();
+                string stateGuid = System.Guid.NewGuid().ToString();
 
-                context.users.Add(user);
-                context.products.Add(game);
-                context.states.Add(state);
+                dataRepository.AddUser(userGuid, RandomString(10), RandomEmail(), RandomNumber<double>(4), RandomDate());
+                dataRepository.AddProduct(productGuid, RandomString(7), RandomNumber<double>(4), RandomPEGI());
+                dataRepository.AddState(stateGuid, productGuid, RandomNumber<int>(2));
 
                 if (random.Next() < 0.85) // 15% chance of supplying
                     continue;
 
-                SupplyEvent supplyEvent = new SupplyEvent(null, state, user, random.Next(5,10));
-                context.events.Add(supplyEvent);
+                dataRepository.AddEvent(null, stateGuid, userGuid, "SupplyEvent", random.Next(5,10));
             }
 
-            foreach (IUser user in context.users)
+            foreach (IUser user in dataRepository.GetAllUsers().Values)
             {
                 int age = (DateTime.Today - user.dateOfBirth).Days;
 
                 Func<string, bool> IsProductOwned = (guid) => !user.productLibrary.ContainsKey(guid);
 
-                List<IState> availableGamesStates = context.states.FindAll(
+                // finding all games and their states that meet the requirements provided by the user (ie, age and balance) and the ones provided by the system (ownership and quantity in the shop)
+                Dictionary<string, IState> availableGamesStates = dataRepository.GetAllStates().Where(
                     (state) => (
-                        state.product.price < user.balance &&
-                        ((Game)state.product).pegi * 365 < age &&
-                        IsProductOwned(state.product.guid) &&
-                        state.productQuantity > 0
+                        dataRepository.GetProduct(state.Value.productGuid).price < user.balance &&
+                        dataRepository.GetProduct(state.Value.productGuid).pegi * DAYS < age &&
+                        IsProductOwned(state.Value.productGuid) &&
+                        state.Value.productQuantity > 0
                     )    
-                );
+                ).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-                foreach (IState availableGameState in availableGamesStates)
+                foreach (IState availableGameState in availableGamesStates.Values)
                 {
-                    if (availableGameState.product.price > user.balance)
+                    if (dataRepository.GetProduct(availableGameState.productGuid).price > user.balance)
                         continue;
 
                     if (random.NextDouble() < 0.15) // 85% chance of purchasing
                         continue;
 
-                    PurchaseEvent purchaseEvent = new PurchaseEvent(null, availableGameState, user);
-                    context.events.Add(purchaseEvent);
+                    dataRepository.AddEvent(null, availableGameState.guid, user.guid, "PurchaseEvent");
 
                     if (random.NextDouble() < 0.65) // 35% chance of returning
                         continue;
 
-                    ReturnEvent eventReturn = new ReturnEvent(null, availableGameState, user);
-                    context.events.Add(eventReturn);
+                    dataRepository.AddEvent(null, availableGameState.guid, user.guid, "ReturnEvent");
                 }
             }
         }

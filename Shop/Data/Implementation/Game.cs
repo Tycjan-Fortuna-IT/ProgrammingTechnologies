@@ -2,14 +2,13 @@
 
 namespace Data.Implementation
 {
-    public class Game : IProduct
+    internal class Game : IProduct
     {
-        public Game(string? guid, string name, double price, DateTime releaseDate, int pegi)
+        public Game(string? guid, string name, double price, int pegi)
         {
             this.guid = guid ?? System.Guid.NewGuid().ToString();
             this.name = name;
             this.price = price;
-            this.releaseDate = releaseDate;
             this.pegi = pegi;
         }
 
@@ -18,8 +17,6 @@ namespace Data.Implementation
         public string name { get; set; }
 
         public double price { get; set; }
-
-        public DateTime releaseDate { get; set; }
 
         public int pegi { get; set; }
     }

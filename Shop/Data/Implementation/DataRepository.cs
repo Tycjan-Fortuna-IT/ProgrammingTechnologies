@@ -2,224 +2,243 @@
 
 namespace Data.Implementation
 {
-    public class DataRepository : IDataRepository
+    internal class DataRepository : IDataRepository
     {
-        private IDataContext _context;
+        private IDataContext context;
 
         public DataRepository(IDataContext context) 
         {
-            this._context = context;
+            this.context = context;
         }
 
         // --- User ---
-        public void AddUser(IUser user)
+        public void AddUser(string? guid, string nickname, string email, double balance, DateTime dateOfBirth)
         {
-            IUser? duplicateUser = this._context.users.Find(element => element.guid == user.guid);
-
-            if (duplicateUser is not null)
+            if (guid is not null && this.CheckIfUserExists(guid))
                 throw new Exception("This user already exists!");
 
-            this._context.users.Add(user);
+            IUser newUser = new User(guid, nickname, email, balance, dateOfBirth);
+
+            this.context.users.Add(newUser.guid, newUser);
         }
 
         public IUser GetUser(string guid)
         {
-            IUser? foundUser = this._context.users.Find(element => element.guid == guid);
-
-            if (foundUser is null)
+            if (!this.CheckIfUserExists(guid))
                 throw new Exception("This user does not exist!");
 
-            return foundUser;
+            return this.context.users[guid];
         }
 
         public bool CheckIfUserExists(string guid)
         {
-            return this._context.users.Exists(element => element.guid == guid);
+            return this.context.users.ContainsKey(guid);
         }
 
-        public void UpdateUser(IUser user)
+        public void UpdateUser(string guid, string nickname, string email, double balance, DateTime dateOfBirth)
         {
-            IUser? userToUpdate = this._context.users.Find(element => element.guid == user.guid);
-
-            if (userToUpdate is null)
+            if (!this.CheckIfUserExists(guid))
                 throw new Exception("This user does not exist!");
 
-            userToUpdate = user;
+            IUser userToUpdate = this.GetUser(guid);
+
+            userToUpdate.nickname = nickname;
+            userToUpdate.email = email;
+            userToUpdate.balance = balance;
+            userToUpdate.dateOfBirth = dateOfBirth;
         }
 
         public void DeleteUser(string guid) 
         {
-            IUser? userToDelete = this._context.users.Find(element => element.guid == guid);
-
-            if (userToDelete is null)
+            if (!this.CheckIfUserExists(guid))
                 throw new Exception("This user does not exist!");
 
-            this._context.users.Remove(userToDelete);
+            this.context.users.Remove(guid);
         }
 
-        public List<IUser> GetAllUsers()
+        public Dictionary<string, IUser> GetAllUsers()
         {
-            return this._context.users;
+            return this.context.users;
         }
 
         public int GetUserCount() 
         {
-            return this._context.users.Count;
+            return this.context.users.Count;
         }
 
 
         // --- Product ---
-        public void AddProduct(IProduct product) 
+        public void AddProduct(string? guid, string name, double price, int pegi) 
         {
-            IProduct? duplicateProduct = this._context.products.Find(element => element.guid == product.guid);
-
-            if (duplicateProduct is not null)
+            if (guid is not null && this.CheckIfProductExists(guid))
                 throw new Exception("This product already exists!");
 
-            this._context.products.Add(product);
+            IProduct newProduct = new Game(guid, name, price, pegi);
+
+            this.context.products.Add(newProduct.guid, newProduct);
         }
 
         public IProduct GetProduct(string guid) 
         {
-            IProduct? foundProduct = this._context.products.Find(element => element.guid == guid);
-
-            if (foundProduct is null)
+            if (!this.CheckIfProductExists(guid))
                 throw new Exception("This product does not exist!");
 
-            return foundProduct;
+            return this.context.products[guid];
         }
 
         public bool CheckIfProductExists(string guid)
         {
-            return this._context.products.Exists(element => element.guid == guid);
+            return this.context.products.ContainsKey(guid);
         }
 
-        public void UpdateProduct(IProduct product) 
+        public void UpdateProduct(string guid, string name, double price, int pegi) 
         {
-            IProduct? productToUpdate = this._context.products.Find(element => element.guid == product.guid);
+            if (!this.CheckIfProductExists(guid))
+                throw new Exception("This product does not exist!");
 
-            if (productToUpdate is null)
-                throw new Exception("This user does not exist!");
+            IProduct productToUpdate = this.GetProduct(guid);
 
-            productToUpdate = product;
+            productToUpdate.name = name;
+            productToUpdate.price = price;
+            productToUpdate.pegi = pegi;
         }
 
         public void DeleteProduct(string guid) 
         {
-            IProduct? productToDelete = this._context.products.Find(element => element.guid == guid);
-
-            if (productToDelete is null)
+            if (!this.CheckIfProductExists(guid))
                 throw new Exception("This product does not exist!");
 
-            this._context.products.Remove(productToDelete);
+            this.context.products.Remove(guid);
         }
 
-        public List<IProduct> GetAllProducts() 
+        public Dictionary<string, IProduct> GetAllProducts() 
         {
-            return this._context.products;
+            return this.context.products;
         }
 
         public int GetProductCount() 
         {
-            return this._context.products.Count;
+            return this.context.products.Count;
         }
 
 
         // --- State ---
-        public void AddState(IState product) 
+        public void AddState(string? guid, string productGuid, int productQuantity = 0) 
         {
-            IState? duplicateState = this._context.states.Find(element => element.guid == product.guid);
-
-            if (duplicateState is not null)
+            if (guid is not null && this.CheckIfStateExists(guid))
                 throw new Exception("This state already exists!");
 
-            this._context.states.Add(product);
+            IState newState = new State(guid, productGuid, productQuantity);
+
+            this.context.states.Add(newState.guid, newState);
         }
 
         public IState GetState(string guid) 
         {
-            IState? foundState = this._context.states.Find(element => element.guid == guid);
-
-            if (foundState is null)
+            if (!this.CheckIfStateExists(guid))
                 throw new Exception("This state does not exist!");
 
-            return foundState;
+            return this.context.states[guid];
+        }
+
+        public bool CheckIfStateExists(string guid)
+        {
+            return this.context.states.ContainsKey(guid);
         }
 
         public void DeleteState(string guid) 
         {
-            IState? stateToDelete = this._context.states.Find(element => element.guid == guid);
-
-            if (stateToDelete is null)
+            if (!this.CheckIfStateExists(guid))
                 throw new Exception("This state does not exist!");
 
-            this._context.states.Remove(stateToDelete);
+            this.context.states.Remove(guid);
         }
 
-        public List<IState> GetAllStates() 
+        public Dictionary<string, IState> GetAllStates() 
         {
-            return this._context.states;
+            return this.context.states;
         }
 
         public int GetStateCount()
         {
-            return this._context.states.Count;
+            return this.context.states.Count;
         }
 
 
         // --- Event ---
-        public void AddEvent(IEvent shopEvent) 
+        public void AddEvent(string? guid, string stateGuid, string userGuid, string type, int quantity = 0) 
         {
-            IEvent? duplicateEvent = this._context.events.Find(element => element.guid == shopEvent.guid);
-
-            if (duplicateEvent is not null)
+            if (guid is not null && this.CheckIfEventExists(guid))
                 throw new Exception("This event already exists!");
 
-            this._context.events.Add(shopEvent);
+            IEvent newEvent;
+
+            switch (type)
+            {
+                case "PurchaseEvent":
+                    newEvent = new PurchaseEvent(guid, stateGuid, userGuid); break;
+                case "ReturnEvent":
+                    newEvent = new ReturnEvent(guid, stateGuid, userGuid); break;
+                case "SupplyEvent":
+                    newEvent = new SupplyEvent(guid, stateGuid, userGuid, quantity); break;
+                default:
+                    throw new Exception("This event type does not exist!");
+            }
+
+            newEvent.Action(this);
+
+            this.context.events.Add(newEvent.guid, newEvent);
         }
 
         public IEvent GetEvent(string guid) 
         {
-            IEvent? foundEvent = this._context.events.Find(element => element.guid == guid);
-
-            if (foundEvent is null)
+            if (!this.CheckIfEventExists(guid))
                 throw new Exception("This event does not exist!");
 
-            return foundEvent;
+            return this.context.events[guid];
+        }
+
+        public bool CheckIfEventExists(string guid)
+        {
+            return this.context.events.ContainsKey(guid);
         }
 
         public void DeleteEvent(string guid) 
         {
-            IEvent? eventToDelete = this._context.events.Find(element => element.guid == guid);
-
-            if (eventToDelete is null)
+            if (!this.CheckIfEventExists(guid))
                 throw new Exception("This event does not exist!");
 
-            this._context.events.Remove(eventToDelete);
+            this.context.events.Remove(guid);
         }
 
-        public List<IEvent> GetAllEvents() 
+        public Dictionary<string, IEvent> GetAllEvents() 
         {
-            return this._context.events;
+            return this.context.events;
         }
 
         public int GetEventCount() 
         {
-            return this._context.events.Count;
+            return this.context.events.Count;
         }
 
 
         public IEvent GetLastProductEvent(string productGuid)
-        {
-            List<IEvent> productEvents = this._context.events.FindAll(element => element.state.product.guid == productGuid);
+        {   
+            Dictionary<string, IEvent> productEvents = this.context.events
+                .Where(
+                    kvp => this.GetState(kvp.Value.stateGuid).productGuid == productGuid
+                )
+                .ToDictionary(
+                    kvp => kvp.Key, kvp => kvp.Value
+                );
 
             IEvent? lastProductEvent = null;
 
-            foreach (IEvent productEvent in productEvents)
-                if (lastProductEvent is not null && lastProductEvent.occurrenceDate < productEvent.occurrenceDate)
-                    lastProductEvent = productEvent;
+            foreach (KeyValuePair<string, IEvent> productEvent in productEvents)
+                if (lastProductEvent is not null && lastProductEvent.occurrenceDate < productEvent.Value.occurrenceDate)
+                    lastProductEvent = productEvent.Value;
                 else
-                    lastProductEvent = productEvent;
+                    lastProductEvent = productEvent.Value;
 
             if (lastProductEvent is null)
                 throw new Exception("There have been no events for this product!");
@@ -227,17 +246,27 @@ namespace Data.Implementation
             return lastProductEvent;
         }
 
-        public List<IEvent> GetProductEventHistory(string productGuid)
+        public Dictionary<string, IEvent> GetProductEventHistory(string productGuid)
         {
-            return this._context.events.FindAll(element => element.state.product.guid == productGuid);
+            return this.context.events
+                .Where(
+                    kvp => this.GetState(kvp.Value.stateGuid).productGuid == productGuid
+                )
+                .ToDictionary(
+                    kvp => kvp.Key, kvp => kvp.Value
+                );
         }
 
-        public IState GetProductState(string productGuid) 
+        public IState GetProductState(string productGuid)
         {
-            IState? state = this._context.states.Find(element => element.product.guid == productGuid);
+            if (!this.CheckIfProductExists(productGuid))
+                throw new Exception("This product does not exist!");
 
-            if (state is null)
-                throw new Exception("There is no state for this product!");
+            IState state = this.context.states
+                .First(
+                    kvp => kvp.Value.productGuid == productGuid
+                )
+                .Value;
 
             return state;
         }

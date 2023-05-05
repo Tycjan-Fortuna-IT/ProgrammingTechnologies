@@ -2,44 +2,46 @@ using Data.API;
 
 namespace Data.Implementation
 {
-    public class PurchaseEvent : IEvent
+    internal class PurchaseEvent : IEvent
     {
-        public PurchaseEvent(string? guid, IState state, IUser user) 
+        public PurchaseEvent(string? guid, string stateGuid, string userGuid) 
         {
             this.guid = guid ?? System.Guid.NewGuid().ToString();
-            this.state = state;
-            this.user = user;
+            this.stateGuid = stateGuid;
+            this.userGuid = userGuid;
             this.occurrenceDate = DateTime.Now;
-
-            this.Action();
         }
 
         public string guid { get; }
 
-        public IState state { get; }
+        public string stateGuid { get; }
 
-        public IUser user { get; }
+        public string userGuid { get; }
 
         public DateTime occurrenceDate { get; }
 
-        public void Action() 
+        public void Action(IDataRepository dataRepository) 
         {
-            if (this.user.productLibrary.ContainsKey(this.state.product.guid))
-                throw new Exception("You already have this Product!");   
+            IUser user = dataRepository.GetUser(this.userGuid);
+            IState state = dataRepository.GetState(this.stateGuid);
+            IProduct product = dataRepository.GetProduct(state.productGuid);
 
-            if (this.state.product is Game)
-                if (DateTime.Now.Year - this.user.dateOfBirth.Year < ((Game)this.state.product).pegi)
+            if (user.productLibrary.ContainsKey(product.guid))
+                throw new Exception("You already have this product!");   
+
+            if (product is Game)
+                if (DateTime.Now.Year - user.dateOfBirth.Year < ((Game)product).pegi)
                     throw new Exception("You are not old enough to purchase this game!");
 
-            if (this.state.productQuantity == 0)
+            if (state.productQuantity == 0)
                 throw new Exception("Product unavailable, please check later!");
 
-            if (this.user.balance < this.state.product.price)
-                throw new Exception("Not enough money to purchase this Product!");
+            if (user.balance < product.price)
+                throw new Exception("Not enough money to purchase this product!");
 
-            this.state.productQuantity--;
-            this.user.balance -= this.state.product.price;
-            this.user.productLibrary.Add(this.state.product.guid, this.state.product);
+            state.productQuantity--;
+            user.balance -= product.price;
+            user.productLibrary.Add(product.guid, product);
         }
     }
 }

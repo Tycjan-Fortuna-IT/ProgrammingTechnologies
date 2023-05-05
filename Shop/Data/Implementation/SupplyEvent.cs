@@ -2,35 +2,35 @@
 
 namespace Data.Implementation
 {
-    public class SupplyEvent : IEvent
+    internal class SupplyEvent : IEvent
     {
-        public SupplyEvent(string? guid, IState state, IUser user, int quantity)
+        public SupplyEvent(string? guid, string stateGuid, string userGuid, int quantity)
         {
             this.guid = guid ?? System.Guid.NewGuid().ToString();
-            this.state = state;
-            this.user = user;
+            this.stateGuid = stateGuid;
+            this.userGuid = userGuid;
             this.quantity = quantity;
             this.occurrenceDate = DateTime.Now;
-
-            this.Action();
         }
 
         public string guid { get; }
 
-        public IState state { get; }
+        public string stateGuid { get; }
 
-        public IUser user { get; }
+        public string userGuid { get; }
 
         public DateTime occurrenceDate { get; }
 
         public int quantity;
 
-        public void Action()
+        public void Action(IDataRepository dataRepository)
         {
+            IState state = dataRepository.GetState(this.stateGuid);
+
             if (quantity <= 0)
                 throw new Exception("Can not supply with this amount!");
 
-            this.state.productQuantity += this.quantity;
+            state.productQuantity += this.quantity;
         }
     }
 }

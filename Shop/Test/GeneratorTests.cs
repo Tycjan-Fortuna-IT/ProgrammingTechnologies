@@ -1,5 +1,4 @@
 ﻿using Data.API;
-using Data.Implementation;
 
 namespace Test
 {
@@ -9,23 +8,23 @@ namespace Test
         [TestMethod]
         public void FixedGeneratorTests()
         {
-            IDataContext context = new DataContext();
+            IDataRepository dataRepository = IDataRepository.CreateDatabase();
 
             IGenerator generator = new FixedGenerator();
 
-            generator.Generate(context);
+            generator.Generate(dataRepository);
 
-            Assert.AreEqual(10, context.users.Count);
+            Assert.AreEqual(10, dataRepository.GetUserCount());
         }
 
         [TestMethod]
         public void RandomGeneratorTests()
         {
-            IDataContext context = new DataContext();
+            IDataRepository dataRepository = IDataRepository.CreateDatabase();
 
             IGenerator generator = new RandomGenerator();
 
-            generator.Generate(context);
+            generator.Generate(dataRepository);
 
             Assert.ThrowsException<ArgumentException>(() => { RandomGenerator.RandomNumber<int>(-1); });
         }

@@ -10,10 +10,10 @@ namespace Logic.API
             return new BusinessLogic(dataRepository);
         }
 
-        void Purchase(IState state, IUser user);
+        void Purchase(string stateGuid, string userGuid);
 
-        void Return(IState state, IUser user);
+        void Return(string stateGuid, string userGuid);
 
-        void Supply(IState state, IUser user, int quantity);
+        void Supply(string stateGuid, string userGuid, int quantity);
     }
 }

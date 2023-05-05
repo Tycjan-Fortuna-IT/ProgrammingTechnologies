@@ -1,10 +1,9 @@
 ﻿using Data.API;
-using Data.Implementation;
 using Logic.API;
 
 namespace Shop.Logic
 {
-    public class BusinessLogic : IBusinessLogic
+    internal class BusinessLogic : IBusinessLogic
     {
         private IDataRepository repository;
 
@@ -13,37 +12,43 @@ namespace Shop.Logic
             this.repository = repository;
         }
 
-        public void Purchase(IState state, IUser user)
+        public void Purchase(string stateGuid, string userGuid)
         {
-            if (!this.repository.CheckIfProductExists(state.product.guid))
+            IState state = repository.GetState(stateGuid);
+
+            if (!this.repository.CheckIfProductExists(state.productGuid))
                 throw new Exception("This product is not registered in our system!");
 
-            if (!this.repository.CheckIfUserExists(user.guid))
+            if (!this.repository.CheckIfUserExists(userGuid))
                 throw new Exception("This user is not registered in our system!");
 
-            this.repository.AddEvent(new PurchaseEvent(null, state, user));
+            this.repository.AddEvent(null, stateGuid, userGuid, "PurchaseEvent");
         }
 
-        public void Return(IState state, IUser user) 
+        public void Return(string stateGuid, string userGuid) 
         {
-            if (!this.repository.CheckIfProductExists(state.product.guid))
+            IState state = repository.GetState(stateGuid);
+
+            if (!this.repository.CheckIfProductExists(state.productGuid))
                 throw new Exception("This product is not registered in our system!");
 
-            if (!this.repository.CheckIfUserExists(user.guid))
+            if (!this.repository.CheckIfUserExists(userGuid))
                 throw new Exception("This user is not registered in our system!");
 
-            this.repository.AddEvent(new ReturnEvent(null, state, user));
+            this.repository.AddEvent(null, stateGuid, userGuid, "ReturnEvent");
         }
 
-        public void Supply(IState state, IUser user, int quantity)
+        public void Supply(string stateGuid, string userGuid, int quantity)
         {
-            if (!this.repository.CheckIfProductExists(state.product.guid))
+            IState state = repository.GetState(stateGuid);
+
+            if (!this.repository.CheckIfProductExists(state.productGuid))
                 throw new Exception("This product is not registered in our system!");
 
-            if (!this.repository.CheckIfUserExists(user.guid))
+            if (!this.repository.CheckIfUserExists(userGuid))
                 throw new Exception("This user is not registered in our system!");
 
-            this.repository.AddEvent(new SupplyEvent(null, state, user, quantity));
+            this.repository.AddEvent(null, stateGuid, userGuid, "SupplyEvent", quantity);
         }
     }
 }

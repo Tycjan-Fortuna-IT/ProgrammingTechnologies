@@ -8,6 +8,6 @@
 
         double price { get; set; }
 
-        DateTime releaseDate { get; set; }
+        int pegi { get; set; }
     }
 }

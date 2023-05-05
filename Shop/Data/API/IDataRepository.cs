@@ -4,45 +4,46 @@ namespace Data.API
 {
     public interface IDataRepository
     {
-        static IDataRepository CreateDatabase(IDataContext dataContext)
+        static IDataRepository CreateDatabase(IDataContext dataContext = null)
         {
-            return new DataRepository(dataContext);
+            return new DataRepository(dataContext ?? new DataContext());
         }
 
         // --- User ---
-        void AddUser(IUser user);
+        void AddUser(string? guid, string nickname, string email, double balance, DateTime dateOfBirth);
         IUser GetUser(string guid);
         bool CheckIfUserExists(string guid);
-        void UpdateUser(IUser user);
+        void UpdateUser(string guid, string nickname, string email, double balance, DateTime dateOfBirth);
         void DeleteUser(string guid);
-        List<IUser> GetAllUsers();
+        Dictionary<string, IUser> GetAllUsers();
         int GetUserCount();
 
         // --- Product ---
-        void AddProduct(IProduct product);
+        void AddProduct(string? guid, string name, double price, int pegi);
         IProduct GetProduct(string guid);
         bool CheckIfProductExists(string guid);
-        void UpdateProduct(IProduct product);
+        void UpdateProduct(string guid, string name, double price, int pegi);
         void DeleteProduct(string guid);
-        List<IProduct> GetAllProducts();
+        Dictionary<string, IProduct> GetAllProducts();
         int GetProductCount();
 
         // --- State ---
-        void AddState(IState product);
+        void AddState(string? guid, string productGuid, int productQuantity = 0);
         IState GetState(string guid);
         void DeleteState(string guid);
-        List<IState> GetAllStates();
+        Dictionary<string, IState> GetAllStates();
         int GetStateCount();
 
         // --- Event ---
-        void AddEvent(IEvent shopEvent);
+        void AddEvent(string? guid, string stateGuid, string userGuid, string type, int quantity = 0);
         IEvent GetEvent(string guid);
+        bool CheckIfEventExists(string guid);
         void DeleteEvent(string guid);
-        List<IEvent> GetAllEvents();
+        Dictionary<string, IEvent> GetAllEvents();
         int GetEventCount();
 
         IEvent GetLastProductEvent(string productGuid);
-        List<IEvent> GetProductEventHistory(string productGuid);
+        Dictionary<string, IEvent> GetProductEventHistory(string productGuid);
         IState GetProductState(string productGuid);
     }
 }
