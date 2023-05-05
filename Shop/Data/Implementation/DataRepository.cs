@@ -4,11 +4,11 @@ namespace Data.Implementation
 {
     internal class DataRepository : IDataRepository
     {
-        private IDataContext _context;
+        private IDataContext context;
 
         public DataRepository(IDataContext context) 
         {
-            this._context = context;
+            this.context = context;
         }
 
         // --- User ---
@@ -19,7 +19,7 @@ namespace Data.Implementation
 
             IUser newUser = new User(guid, nickname, email, balance, dateOfBirth);
 
-            this._context.users.Add(newUser.guid, newUser);
+            this.context.users.Add(newUser.guid, newUser);
         }
 
         public IUser GetUser(string guid)
@@ -27,12 +27,12 @@ namespace Data.Implementation
             if (!this.CheckIfUserExists(guid))
                 throw new Exception("This user does not exist!");
 
-            return this._context.users[guid];
+            return this.context.users[guid];
         }
 
         public bool CheckIfUserExists(string guid)
         {
-            return this._context.users.ContainsKey(guid);
+            return this.context.users.ContainsKey(guid);
         }
 
         public void UpdateUser(string guid, string nickname, string email, double balance, DateTime dateOfBirth)
@@ -53,17 +53,17 @@ namespace Data.Implementation
             if (!this.CheckIfUserExists(guid))
                 throw new Exception("This user does not exist!");
 
-            this._context.users.Remove(guid);
+            this.context.users.Remove(guid);
         }
 
         public Dictionary<string, IUser> GetAllUsers()
         {
-            return this._context.users;
+            return this.context.users;
         }
 
         public int GetUserCount() 
         {
-            return this._context.users.Count;
+            return this.context.users.Count;
         }
 
 
@@ -75,7 +75,7 @@ namespace Data.Implementation
 
             IProduct newProduct = new Game(guid, name, price, pegi);
 
-            this._context.products.Add(newProduct.guid, newProduct);
+            this.context.products.Add(newProduct.guid, newProduct);
         }
 
         public IProduct GetProduct(string guid) 
@@ -83,12 +83,12 @@ namespace Data.Implementation
             if (!this.CheckIfProductExists(guid))
                 throw new Exception("This product does not exist!");
 
-            return this._context.products[guid];
+            return this.context.products[guid];
         }
 
         public bool CheckIfProductExists(string guid)
         {
-            return this._context.products.ContainsKey(guid);
+            return this.context.products.ContainsKey(guid);
         }
 
         public void UpdateProduct(string guid, string name, double price, int pegi) 
@@ -108,17 +108,17 @@ namespace Data.Implementation
             if (!this.CheckIfProductExists(guid))
                 throw new Exception("This product does not exist!");
 
-            this._context.products.Remove(guid);
+            this.context.products.Remove(guid);
         }
 
         public Dictionary<string, IProduct> GetAllProducts() 
         {
-            return this._context.products;
+            return this.context.products;
         }
 
         public int GetProductCount() 
         {
-            return this._context.products.Count;
+            return this.context.products.Count;
         }
 
 
@@ -130,7 +130,7 @@ namespace Data.Implementation
 
             IState newState = new State(guid, productGuid, productQuantity);
 
-            this._context.states.Add(newState.guid, newState);
+            this.context.states.Add(newState.guid, newState);
         }
 
         public IState GetState(string guid) 
@@ -138,12 +138,12 @@ namespace Data.Implementation
             if (!this.CheckIfStateExists(guid))
                 throw new Exception("This state does not exist!");
 
-            return this._context.states[guid];
+            return this.context.states[guid];
         }
 
         public bool CheckIfStateExists(string guid)
         {
-            return this._context.states.ContainsKey(guid);
+            return this.context.states.ContainsKey(guid);
         }
 
         public void DeleteState(string guid) 
@@ -151,17 +151,17 @@ namespace Data.Implementation
             if (!this.CheckIfStateExists(guid))
                 throw new Exception("This state does not exist!");
 
-            this._context.states.Remove(guid);
+            this.context.states.Remove(guid);
         }
 
         public Dictionary<string, IState> GetAllStates() 
         {
-            return this._context.states;
+            return this.context.states;
         }
 
         public int GetStateCount()
         {
-            return this._context.states.Count;
+            return this.context.states.Count;
         }
 
 
@@ -187,7 +187,7 @@ namespace Data.Implementation
 
             newEvent.Action(this);
 
-            this._context.events.Add(newEvent.guid, newEvent);
+            this.context.events.Add(newEvent.guid, newEvent);
         }
 
         public IEvent GetEvent(string guid) 
@@ -195,12 +195,12 @@ namespace Data.Implementation
             if (!this.CheckIfEventExists(guid))
                 throw new Exception("This event does not exist!");
 
-            return this._context.events[guid];
+            return this.context.events[guid];
         }
 
         public bool CheckIfEventExists(string guid)
         {
-            return this._context.events.ContainsKey(guid);
+            return this.context.events.ContainsKey(guid);
         }
 
         public void DeleteEvent(string guid) 
@@ -208,23 +208,23 @@ namespace Data.Implementation
             if (!this.CheckIfEventExists(guid))
                 throw new Exception("This event does not exist!");
 
-            this._context.events.Remove(guid);
+            this.context.events.Remove(guid);
         }
 
         public Dictionary<string, IEvent> GetAllEvents() 
         {
-            return this._context.events;
+            return this.context.events;
         }
 
         public int GetEventCount() 
         {
-            return this._context.events.Count;
+            return this.context.events.Count;
         }
 
 
         public IEvent GetLastProductEvent(string productGuid)
         {   
-            Dictionary<string, IEvent> productEvents = this._context.events
+            Dictionary<string, IEvent> productEvents = this.context.events
                 .Where(
                     kvp => this.GetState(kvp.Value.stateGuid).productGuid == productGuid
                 )
@@ -248,7 +248,7 @@ namespace Data.Implementation
 
         public Dictionary<string, IEvent> GetProductEventHistory(string productGuid)
         {
-            return this._context.events
+            return this.context.events
                 .Where(
                     kvp => this.GetState(kvp.Value.stateGuid).productGuid == productGuid
                 )
@@ -262,7 +262,7 @@ namespace Data.Implementation
             if (!this.CheckIfProductExists(productGuid))
                 throw new Exception("This product does not exist!");
 
-            IState state = this._context.states
+            IState state = this.context.states
                 .First(
                     kvp => kvp.Value.productGuid == productGuid
                 )
