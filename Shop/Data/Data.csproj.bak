@@ -7,19 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="System.Data.Linq" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Service Include="{3259aa49-8aa1-44d3-9025-a0b520596a8c}" />
+	<Reference Include="System.Data.Linq">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Update="Shop.designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -28,10 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <None Update="Shop.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>Shop.designer.cs</LastGenOutput>
