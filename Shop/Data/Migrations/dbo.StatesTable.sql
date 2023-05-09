@@ -1,7 +1,0 @@
-﻿CREATE TABLE [dbo].[States]
-(
-	[Id] INT NOT NULL PRIMARY KEY, 
-    [Guid] UNIQUEIDENTIFIER NOT NULL, 
-    [productGuid] UNIQUEIDENTIFIER NOT NULL, 
-    [productQuantity] INTEGER NOT NULL
-)
