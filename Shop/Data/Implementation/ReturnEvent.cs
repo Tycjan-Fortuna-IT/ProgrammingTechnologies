@@ -12,6 +12,8 @@ namespace Data.Implementation
             this.occurrenceDate = DateTime.Now;
         }
 
+        public int id { get; set; }
+
         public string guid { get; }
 
         public string stateGuid { get; }
@@ -22,16 +24,16 @@ namespace Data.Implementation
 
         public void Action(IDataRepository dataRepository)
         {
-            IUser user = dataRepository.GetUser(this.userGuid);
-            IState state = dataRepository.GetState(this.stateGuid);
-            IProduct product = dataRepository.GetProduct(state.productGuid);
+            //IUser user = dataRepository.GetUser(this.userGuid);
+            //IState state = dataRepository.GetState(this.stateGuid);
+            //IProduct product = dataRepository.GetProduct(state.productGuid);
 
-            if (!user.productLibrary.ContainsKey(product.guid))
-                throw new Exception("You do not have this Product!");
+            //if (!user.productLibrary.ContainsKey(product.guid))
+            //    throw new Exception("You do not have this Product!");
 
-            state.productQuantity++;
-            user.balance += product.price;
-            user.productLibrary.Remove(product.guid);
+            //state.productQuantity++;
+            //user.balance += product.price;
+            //user.productLibrary.Remove(product.guid);
         }
     }
 }

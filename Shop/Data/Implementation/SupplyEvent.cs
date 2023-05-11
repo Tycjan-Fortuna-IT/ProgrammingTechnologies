@@ -13,6 +13,8 @@ namespace Data.Implementation
             this.occurrenceDate = DateTime.Now;
         }
 
+        public int id { get; set; }
+
         public string guid { get; }
 
         public string stateGuid { get; }
@@ -25,12 +27,12 @@ namespace Data.Implementation
 
         public void Action(IDataRepository dataRepository)
         {
-            IState state = dataRepository.GetState(this.stateGuid);
+            //IState state = dataRepository.GetState(this.stateGuid);
 
-            if (quantity <= 0)
-                throw new Exception("Can not supply with this amount!");
+            //if (quantity <= 0)
+            //    throw new Exception("Can not supply with this amount!");
 
-            state.productQuantity += this.quantity;
+            //state.productQuantity += this.quantity;
         }
     }
 }

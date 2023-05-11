@@ -12,6 +12,8 @@ namespace Data.Implementation
             this.occurrenceDate = DateTime.Now;
         }
 
+        public int id { get; set; }
+
         public string guid { get; }
 
         public string stateGuid { get; }
@@ -22,26 +24,26 @@ namespace Data.Implementation
 
         public void Action(IDataRepository dataRepository) 
         {
-            IUser user = dataRepository.GetUser(this.userGuid);
-            IState state = dataRepository.GetState(this.stateGuid);
-            IProduct product = dataRepository.GetProduct(state.productGuid);
+            //IUser user = dataRepository.GetUser(this.userGuid);
+            //IState state = dataRepository.GetState(this.stateGuid);
+            //IProduct product = dataRepository.GetProduct(state.productGuid);
 
-            if (user.productLibrary.ContainsKey(product.guid))
-                throw new Exception("You already have this product!");   
+            //if (user.productLibrary.ContainsKey(product.guid))
+            //    throw new Exception("You already have this product!");   
 
-            if (product is Game)
-                if (DateTime.Now.Year - user.dateOfBirth.Year < ((Game)product).pegi)
-                    throw new Exception("You are not old enough to purchase this game!");
+            //if (product is Game)
+            //    if (DateTime.Now.Year - user.dateOfBirth.Year < ((Game)product).pegi)
+            //        throw new Exception("You are not old enough to purchase this game!");
 
-            if (state.productQuantity == 0)
-                throw new Exception("Product unavailable, please check later!");
+            //if (state.productQuantity == 0)
+            //    throw new Exception("Product unavailable, please check later!");
 
-            if (user.balance < product.price)
-                throw new Exception("Not enough money to purchase this product!");
+            //if (user.balance < product.price)
+            //    throw new Exception("Not enough money to purchase this product!");
 
-            state.productQuantity--;
-            user.balance -= product.price;
-            user.productLibrary.Add(product.guid, product);
+            //state.productQuantity--;
+            //user.balance -= product.price;
+            //user.productLibrary.Add(product.guid, product);
         }
     }
 }

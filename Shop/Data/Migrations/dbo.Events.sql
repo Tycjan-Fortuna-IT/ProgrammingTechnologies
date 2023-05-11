@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[Events]
+(
+	[id] INT NOT NULL PRIMARY KEY, 
+    [stateId] INT NOT NULL, 
+    [userId] INT NOT NULL, 
+    [occurrenceDate] DATE NOT NULL,
+
+    CONSTRAINT [FK_Events_States] FOREIGN KEY ([stateId]) REFERENCES [dbo].[States] ([id]),
+    CONSTRAINT [FK_Events_Users] FOREIGN KEY ([userId]) REFERENCES [dbo].[Users] ([id])
+)

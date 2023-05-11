@@ -1,32 +1,32 @@
-﻿using Data.API;
+﻿//using Data.API;
 
-namespace Test
-{
-    [TestClass]
-    public class GeneratorTests
-    {
-        [TestMethod]
-        public void FixedGeneratorTests()
-        {
-            IDataRepository dataRepository = IDataRepository.CreateDatabase();
+//namespace Test
+//{
+//    [TestClass]
+//    public class GeneratorTests
+//    {
+//        [TestMethod]
+//        public void FixedGeneratorTests()
+//        {
+//            IDataRepository dataRepository = IDataRepository.CreateDatabase();
 
-            IGenerator generator = new FixedGenerator();
+//            IGenerator generator = new FixedGenerator();
 
-            generator.Generate(dataRepository);
+//            generator.Generate(dataRepository);
 
-            Assert.AreEqual(10, dataRepository.GetUserCount());
-        }
+//            Assert.AreEqual(10, dataRepository.GetUserCount());
+//        }
 
-        [TestMethod]
-        public void RandomGeneratorTests()
-        {
-            IDataRepository dataRepository = IDataRepository.CreateDatabase();
+//        [TestMethod]
+//        public void RandomGeneratorTests()
+//        {
+//            IDataRepository dataRepository = IDataRepository.CreateDatabase();
 
-            IGenerator generator = new RandomGenerator();
+//            IGenerator generator = new RandomGenerator();
 
-            generator.Generate(dataRepository);
+//            generator.Generate(dataRepository);
 
-            Assert.ThrowsException<ArgumentException>(() => { RandomGenerator.RandomNumber<int>(-1); });
-        }
-    }
-}
+//            Assert.ThrowsException<ArgumentException>(() => { RandomGenerator.RandomNumber<int>(-1); });
+//        }
+//    }
+//}

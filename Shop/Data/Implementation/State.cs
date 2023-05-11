@@ -11,6 +11,8 @@ namespace Data.Implementation
             this.productQuantity = productQuantity;
         }
 
+        public int id { get; set; }
+
         public string guid { get; }
 
         public string productGuid { get; }

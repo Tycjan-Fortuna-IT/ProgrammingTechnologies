@@ -2,12 +2,12 @@
 {
     public interface IProduct
     {
-        string guid { get; }
+        int Id { get; set; }
 
-        string name { get; set; }
+        string Name { get; set; }
 
-        double price { get; set; }
+        double Price { get; set; }
 
-        int pegi { get; set; }
+        int Pegi { get; set; }
     }
 }

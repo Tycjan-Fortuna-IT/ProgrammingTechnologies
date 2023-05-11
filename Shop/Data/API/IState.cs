@@ -2,6 +2,8 @@
 {
     public interface IState
     {
+        int id { get; set; }
+
         string guid { get; }
 
         string productGuid { get; }

@@ -2,6 +2,8 @@
 {
     public interface IEvent
     {
+        int id { get; set; }
+
         string guid { get; }
 
         string stateGuid { get; }
