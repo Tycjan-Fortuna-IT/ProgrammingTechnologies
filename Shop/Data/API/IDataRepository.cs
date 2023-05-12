@@ -4,19 +4,10 @@ namespace Data.API;
 
 public interface IDataRepository
 {
-    static IDataRepository CreateDatabase(IDataContext dataContext = null)
+    static IDataRepository CreateDatabase(IDataContext? dataContext = null)
     {
         return new DataRepository(dataContext ?? new DataContext());
     }
-
-    // --- User ---
-    //void AddUser(string? guid, string nickname, string email, double balance, DateTime dateOfBirth);
-    //IUser GetUser(string guid);
-    //bool CheckIfUserExists(string guid);
-    //void UpdateUser(string guid, string nickname, string email, double balance, DateTime dateOfBirth);
-    //void DeleteUser(string guid);
-    //Dictionary<string, IUser> GetAllUsers();
-    //int GetUserCount();
 
     #region User CRUD
 
@@ -52,39 +43,55 @@ public interface IDataRepository
     #endregion
 
 
+    #region State CRUD
+
+    Task AddStateAsync(int productId, int productQuantity);
+
+    Task<IState> GetStateAsync(int id);
+
+    Task UpdateStateAsync(int id, int productId, int productQuantity);
+
+    Task DeleteStateAsync(int id);
+
+    Task<Dictionary<int, IState>> GetAllStatesAsync();
+
+    Task<int> GetStatesCountAsync();
+
+    #endregion
+
+
+    #region Event CRUD
+
+    Task AddEventAsync(int id, int stateId, int userId, string type, int quantity = 0);
+
+    Task<IEvent> GetEventAsync(int id, string type);
+
+    Task UpdateEventAsync(int id, int stateId, int userId, string type, int? quantity);
+
+    Task DeleteEventAsync(int id);
+
+    Task<Dictionary<int, IEvent>> GetAllEventsAsync();
+
+    Task<int> GetEventsCountAsync();
+
+    #endregion
+
+
     #region Utils
 
     Task<bool> CheckIfUserExists(int id);
 
     Task<bool> CheckIfProductExists(int id);
 
+    Task<bool> CheckIfStateExists(int id);
+
+    Task<bool> CheckIfEventExists(int id, string type);
+
+    //Task<IEvent> GetLastProductEvent(int productId);
+    
+    //Task<Dictionary<int, IEvent>> GetProductEventHistory(int productId);
+    
+    //Task<IState> GetProductState(int productId);
+    
     #endregion
-
-    //// --- Product ---
-    //void AddProduct(string? guid, string name, double price, int pegi);
-    //IProduct GetProduct(string guid);
-    //bool CheckIfProductExists(string guid);
-    //void UpdateProduct(string guid, string name, double price, int pegi);
-    //void DeleteProduct(string guid);
-    //Dictionary<string, IProduct> GetAllProducts();
-    //int GetProductCount();
-
-    //// --- State ---
-    //void AddState(string? guid, string productGuid, int productQuantity = 0);
-    //IState GetState(string guid);
-    //void DeleteState(string guid);
-    //Dictionary<string, IState> GetAllStates();
-    //int GetStateCount();
-
-    //// --- Event ---
-    //void AddEvent(string? guid, string stateGuid, string userGuid, string type, int quantity = 0);
-    //IEvent GetEvent(string guid);
-    //bool CheckIfEventExists(string guid);
-    //void DeleteEvent(string guid);
-    //Dictionary<string, IEvent> GetAllEvents();
-    //int GetEventCount();
-
-    //IEvent GetLastProductEvent(string productGuid);
-    //Dictionary<string, IEvent> GetProductEventHistory(string productGuid);
-    //IState GetProductState(string productGuid);
 }

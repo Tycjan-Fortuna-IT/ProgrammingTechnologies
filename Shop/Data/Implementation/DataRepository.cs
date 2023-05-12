@@ -1,4 +1,6 @@
 ﻿using Data.API;
+using Data.Implementation.DTO;
+using System.Diagnostics;
 
 namespace Data.Implementation;
 
@@ -111,6 +113,132 @@ internal class DataRepository : IDataRepository
     #endregion
 
 
+    #region State CRUD
+
+    public async Task AddStateAsync(int productId, int productQuantity)
+    {
+        IState state = new State(-1, productId, productQuantity);
+
+        await this._context.AddStateAsync(state);
+    }
+
+    public async Task<IState> GetStateAsync(int id)
+    {
+        IState? state = await this._context.GetStateAsync(id);
+
+        if (state is null)
+            throw new Exception("This state does not exist!");
+
+        return state;
+    }
+
+    public async Task UpdateStateAsync(int id, int productId, int productQuantity)
+    {
+        IState state = new State(id, productId, productQuantity);
+
+        if (!await this.CheckIfStateExists(state.Id))
+            throw new Exception("This state does not exist");
+
+        await this._context.UpdateStateAsync(state);
+    }
+
+    public async Task DeleteStateAsync(int id)
+    {
+        if (!await this.CheckIfStateExists(id))
+            throw new Exception("This state does not exist");
+
+        await this._context.DeleteStateAsync(id);
+    }
+
+    public async Task<Dictionary<int, IState>> GetAllStatesAsync()
+    {
+        return await this._context.GetAllStatesAsync();
+    }
+
+    public async Task<int> GetStatesCountAsync()
+    {
+        return await this._context.GetStatesCountAsync();
+    }
+
+    #endregion
+
+
+    #region Event CRUD
+
+    public async Task AddEventAsync(int id, int stateId, int userId, string type, int quantity = 0)
+    {
+        IEvent newEvent;
+
+        switch (type)
+        {
+            case "PurchaseEvent":
+                newEvent = new PurchaseEvent(id, stateId, userId, DateTime.Now); break;
+            case "ReturnEvent":
+                newEvent = new ReturnEvent(id, stateId, userId, DateTime.Now); break;
+            case "SupplyEvent":
+                newEvent = new SupplyEvent(id, stateId, userId, DateTime.Now, quantity); break;
+            default:
+                throw new Exception("This event type does not exist!");
+        }
+
+        newEvent.Action(this);
+
+        await this._context.AddEventAsync(newEvent);
+    }
+
+    public async Task<IEvent> GetEventAsync(int id, string type)
+    {
+        IEvent? even = await this._context.GetEventAsync(id, type);
+
+        if (even is null)
+            throw new Exception("This event does not exist!");
+
+        return even;
+    }
+
+    public async Task UpdateEventAsync(int id, int stateId, int userId, string type, int? quantity)
+    {
+        IEvent newEvent;
+
+        switch (type)
+        {
+            case "PurchaseEvent":
+                newEvent = new PurchaseEvent(id, stateId, userId, DateTime.Now); break;
+            case "ReturnEvent":
+                newEvent = new ReturnEvent(id, stateId, userId, DateTime.Now); break;
+            case "SupplyEvent":
+                newEvent = new SupplyEvent(id, stateId, userId, DateTime.Now, (int)quantity!); break;
+            default:
+                throw new Exception("This event type does not exist!");
+        }
+
+        if (!await this.CheckIfEventExists(newEvent.Id, type))
+            throw new Exception("This event does not exist");
+
+        await this._context.UpdateEventAsync(newEvent);
+    }
+
+    public async Task DeleteEventAsync(int id)
+    {
+        if (!await this.CheckIfEventExists(id, "NotRelevant"))
+            throw new Exception("This event does not exist");
+
+        await this._context.DeleteEventAsync(id);
+    }
+
+    public async Task<Dictionary<int, IEvent>> GetAllEventsAsync()
+    {
+        return await this._context.GetAllEventsAsync();
+    }
+
+    public async Task<int> GetEventsCountAsync()
+    {
+        return await this._context.GetEventsCountAsync();
+    }
+
+    #endregion
+
+
     #region Utils
 
     public async Task<bool> CheckIfUserExists(int id)
@@ -123,104 +251,32 @@ internal class DataRepository : IDataRepository
         return await this._context.CheckIfProductExists(id);
     }
 
+    public async Task<bool> CheckIfStateExists(int id)
+    {
+        return await this._context.CheckIfStateExists(id);
+    }
+
+    public async Task<bool> CheckIfEventExists(int id, string type)
+    {
+        return await this._context.CheckIfEventExists(id, type);
+    }
+
+    //public async Task<IEvent> GetLastProductEvent(int productId)
+    //{
+
+    //}
+
+    //public async Task<Dictionary<int, IEvent>> GetProductEventHistory(int productId)
+    //{
+
+    //}
+
+    //public async Task<IState> GetProductState(int productId)
+    //{
+
+    //}
+
     #endregion
-
-    //// --- Product ---
-    //public void AddProduct(string? guid, string name, double price, int pegi) 
-    //{
-    //    if (guid is not null && this.CheckIfProductExists(guid))
-    //        throw new Exception("This product already exists!");
-
-    //    IProduct newProduct = new Game(guid, name, price, pegi);
-
-    //    this.context.products.Add(newProduct.guid, newProduct);
-    //}
-
-    //public IProduct GetProduct(string guid) 
-    //{
-    //    if (!this.CheckIfProductExists(guid))
-    //        throw new Exception("This product does not exist!");
-
-    //    return this.context.products[guid];
-    //}
-
-    //public bool CheckIfProductExists(string guid)
-    //{
-    //    return this.context.products.ContainsKey(guid);
-    //}
-
-    //public void UpdateProduct(string guid, string name, double price, int pegi) 
-    //{
-    //    if (!this.CheckIfProductExists(guid))
-    //        throw new Exception("This product does not exist!");
-
-    //    IProduct productToUpdate = this.GetProduct(guid);
-
-    //    productToUpdate.name = name;
-    //    productToUpdate.price = price;
-    //    productToUpdate.pegi = pegi;
-    //}
-
-    //public void DeleteProduct(string guid) 
-    //{
-    //    if (!this.CheckIfProductExists(guid))
-    //        throw new Exception("This product does not exist!");
-
-    //    this.context.products.Remove(guid);
-    //}
-
-    //public Dictionary<string, IProduct> GetAllProducts() 
-    //{
-    //    return this.context.products;
-    //}
-
-    //public int GetProductCount() 
-    //{
-    //    return this.context.products.Count;
-    //}
-
-
-    //// --- State ---
-    //public void AddState(string? guid, string productGuid, int productQuantity = 0) 
-    //{
-    //    if (guid is not null && this.CheckIfStateExists(guid))
-    //        throw new Exception("This state already exists!");
-
-    //    IState newState = new State(guid, productGuid, productQuantity);
-
-    //    this.context.states.Add(newState.guid, newState);
-    //}
-
-    //public IState GetState(string guid) 
-    //{
-    //    if (!this.CheckIfStateExists(guid))
-    //        throw new Exception("This state does not exist!");
-
-    //    return this.context.states[guid];
-    //}
-
-    //public bool CheckIfStateExists(string guid)
-    //{
-    //    return this.context.states.ContainsKey(guid);
-    //}
-
-    //public void DeleteState(string guid) 
-    //{
-    //    if (!this.CheckIfStateExists(guid))
-    //        throw new Exception("This state does not exist!");
-
-    //    this.context.states.Remove(guid);
-    //}
-
-    //public Dictionary<string, IState> GetAllStates() 
-    //{
-    //    return this.context.states;
-    //}
-
-    //public int GetStateCount()
-    //{
-    //    return this.context.states.Count;
-    //}
 
 
     //// --- Event ---
