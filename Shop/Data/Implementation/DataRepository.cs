@@ -117,6 +117,12 @@ internal class DataRepository : IDataRepository
 
     public async Task AddStateAsync(int productId, int productQuantity)
     {
+        if (!await this._context.CheckIfProductExists(productId))
+            throw new Exception("This product does not exist!");
+
+        if (productQuantity <= 0)
+            throw new Exception("Product's quantity must be number greater that 0!");
+
         IState state = new State(-1, productId, productQuantity);
 
         await this._context.AddStateAsync(state);
@@ -134,6 +140,12 @@ internal class DataRepository : IDataRepository
 
     public async Task UpdateStateAsync(int id, int productId, int productQuantity)
     {
+        if (!await this._context.CheckIfProductExists(productId))
+            throw new Exception("This product does not exist!");
+
+        if (productQuantity <= 0)
+            throw new Exception("Product's quantity must be number greater that 0!");
+
         IState state = new State(id, productId, productQuantity);
 
         if (!await this.CheckIfStateExists(state.Id))

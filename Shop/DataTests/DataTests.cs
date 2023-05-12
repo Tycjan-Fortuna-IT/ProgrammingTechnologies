@@ -8,6 +8,7 @@ public class DataTests
 {
     private readonly IDataRepository _dataRepository = IDataRepository.CreateDatabase();
 
+    [Priority(4)]
     [TestMethod]
     public async Task UserTests()
     {
@@ -49,6 +50,7 @@ public class DataTests
         await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.DeleteUserAsync(user1));
     }
 
+    [Priority(3)]
     [TestMethod]
     public async Task ProductTests()
     {
@@ -84,5 +86,59 @@ public class DataTests
         await _dataRepository.DeleteProductAsync(productId);
         await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetProductAsync(productId));
         await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.DeleteProductAsync(productId));
+    }
+
+    [Priority(2)]
+    [TestMethod]
+    public async Task StateTests()
+    {
+        int productId = 2;
+        int stateId = 1;
+
+        await _dataRepository.AddProductAsync("Assassin's Creed Valhalla", 240, 18);
+
+        IProduct product = await _dataRepository.GetProductAsync(productId);
+
+        await _dataRepository.AddStateAsync(productId, 12);
+
+        IState state = await _dataRepository.GetStateAsync(stateId);
+
+        Assert.IsNotNull(state);
+        Assert.AreEqual(stateId, state.Id);
+        Assert.AreEqual(productId, state.productId);
+        Assert.AreEqual(12, state.productQuantity);
+
+        Assert.IsNotNull(await _dataRepository.GetAllStatesAsync());
+        Assert.IsTrue(await _dataRepository.GetStatesCountAsync() > 0);
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetStateAsync(stateId + 2));
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.AddStateAsync(13, 12));
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.AddStateAsync(productId, -1));
+
+        await _dataRepository.UpdateStateAsync(stateId, productId, 9);
+
+        IState stateUpdated = await _dataRepository.GetStateAsync(stateId);
+
+        Assert.IsNotNull(stateUpdated);
+        Assert.AreEqual(stateId, stateUpdated.Id);
+        Assert.AreEqual(productId, stateUpdated.productId);
+        Assert.AreEqual(9, stateUpdated.productQuantity);
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.UpdateStateAsync(stateId + 2, productId, 12));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.UpdateStateAsync(stateId, 13, 12));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.UpdateStateAsync(stateId, productId, -12));
+
+        await _dataRepository.DeleteStateAsync(stateId);
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetStateAsync(stateId));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.DeleteStateAsync(stateId));
+    }
+
+    [Priority(1)]
+    [TestMethod]
+    public async Task EventTests()
+    {
+        int eventId = 1;
     }
 }
