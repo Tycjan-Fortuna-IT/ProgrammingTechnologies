@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[States]
 (
-	[id] INT NOT NULL IDENTITY(1,1) PRIMARY KEY, 
+	[id] INT NOT NULL PRIMARY KEY, 
     [productId] INT NOT NULL, 
     [productQuantity] INT NOT NULL,
 

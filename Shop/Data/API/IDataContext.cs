@@ -63,7 +63,7 @@ public interface IDataContext
 
     #region Event CRUD
 
-    Task AddEventAsync(IEvent even);
+    Task AddEventAsync(IEvent even, string type);
 
     Task<IEvent?> GetEventAsync(int id, string type);
 

@@ -15,9 +15,9 @@ internal class DataRepository : IDataRepository
 
     #region User CRUD
 
-    public async Task AddUserAsync(string nickname, string email, double balance, DateTime dateOfBirth)
+    public async Task AddUserAsync(int id, string nickname, string email, double balance, DateTime dateOfBirth)
     {
-        IUser user = new User(-1, nickname, email, balance, dateOfBirth);
+        IUser user = new User(id, nickname, email, balance, dateOfBirth);
 
         await this._context.AddUserAsync(user);
     }
@@ -65,9 +65,9 @@ internal class DataRepository : IDataRepository
 
     #region Product CRUD
 
-    public async Task AddProductAsync(string name, double price, int pegi)
+    public async Task AddProductAsync(int id, string name, double price, int pegi)
     {
-        IProduct product = new Game(-1, name, price, pegi);
+        IProduct product = new Game(id, name, price, pegi);
 
         await this._context.AddProductAsync(product);
     }
@@ -115,7 +115,7 @@ internal class DataRepository : IDataRepository
 
     #region State CRUD
 
-    public async Task AddStateAsync(int productId, int productQuantity)
+    public async Task AddStateAsync(int id, int productId, int productQuantity)
     {
         if (!await this._context.CheckIfProductExists(productId))
             throw new Exception("This product does not exist!");
@@ -123,7 +123,7 @@ internal class DataRepository : IDataRepository
         if (productQuantity <= 0)
             throw new Exception("Product's quantity must be number greater that 0!");
 
-        IState state = new State(-1, productId, productQuantity);
+        IState state = new State(id, productId, productQuantity);
 
         await this._context.AddStateAsync(state);
     }
@@ -195,7 +195,7 @@ internal class DataRepository : IDataRepository
 
         newEvent.Action(this);
 
-        await this._context.AddEventAsync(newEvent);
+        await this._context.AddEventAsync(newEvent, type);
     }
 
     public async Task<IEvent> GetEventAsync(int id, string type)
@@ -232,7 +232,7 @@ internal class DataRepository : IDataRepository
 
     public async Task DeleteEventAsync(int id)
     {
-        if (!await this.CheckIfEventExists(id, "NotRelevant"))
+        if (!await this.CheckIfEventExists(id, "PurchaseEvent"))
             throw new Exception("This event does not exist");
 
         await this._context.DeleteEventAsync(id);

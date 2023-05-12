@@ -36,6 +36,7 @@ internal partial class DataContext : DbContext, IDataContext
     {
         DTO.User userEntity = new DTO.User()
         {
+            Id = user.Id,
             Nickname = user.Nickname,
             Email = user.Email,
             Balance = user.Balance,
@@ -105,6 +106,7 @@ internal partial class DataContext : DbContext, IDataContext
     {
         DTO.Product productEntity = new DTO.Product()
         {
+            Id = product.Id,
             Name = product.Name,
             Price = product.Price,
             Pegi = product.Pegi,
@@ -172,6 +174,7 @@ internal partial class DataContext : DbContext, IDataContext
     {
         DTO.State stateEntity = new DTO.State()
         {
+            Id = state.Id,
             ProductId = state.productId,
             ProductQuantity = state.productQuantity
         };
@@ -233,13 +236,15 @@ internal partial class DataContext : DbContext, IDataContext
 
     #region Event CRUD
 
-    public async Task AddEventAsync(IEvent even)
+    public async Task AddEventAsync(IEvent even, string type)
     {
         DTO.Event eventEntity = new DTO.Event()
         {
+            Id = even.Id,
             StateId = even.stateId,
             UserId = even.userId,
             OccurrenceDate = even.occurrenceDate,
+            Type = type,
         };
 
         await this.events.AddAsync(eventEntity);
@@ -344,16 +349,18 @@ internal partial class DataContext : DbContext, IDataContext
     {
         modelBuilder.Entity<DTO.Event>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Events__3213E83F8EABB74D");
+            entity.HasKey(e => e.Id).HasName("PK__Events__3213E83F3E076BCD");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
             entity.Property(e => e.OccurrenceDate)
                 .HasColumnType("date")
                 .HasColumnName("occurrenceDate");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.StateId).HasColumnName("stateId");
             entity.Property(e => e.Type)
-                .HasMaxLength(1)
+                .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("type");
             entity.Property(e => e.UserId).HasColumnName("userId");
@@ -371,9 +378,11 @@ internal partial class DataContext : DbContext, IDataContext
 
         modelBuilder.Entity<DTO.Product>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Products__3213E83F62C22C97");
+            entity.HasKey(e => e.Id).HasName("PK__Products__3213E83FC55FC57C");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -384,9 +393,11 @@ internal partial class DataContext : DbContext, IDataContext
 
         modelBuilder.Entity<DTO.State>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__States__3213E83F8DAC8DC2");
+            entity.HasKey(e => e.Id).HasName("PK__States__3213E83F3C8408B8");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
             entity.Property(e => e.ProductId).HasColumnName("productId");
             entity.Property(e => e.ProductQuantity).HasColumnName("productQuantity");
 
@@ -398,9 +409,11 @@ internal partial class DataContext : DbContext, IDataContext
 
         modelBuilder.Entity<DTO.User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3213E83F047F7782");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3213E83FE0EF376A");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
             entity.Property(e => e.Balance)
                 .HasColumnType("decimal(18, 0)")
                 .HasColumnName("balance");
