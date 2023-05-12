@@ -262,7 +262,6 @@ internal class DataRepository : IDataRepository
     }
 
     //public async Task<IEvent> GetLastProductEvent(int productId)
-    //{
 
     //}
 
@@ -277,111 +276,4 @@ internal class DataRepository : IDataRepository
     //}
 
     #endregion
-
-
-    //// --- Event ---
-    //public void AddEvent(string? guid, string stateGuid, string userGuid, string type, int quantity = 0) 
-    //{
-    //    if (guid is not null && this.CheckIfEventExists(guid))
-    //        throw new Exception("This event already exists!");
-
-    //    IEvent newEvent;
-
-    //    switch (type)
-    //    {
-    //        case "PurchaseEvent":
-    //            newEvent = new PurchaseEvent(guid, stateGuid, userGuid); break;
-    //        case "ReturnEvent":
-    //            newEvent = new ReturnEvent(guid, stateGuid, userGuid); break;
-    //        case "SupplyEvent":
-    //            newEvent = new SupplyEvent(guid, stateGuid, userGuid, quantity); break;
-    //        default:
-    //            throw new Exception("This event type does not exist!");
-    //    }
-
-    //    newEvent.Action(this);
-
-    //    this.context.events.Add(newEvent.guid, newEvent);
-    //}
-
-    //public IEvent GetEvent(string guid) 
-    //{
-    //    if (!this.CheckIfEventExists(guid))
-    //        throw new Exception("This event does not exist!");
-
-    //    return this.context.events[guid];
-    //}
-
-    //public bool CheckIfEventExists(string guid)
-    //{
-    //    return this.context.events.ContainsKey(guid);
-    //}
-
-    //public void DeleteEvent(string guid) 
-    //{
-    //    if (!this.CheckIfEventExists(guid))
-    //        throw new Exception("This event does not exist!");
-
-    //    this.context.events.Remove(guid);
-    //}
-
-    //public Dictionary<string, IEvent> GetAllEvents() 
-    //{
-    //    return this.context.events;
-    //}
-
-    //public int GetEventCount() 
-    //{
-    //    return this.context.events.Count;
-    //}
-
-
-    //public IEvent GetLastProductEvent(string productGuid)
-    //{   
-    //    Dictionary<string, IEvent> productEvents = this.context.events
-    //        .Where(
-    //            kvp => this.GetState(kvp.Value.stateGuid).productGuid == productGuid
-    //        )
-    //        .ToDictionary(
-    //            kvp => kvp.Key, kvp => kvp.Value
-    //        );
-
-    //    IEvent? lastProductEvent = null;
-
-    //    foreach (KeyValuePair<string, IEvent> productEvent in productEvents)
-    //        if (lastProductEvent is not null && lastProductEvent.occurrenceDate < productEvent.Value.occurrenceDate)
-    //            lastProductEvent = productEvent.Value;
-    //        else
-    //            lastProductEvent = productEvent.Value;
-
-    //    if (lastProductEvent is null)
-    //        throw new Exception("There have been no events for this product!");
-
-    //    return lastProductEvent;
-    //}
-
-    //public Dictionary<string, IEvent> GetProductEventHistory(string productGuid)
-    //{
-    //    return this.context.events
-    //        .Where(
-    //            kvp => this.GetState(kvp.Value.stateGuid).productGuid == productGuid
-    //        )
-    //        .ToDictionary(
-    //            kvp => kvp.Key, kvp => kvp.Value
-    //        );
-    //}
-
-    //public IState GetProductState(string productGuid)
-    //{
-    //    if (!this.CheckIfProductExists(productGuid))
-    //        throw new Exception("This product does not exist!");
-
-    //    IState state = this.context.states
-    //        .First(
-    //            kvp => kvp.Value.productGuid == productGuid
-    //        )
-    //        .Value;
-
-    //    return state;
-    //}
 }
