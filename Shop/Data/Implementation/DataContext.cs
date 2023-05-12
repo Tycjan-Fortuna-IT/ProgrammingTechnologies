@@ -344,42 +344,81 @@ internal partial class DataContext : DbContext, IDataContext
     {
         modelBuilder.Entity<DTO.User>(entity =>
         {
-            entity.HasKey(e => e.Id)
-                .HasName("PK__Users__3213E83FCD75E293");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3213E83F4060E7B0");
 
-            entity.Property(e => e.Nickname)
-                .IsRequired()
-                .HasColumnName("nickname");
-
-            entity.Property(e => e.Email)
-                .IsRequired()
-                .HasColumnName("email");
-
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Balance)
-                .HasColumnType("decimal(18, 2)")
+                .HasColumnType("decimal(18, 0)")
                 .HasColumnName("balance");
-
             entity.Property(e => e.DateOfBirth)
+                .HasColumnType("date")
                 .HasColumnName("dateOfBirth");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("email");
+            entity.Property(e => e.Nickname)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("nickname");
         });
 
         modelBuilder.Entity<DTO.Product>(entity =>
         {
-            entity.HasKey(e => e.Id)
-                .HasName("PK__Products__3213E83F80E46A65");
+            entity.HasKey(e => e.Id).HasName("PK__Products__3213E83F453A6F30");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
-                .IsRequired()
+                .HasMaxLength(255)
+                .IsUnicode(false)
                 .HasColumnName("name");
-
+            entity.Property(e => e.Pegi).HasColumnName("pegi");
             entity.Property(e => e.Price)
-                .HasColumnType("decimal(18, 2)")
-                .HasColumnName("price")
-                .IsRequired();
+                .HasColumnType("decimal(18, 0)")
+                .HasColumnName("price");
+        });
 
-            entity.Property(e => e.Pegi)
-                .HasColumnType("integer")
-                .HasColumnName("pegi");
+        modelBuilder.Entity<DTO.State>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__States__3213E83FB2202D2C");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ProductId).HasColumnName("productId");
+            entity.Property(e => e.ProductQuantity).HasColumnName("productQuantity");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.States)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_States_Products");
+        });
+
+        modelBuilder.Entity<DTO.Event>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Events__3213E83FB34F1E0D");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.OccurrenceDate)
+                .HasColumnType("date")
+                .HasColumnName("occurrenceDate");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.StateId).HasColumnName("stateId");
+            entity.Property(e => e.Type)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasColumnName("type");
+            entity.Property(e => e.UserId).HasColumnName("userId");
+
+            entity.HasOne(d => d.State).WithMany(p => p.Events)
+                .HasForeignKey(d => d.StateId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Events_States");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Events)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Events_Users");
         });
 
         OnModelCreatingPartial(modelBuilder);

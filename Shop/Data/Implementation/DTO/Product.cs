@@ -16,4 +16,6 @@ internal class Product
     public decimal Price { get; set; }
 
     public int Pegi { get; set; }
+
+    public virtual ICollection<State> States { get; set; } = new List<State>();
 }
