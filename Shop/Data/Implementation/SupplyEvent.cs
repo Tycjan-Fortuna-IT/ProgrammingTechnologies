@@ -21,15 +21,16 @@ internal class SupplyEvent : IEvent
 
     public DateTime occurrenceDate { get; set; }
 
-    public int quantity;
+    public int quantity { get; set; }
 
-    public void Action(IDataRepository dataRepository)
+    public async Task Action(IDataRepository dataRepository)
     {
-        //IState state = dataRepository.GetState(this.stateGuid);
+        IState state = await dataRepository.GetStateAsync(stateId);
+        IProduct product = await dataRepository.GetProductAsync(state.productId);
 
-        //if (quantity <= 0)
-        //    throw new Exception("Can not supply with this amount!");
+        if (quantity <= 0)
+            throw new Exception("Can not supply with this amount!");
 
-        //state.productQuantity += this.quantity;
+        await dataRepository.UpdateStateAsync(stateId, product.Id, state.productQuantity + quantity);
     }
 }
