@@ -1,4 +1,5 @@
 ﻿using Data.API;
+using System.Runtime.Intrinsics.X86;
 
 namespace DataTests;
 
@@ -46,5 +47,42 @@ public class DataTests
         await _dataRepository.DeleteUserAsync(user1);
         await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetUserAsync(user1));
         await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.DeleteUserAsync(user1));
+    }
+
+    [TestMethod]
+    public async Task ProductTests()
+    {
+        int productId = 1;
+
+        await _dataRepository.AddProductAsync("Assassin's Creed Valhalla", 240, 18);
+
+        IProduct product = await _dataRepository.GetProductAsync(productId);
+
+        Assert.IsNotNull(product);
+        Assert.AreEqual(productId, product.Id);
+        Assert.AreEqual("Assassin's Creed Valhalla", product.Name);
+        Assert.AreEqual(240, product.Price);
+        Assert.AreEqual(18, product.Pegi);
+
+        Assert.IsNotNull(await _dataRepository.GetAllProductsAsync());
+        Assert.IsTrue(await _dataRepository.GetProductsCountAsync() > 0);
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetProductAsync(productId + 2));
+
+        await _dataRepository.UpdateProductAsync(productId, "Cyberpunk 2077", 300, 15);
+
+        IProduct productUpdated = await _dataRepository.GetProductAsync(productId);
+
+        Assert.IsNotNull(productUpdated);
+        Assert.AreEqual(productId, productUpdated.Id);
+        Assert.AreEqual("Cyberpunk 2077", productUpdated.Name);
+        Assert.AreEqual(300, productUpdated.Price);
+        Assert.AreEqual(15, productUpdated.Pegi);
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.UpdateProductAsync(productId + 2, "Cyberpunk 2077", 300, 15));
+
+        await _dataRepository.DeleteProductAsync(productId);
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetProductAsync(productId));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.DeleteProductAsync(productId));
     }
 }
