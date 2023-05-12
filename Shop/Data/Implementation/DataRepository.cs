@@ -1,6 +1,4 @@
 ﻿using Data.API;
-using Data.Implementation.DTO;
-using System.Diagnostics;
 
 namespace Data.Implementation;
 
@@ -120,7 +118,7 @@ internal class DataRepository : IDataRepository
         if (!await this._context.CheckIfProductExists(productId))
             throw new Exception("This product does not exist!");
 
-        if (productQuantity <= 0)
+        if (productQuantity < 0)
             throw new Exception("Product's quantity must be number greater that 0!");
 
         IState state = new State(id, productId, productQuantity);
@@ -193,7 +191,7 @@ internal class DataRepository : IDataRepository
                 throw new Exception("This event type does not exist!");
         }
 
-        newEvent.Action(this);
+        await newEvent.Action(this);
 
         await this._context.AddEventAsync(newEvent, type);
     }

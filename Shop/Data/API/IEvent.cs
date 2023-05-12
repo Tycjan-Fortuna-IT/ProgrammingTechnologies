@@ -10,5 +10,5 @@ public interface IEvent
 
     DateTime occurrenceDate { get; set; }
 
-    void Action(IDataRepository dataRepository);
+    Task Action(IDataRepository dataRepository);
 }

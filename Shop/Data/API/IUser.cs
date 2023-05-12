@@ -11,6 +11,4 @@ public interface IUser
     double Balance { get; set; }
 
     DateTime DateOfBirth { get; set; }
-
-    //Dictionary<string, IProduct> productLibrary { get; set; }
 }

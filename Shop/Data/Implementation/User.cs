@@ -11,7 +11,6 @@ internal class User : IUser
         this.Email = email;
         this.Balance = balance;
         this.DateOfBirth = dateOfBirth;
-        //this.productLibrary = productLibrary ?? new Dictionary<string, IProduct>();
     }
 
     public int Id { get; set; }
@@ -23,6 +22,4 @@ internal class User : IUser
     public double Balance { get; set; } = 0;
 
     public DateTime DateOfBirth { get; set; }
-
-    //public Dictionary<string, IProduct> productLibrary { get; set; }
 }

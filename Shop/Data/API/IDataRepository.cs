@@ -87,11 +87,5 @@ public interface IDataRepository
 
     Task<bool> CheckIfEventExists(int id, string type);
 
-    //Task<IEvent> GetLastProductEvent(int productId);
-    
-    //Task<Dictionary<int, IEvent>> GetProductEventHistory(int productId);
-    
-    //Task<IState> GetProductState(int productId);
-    
     #endregion
 }
