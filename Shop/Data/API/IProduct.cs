@@ -1,13 +1,12 @@
-﻿namespace Data.API
+﻿namespace Data.API;
+
+public interface IProduct
 {
-    public interface IProduct
-    {
-        int Id { get; set; }
+    int Id { get; set; }
 
-        string Name { get; set; }
+    string Name { get; set; }
 
-        double Price { get; set; }
+    double Price { get; set; }
 
-        int Pegi { get; set; }
-    }
+    int Pegi { get; set; }
 }

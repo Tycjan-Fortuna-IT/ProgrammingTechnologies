@@ -1,17 +1,14 @@
-﻿namespace Data.API
+﻿namespace Data.API;
+
+public interface IEvent
 {
-    public interface IEvent
-    {
-        int id { get; set; }
+    int Id { get; set; }
 
-        string guid { get; }
+    int stateId { get; set; }
 
-        string stateGuid { get; }
+    int userId { get; set; }
 
-        string userGuid { get; }
+    DateTime occurrenceDate { get; set; }
 
-        DateTime occurrenceDate { get; }
-
-        void Action(IDataRepository dataRepository);
-    }
+    void Action(IDataRepository dataRepository);
 }

@@ -12,4 +12,8 @@ internal class Event
     public int UserId { get; set; }
 
     public DateTime OccurrenceDate { get; set; }
+
+    public string Type { get; set; } = null!;
+
+    public int? Quantity { get; set; }
 }

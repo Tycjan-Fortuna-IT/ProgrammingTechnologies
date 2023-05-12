@@ -1,39 +1,36 @@
 using Data.API;
 
-namespace Data.Implementation
+namespace Data.Implementation;
+
+internal class ReturnEvent : IEvent
 {
-    internal class ReturnEvent : IEvent
+    public ReturnEvent(int id, int stateId, int userId, DateTime occurrenceDate)
     {
-        public ReturnEvent(string? guid, string stateGuid, string userGuid)
-        {
-            this.guid = guid ?? System.Guid.NewGuid().ToString();
-            this.stateGuid = stateGuid;
-            this.userGuid = userGuid;
-            this.occurrenceDate = DateTime.Now;
-        }
+        this.Id = id;
+        this.stateId = stateId;
+        this.userId = userId;
+        this.occurrenceDate = occurrenceDate;
+    }
 
-        public int id { get; set; }
+    public int Id { get; set; }
 
-        public string guid { get; }
+    public int stateId { get; set; }
 
-        public string stateGuid { get; }
+    public int userId { get; set; }
 
-        public string userGuid { get; }
+    public DateTime occurrenceDate { get; set; }
 
-        public DateTime occurrenceDate { get; }
+    public void Action(IDataRepository dataRepository)
+    {
+        //IUser user = dataRepository.GetUser(this.userGuid);
+        //IState state = dataRepository.GetState(this.stateGuid);
+        //IProduct product = dataRepository.GetProduct(state.productGuid);
 
-        public void Action(IDataRepository dataRepository)
-        {
-            //IUser user = dataRepository.GetUser(this.userGuid);
-            //IState state = dataRepository.GetState(this.stateGuid);
-            //IProduct product = dataRepository.GetProduct(state.productGuid);
+        //if (!user.productLibrary.ContainsKey(product.guid))
+        //    throw new Exception("You do not have this Product!");
 
-            //if (!user.productLibrary.ContainsKey(product.guid))
-            //    throw new Exception("You do not have this Product!");
-
-            //state.productQuantity++;
-            //user.balance += product.price;
-            //user.productLibrary.Remove(product.guid);
-        }
+        //state.productQuantity++;
+        //user.balance += product.price;
+        //user.productLibrary.Remove(product.guid);
     }
 }

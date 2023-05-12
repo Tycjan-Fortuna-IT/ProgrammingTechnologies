@@ -1,17 +1,16 @@
-﻿namespace Data.API
+﻿namespace Data.API;
+
+public interface IUser
 {
-    public interface IUser
-    {
-        int Id { get; set; }
+    int Id { get; set; }
 
-        string Nickname { get; set; }
+    string Nickname { get; set; }
 
-        string Email { get; set; }
+    string Email { get; set; }
 
-        double Balance { get; set; }
+    double Balance { get; set; }
 
-        DateTime DateOfBirth { get; set; }
+    DateTime DateOfBirth { get; set; }
 
-        //Dictionary<string, IProduct> productLibrary { get; set; }
-    }
+    //Dictionary<string, IProduct> productLibrary { get; set; }
 }
