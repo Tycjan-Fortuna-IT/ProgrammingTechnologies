@@ -15,7 +15,7 @@ internal class User
 
     public string Email { get; set; } = null!;
 
-    public decimal Balance { get; set; }
+    public double Balance { get; set; }
 
     public DateTime DateOfBirth { get; set; }
 

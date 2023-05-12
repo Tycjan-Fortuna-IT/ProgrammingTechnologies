@@ -13,7 +13,7 @@ internal class Product
 
     public string Name { get; set; } = null!;
 
-    public decimal Price { get; set; }
+    public double Price { get; set; }
 
     public int Pegi { get; set; }
 

@@ -38,7 +38,7 @@ internal partial class DataContext : DbContext, IDataContext
         {
             Nickname = user.Nickname,
             Email = user.Email,
-            Balance = (decimal)user.Balance,
+            Balance = user.Balance,
             DateOfBirth = user.DateOfBirth,
         };
 
@@ -67,7 +67,7 @@ internal partial class DataContext : DbContext, IDataContext
 
         current.Nickname = user.Nickname;
         current.Email = user.Email;
-        current.Balance = (decimal)user.Balance;
+        current.Balance = user.Balance;
         current.DateOfBirth = user.DateOfBirth;
 
         await this.SaveChangesAsync();
@@ -106,7 +106,7 @@ internal partial class DataContext : DbContext, IDataContext
         DTO.Product productEntity = new DTO.Product()
         {
             Name = product.Name,
-            Price = (decimal)product.Price,
+            Price = product.Price,
             Pegi = product.Pegi,
         };
 
@@ -134,7 +134,7 @@ internal partial class DataContext : DbContext, IDataContext
         DTO.Product current = await this.products.FirstAsync(p => p.Id == product.Id);
 
         current.Name = product.Name;
-        current.Price = (decimal)product.Price;
+        current.Price = product.Price;
         current.Pegi = product.Pegi;
 
         await this.SaveChangesAsync();
@@ -342,63 +342,11 @@ internal partial class DataContext : DbContext, IDataContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<DTO.User>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3213E83F4060E7B0");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Balance)
-                .HasColumnType("decimal(18, 0)")
-                .HasColumnName("balance");
-            entity.Property(e => e.DateOfBirth)
-                .HasColumnType("date")
-                .HasColumnName("dateOfBirth");
-            entity.Property(e => e.Email)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("email");
-            entity.Property(e => e.Nickname)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("nickname");
-        });
-
-        modelBuilder.Entity<DTO.Product>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Products__3213E83F453A6F30");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Name)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("name");
-            entity.Property(e => e.Pegi).HasColumnName("pegi");
-            entity.Property(e => e.Price)
-                .HasColumnType("decimal(18, 0)")
-                .HasColumnName("price");
-        });
-
-        modelBuilder.Entity<DTO.State>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__States__3213E83FB2202D2C");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.ProductId).HasColumnName("productId");
-            entity.Property(e => e.ProductQuantity).HasColumnName("productQuantity");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.States)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_States_Products");
-        });
-
         modelBuilder.Entity<DTO.Event>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Events__3213E83FB34F1E0D");
+            entity.HasKey(e => e.Id).HasName("PK__Events__3213E83F8EABB74D");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.OccurrenceDate)
                 .HasColumnType("date")
                 .HasColumnName("occurrenceDate");
@@ -419,6 +367,54 @@ internal partial class DataContext : DbContext, IDataContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Events_Users");
+        });
+
+        modelBuilder.Entity<DTO.Product>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Products__3213E83F62C22C97");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.Pegi).HasColumnName("pegi");
+            entity.Property(e => e.Price).HasColumnName("price");
+        });
+
+        modelBuilder.Entity<DTO.State>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__States__3213E83F8DAC8DC2");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ProductId).HasColumnName("productId");
+            entity.Property(e => e.ProductQuantity).HasColumnName("productQuantity");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.States)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_States_Products");
+        });
+
+        modelBuilder.Entity<DTO.User>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Users__3213E83F047F7782");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Balance)
+                .HasColumnType("decimal(18, 0)")
+                .HasColumnName("balance");
+            entity.Property(e => e.DateOfBirth)
+                .HasColumnType("date")
+                .HasColumnName("dateOfBirth");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("email");
+            entity.Property(e => e.Nickname)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("nickname");
         });
 
         OnModelCreatingPartial(modelBuilder);
