@@ -6,83 +6,30 @@ namespace Data.Implementation;
 
 internal partial class DataContext : DbContext, IDataContext
 {
-    //public Dictionary<string, IUser> users { get; set; }
-
-    //public Dictionary<string, IProduct> products { get; set; }
-
-    //public Dictionary<string, IState> states { get; set; }
-
-    //public Dictionary<string, IEvent> events { get; set; }
-
     public DataContext()
     {
-        //this.users = new Dictionary<string, IUser>();
 
-        //this.products = new Dictionary<string, IProduct>();
-
-        //this.states = new Dictionary<string, IState>();
-
-        //this.events = new Dictionary<string, IEvent>();
     }
 
     protected virtual DbSet<DTO.User> users { get; set; }
 
-    public IQueryable<IUser> Users => users.Cast<IUser>();
-
     protected virtual DbSet<DTO.Product> products { get; set; }
+
+    protected virtual DbSet<DTO.State> states { get; set; }
+
+    protected virtual DbSet<DTO.Event> events { get; set; }
+
+    public IQueryable<IUser> Users => users.Cast<IUser>();
 
     public IQueryable<IProduct> Products => products.Cast<IProduct>();
 
+    public IQueryable<IState> States => states.Cast<IState>();
+
+    public IQueryable<IEvent> Events => events.Cast<IEvent>();
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=shop;Integrated Security=True;TrustServerCertificate=true");
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<DTO.User>(entity =>
-        {
-            entity.HasKey(e => e.Id)
-                .HasName("PK__Users__3213E83FCD75E293");
-
-            entity.Property(e => e.Nickname)
-                .IsRequired()
-                .HasColumnName("nickname");
-
-            entity.Property(e => e.Email)
-                .IsRequired()
-                .HasColumnName("email");
-
-            entity.Property(e => e.Balance)
-                .HasColumnType("decimal(18, 2)")
-                .HasColumnName("balance");
-
-            entity.Property(e => e.DateOfBirth)
-                .HasColumnName("dateOfBirth");
-        });
-
-        modelBuilder.Entity<DTO.Product>(entity =>
-        {
-            entity.HasKey(e => e.Id)
-                .HasName("PK__Products__3213E83F80E46A65");
-
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasColumnName("name");
-
-            entity.Property(e => e.Price)
-                .HasColumnType("decimal(18, 2)")
-                .HasColumnName("price")
-                .IsRequired();
-
-            entity.Property(e => e.Pegi)
-                .HasColumnType("integer")
-                .HasColumnName("pegi");
-        });
-
-        OnModelCreatingPartial(modelBuilder);
-    }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
+    
     #region User CRUD
 
     public async Task AddUserAsync(IUser user)
@@ -184,7 +131,7 @@ internal partial class DataContext : DbContext, IDataContext
 
     public async Task UpdateProductAsync(IProduct product)
     {
-        DTO.Product current = await this.products.FirstAsync(u => u.Id == product.Id);
+        DTO.Product current = await this.products.FirstAsync(p => p.Id == product.Id);
 
         current.Name = product.Name;
         current.Price = (decimal)product.Price;
@@ -195,7 +142,7 @@ internal partial class DataContext : DbContext, IDataContext
 
     public async Task DeleteProductAsync(int id)
     {
-        DTO.Product toDelete = await this.products.FirstAsync(u => u.Id == id);
+        DTO.Product toDelete = await this.products.FirstAsync(p => p.Id == id);
 
         this.products.Remove(toDelete);
 
@@ -219,6 +166,155 @@ internal partial class DataContext : DbContext, IDataContext
     #endregion
 
 
+    #region State CRUD
+
+    public async Task AddStateAsync(IState state)
+    {
+        DTO.State stateEntity = new DTO.State()
+        {
+            ProductId = state.productId,
+            ProductQuantity = state.productQuantity
+        };
+
+        await this.states.AddAsync(stateEntity);
+        await this.SaveChangesAsync();
+    }
+
+    public async Task<IState?> GetStateAsync(int id)
+    {
+        DTO.State? state = await Task.Run(() =>
+        {
+            IQueryable<DTO.State> query =
+                from s in states
+                where s.Id == id
+                select s;
+
+            return query.FirstOrDefault();
+        });
+
+        return state is not null ? new State(state.Id, state.ProductId, state.ProductQuantity) : null;
+    }
+
+    public async Task UpdateStateAsync(IState state)
+    {
+        DTO.State current = await this.states.FirstAsync(s => s.Id == state.Id);
+
+        current.ProductId = state.productId;
+        current.ProductQuantity = state.productQuantity;
+
+        await this.SaveChangesAsync();
+    }
+
+    public async Task DeleteStateAsync(int id)
+    {
+        DTO.State toDelete = await this.states.FirstAsync(s => s.Id == id);
+
+        this.states.Remove(toDelete);
+
+        await this.SaveChangesAsync();
+    }
+
+    public async Task<Dictionary<int, IState>> GetAllStatesAsync()
+    {
+        IQueryable<IState> stateQuery = from s in this.states
+            select
+                new State(s.Id, s.ProductId, s.ProductQuantity) as IState;
+
+        return await stateQuery.ToDictionaryAsync(p => p.Id);
+    }
+
+    public async Task<int> GetStatesCountAsync()
+    {
+        return await this.states.CountAsync();
+    }
+
+    #endregion
+
+
+    #region Event CRUD
+
+    public async Task AddEventAsync(IEvent even)
+    {
+        DTO.Event eventEntity = new DTO.Event()
+        {
+            StateId = even.stateId,
+            UserId = even.userId,
+            OccurrenceDate = even.occurrenceDate,
+        };
+
+        await this.events.AddAsync(eventEntity);
+        await this.SaveChangesAsync();
+    }    
+
+    public async Task<IEvent?> GetEventAsync(int id, string type)
+    {
+        DTO.Event? even = await Task.Run(() =>
+        {
+            IQueryable<DTO.Event> query =
+                from e in events
+                where e.Id == id
+                select e;
+
+            return query.FirstOrDefault();
+        });
+
+        IEvent newEvent;
+
+        if (even is null)
+            return null;
+
+        switch (type)
+        {
+            case "PurchaseEvent":
+                newEvent = new PurchaseEvent(even.Id, even.StateId, even.UserId, even.OccurrenceDate); break;
+            case "ReturnEvent":
+                newEvent = new ReturnEvent(even.Id, even.StateId, even.UserId, even.OccurrenceDate); break;
+            case "SupplyEvent":
+                newEvent = new SupplyEvent(even.Id, even.StateId, even.UserId, even.OccurrenceDate, (int)even.Quantity!); break;
+            default:
+                throw new Exception("This event type does not exist!");
+        }
+
+        return newEvent;
+    }    
+
+    public async Task UpdateEventAsync(IEvent even)
+    {
+        DTO.Event current = await this.events.FirstAsync(e => e.Id == even.Id);
+
+        current.StateId = even.stateId;
+        current.UserId = even.userId;
+        current.OccurrenceDate = even.occurrenceDate;
+
+        await this.SaveChangesAsync();
+    }    
+
+    public async Task DeleteEventAsync(int id)
+    {
+        DTO.Event toDelete = await this.events.FirstAsync(e => e.Id == id);
+
+        this.events.Remove(toDelete);
+
+        await this.SaveChangesAsync();
+    }    
+
+    public async Task<Dictionary<int, IEvent>> GetAllEventsAsync()
+    {
+        IQueryable<IEvent> stateQuery = from e in this.events
+            select
+                new PurchaseEvent(e.Id, e.StateId, e.UserId, e.OccurrenceDate) as IEvent;
+
+        return await stateQuery.ToDictionaryAsync(p => p.Id);
+    }    
+
+    public async Task<int> GetEventsCountAsync()
+    {
+        return await this.events.CountAsync();
+    }    
+
+    #endregion
+
+
     #region Utils
 
     public async Task<bool> CheckIfUserExists(int id)
@@ -231,6 +327,64 @@ internal partial class DataContext : DbContext, IDataContext
         return (await this.GetProductAsync(id)) != null;
     }
 
+    public async Task<bool> CheckIfStateExists(int id)
+    {
+        return (await this.GetStateAsync(id)) != null;
+    }
+
+    public async Task<bool> CheckIfEventExists(int id, string type)
+    {
+        return (await this.GetEventAsync(id, type)) != null;
+    }
+
     #endregion
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<DTO.User>(entity =>
+        {
+            entity.HasKey(e => e.Id)
+                .HasName("PK__Users__3213E83FCD75E293");
+
+            entity.Property(e => e.Nickname)
+                .IsRequired()
+                .HasColumnName("nickname");
+
+            entity.Property(e => e.Email)
+                .IsRequired()
+                .HasColumnName("email");
+
+            entity.Property(e => e.Balance)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("balance");
+
+            entity.Property(e => e.DateOfBirth)
+                .HasColumnName("dateOfBirth");
+        });
+
+        modelBuilder.Entity<DTO.Product>(entity =>
+        {
+            entity.HasKey(e => e.Id)
+                .HasName("PK__Products__3213E83F80E46A65");
+
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasColumnName("name");
+
+            entity.Property(e => e.Price)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("price")
+                .IsRequired();
+
+            entity.Property(e => e.Pegi)
+                .HasColumnType("integer")
+                .HasColumnName("pegi");
+        });
+
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
 

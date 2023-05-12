@@ -1,20 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Data.API;
+﻿namespace Data.API;
 
 public interface IDataContext
 {
-    //public Dictionary<string, IUser> users { get; set; }
-
-    //public Dictionary<string, IProduct> products { get; set; }
-
-    //public Dictionary<string, IState> states { get; set; }
-
-    //public Dictionary<string, IEvent> events { get; set; }
-
     public IQueryable<IUser> Users { get; }
 
     public IQueryable<IProduct> Products { get; }
+
+    public IQueryable<IState> States { get; }
+
+    public IQueryable<IEvent> Events { get; }
 
     #region User CRUD
 
@@ -50,11 +44,49 @@ public interface IDataContext
     #endregion
 
 
+    #region State CRUD
+
+    Task AddStateAsync(IState state);
+
+    Task<IState?> GetStateAsync(int id);
+
+    Task UpdateStateAsync(IState state);
+
+    Task DeleteStateAsync(int id);
+
+    Task<Dictionary<int, IState>> GetAllStatesAsync();
+
+    Task<int> GetStatesCountAsync();
+
+    #endregion
+
+
+    #region Event CRUD
+
+    Task AddEventAsync(IEvent even);
+
+    Task<IEvent?> GetEventAsync(int id, string type);
+
+    Task UpdateEventAsync(IEvent even);
+
+    Task DeleteEventAsync(int id);
+
+    Task<Dictionary<int, IEvent>> GetAllEventsAsync();
+
+    Task<int> GetEventsCountAsync();
+
+    #endregion
+
+
     #region Utils
 
     Task<bool> CheckIfUserExists(int id);
 
     Task<bool> CheckIfProductExists(int id);
+
+    Task<bool> CheckIfStateExists(int id);
+
+    Task<bool> CheckIfEventExists(int id, string type);
 
     #endregion
 }
