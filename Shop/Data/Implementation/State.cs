@@ -1,20 +1,19 @@
 ﻿using Data.API;
 
-namespace Data.Implementation
+namespace Data.Implementation;
+
+internal class State : IState
 {
-    internal class State : IState
+    public State(int id, int productId, int productQuantity = 0) 
     {
-        public State(string? guid, string productGuid, int productQuantity = 0) 
-        {
-            this.guid = guid ?? System.Guid.NewGuid().ToString();
-            this.productGuid = productGuid;
-            this.productQuantity = productQuantity;
-        }
-
-        public string guid { get; }
-
-        public string productGuid { get; }
-
-        public int productQuantity { get; set; }
+        this.Id = id;
+        this.productId = productId;
+        this.productQuantity = productQuantity;
     }
+
+    public int Id { get; set; }
+
+    public int productId { get; set; }
+
+    public int productQuantity { get; set; }
 }

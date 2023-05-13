@@ -1,37 +1,57 @@
 using Data.API;
 
-namespace Data.Implementation
+namespace Data.Implementation;
+
+internal class ReturnEvent : IEvent
 {
-    internal class ReturnEvent : IEvent
+    public ReturnEvent(int id, int stateId, int userId, DateTime occurrenceDate)
     {
-        public ReturnEvent(string? guid, string stateGuid, string userGuid)
-        {
-            this.guid = guid ?? System.Guid.NewGuid().ToString();
-            this.stateGuid = stateGuid;
-            this.userGuid = userGuid;
-            this.occurrenceDate = DateTime.Now;
-        }
+        this.Id = id;
+        this.stateId = stateId;
+        this.userId = userId;
+        this.occurrenceDate = occurrenceDate;
+    }
 
-        public string guid { get; }
+    public int Id { get; set; }
 
-        public string stateGuid { get; }
+    public int stateId { get; set; }
 
-        public string userGuid { get; }
+    public int userId { get; set; }
 
-        public DateTime occurrenceDate { get; }
+    public DateTime occurrenceDate { get; set; }
 
-        public void Action(IDataRepository dataRepository)
-        {
-            IUser user = dataRepository.GetUser(this.userGuid);
-            IState state = dataRepository.GetState(this.stateGuid);
-            IProduct product = dataRepository.GetProduct(state.productGuid);
+    public async Task Action(IDataRepository dataRepository)
+    {
+        IUser user = await dataRepository.GetUserAsync(userId);
+        IState state = await dataRepository.GetStateAsync(stateId);
+        IProduct product = await dataRepository.GetProductAsync(state.productId);
 
-            if (!user.productLibrary.ContainsKey(product.guid))
-                throw new Exception("You do not have this Product!");
+        Dictionary<int, IEvent> events = await dataRepository.GetAllEventsAsync();
+        Dictionary<int, IState> states = await dataRepository.GetAllStatesAsync();
 
-            state.productQuantity++;
-            user.balance += product.price;
-            user.productLibrary.Remove(product.guid);
-        }
+        int copiesBought = 0;
+
+        foreach 
+        (
+            IEvent even in 
+                 from even in events.Values 
+                 from stat in states.Values 
+                    where even.userId == user.Id &&
+                          even.stateId == stat.Id && 
+                          stat.productId == product.Id 
+                 select even
+        )
+            if (even is PurchaseEvent)
+                copiesBought++;
+            else if (even is ReturnEvent)
+                copiesBought--;
+
+        copiesBought--;
+
+        if (copiesBought < 0)
+            throw new Exception("You do not own this product!");
+
+        await dataRepository.UpdateStateAsync(stateId, product.Id, state.productQuantity + 1);
+        await dataRepository.UpdateUserAsync(userId, user.Nickname, user.Email, user.Balance + product.Price, user.DateOfBirth);
     }
 }

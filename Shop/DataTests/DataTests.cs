@@ -1,111 +1,304 @@
-﻿using Data.API;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Data.API;
 
-namespace Test
+namespace DataTests;
+
+[TestClass]
+public class DataTests
 {
-    [TestClass]
-    public class DataTests
+    private readonly IDataRepository _dataRepository = IDataRepository.CreateDatabase();
+
+    [TestMethod]
+    public async Task UserTests()
     {
-        IDataRepository dataRepository = IDataRepository.CreateDatabase();
+        int userId = 1;
 
-        [TestMethod]
-        public void UserTests()
-        {
-            dataRepository.AddUser("348e7dd8-c30f-4f02-8215-4e713c58aa51", "Michal", "m_gapcio@gmail.com", 200,
-                new DateTime(2015, 12, 25));
+        await _dataRepository.AddUserAsync(userId, "John", "m_gapcio@gmail.com", 21, new DateTime(2015, 12, 25));
 
-            Assert.AreEqual("348e7dd8-c30f-4f02-8215-4e713c58aa51", dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").guid);
-            Assert.AreEqual("Michal", dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").nickname);
-            Assert.AreEqual("m_gapcio@gmail.com", dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").email);
-            Assert.AreEqual(200, dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").balance);
-            Assert.AreEqual(new DateTime(2015, 12, 25), dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").dateOfBirth);
-            Assert.IsNotNull(dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").productLibrary);
+        IUser user = await _dataRepository.GetUserAsync(userId);
 
-            Assert.ThrowsException<Exception>(() => { dataRepository.AddUser("348e7dd8-c30f-4f02-8215-4e713c58aa51", "random48", "random48@gmail.com", 400, new DateTime(1999, 4, 5)); });
+        Assert.IsNotNull(user);
+        Assert.AreEqual(userId, user.Id);
+        Assert.AreEqual("John", user.Nickname);
+        Assert.AreEqual("m_gapcio@gmail.com", user.Email);
+        Assert.AreEqual(21, user.Balance);
+        Assert.AreEqual(new DateTime(2015, 12, 25), user.DateOfBirth);
 
-            dataRepository.UpdateUser("348e7dd8-c30f-4f02-8215-4e713c58aa51", "Antek", "a_pcimowski@gmail.com", 850, new DateTime(2015, 12, 26));
-            dataRepository.AddProduct("0a81eb06-db53-11ed-afa1-0242ac120002", "Witcher 3", 129.99, 18);
-            dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").productLibrary = new Dictionary<string, IProduct>() {
-                { "0a81eb06-db53-11ed-afa1-0242ac120002" , dataRepository.GetProduct("0a81eb06-db53-11ed-afa1-0242ac120002") }
-            };
+        Assert.IsNotNull(await _dataRepository.GetAllUsersAsync());
+        Assert.IsTrue(await _dataRepository.GetUsersCountAsync() > 0);
 
-            Assert.AreEqual("Antek", dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").nickname);
-            Assert.AreEqual("a_pcimowski@gmail.com", dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").email);
-            Assert.AreEqual(850, dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").balance);
-            Assert.AreEqual(new DateTime(2015, 12, 26), dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").dateOfBirth);
-            Assert.AreSame(dataRepository.GetProduct("0a81eb06-db53-11ed-afa1-0242ac120002"), dataRepository.GetUser("348e7dd8-c30f-4f02-8215-4e713c58aa51").productLibrary["0a81eb06-db53-11ed-afa1-0242ac120002"]);
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetUserAsync(userId + 2));
 
-            Assert.IsTrue(dataRepository.CheckIfUserExists("348e7dd8-c30f-4f02-8215-4e713c58aa51"));
-            Assert.AreEqual(1, dataRepository.GetUserCount());
-            Assert.IsTrue(dataRepository.GetAllUsers().ContainsKey("348e7dd8-c30f-4f02-8215-4e713c58aa51"));
+        await _dataRepository.UpdateUserAsync(userId, "Tom", "t_pokot@gmail.com", 301, new DateTime(2015, 12, 12));
 
-            Assert.IsFalse(dataRepository.CheckIfUserExists(System.Guid.NewGuid().ToString()));
+        IUser userUpdated = await _dataRepository.GetUserAsync(userId);
 
-            dataRepository.DeleteUser("348e7dd8-c30f-4f02-8215-4e713c58aa51");
-            Assert.AreEqual(0, dataRepository.GetUserCount());
-            Assert.IsFalse(dataRepository.GetAllUsers().ContainsKey("348e7dd8-c30f-4f02-8215-4e713c58aa51"));
+        Assert.IsNotNull(userUpdated);
+        Assert.AreEqual(userId, userUpdated.Id);
+        Assert.AreEqual("Tom", userUpdated.Nickname);
+        Assert.AreEqual("t_pokot@gmail.com", userUpdated.Email);
+        Assert.AreEqual(301, userUpdated.Balance);
+        Assert.AreEqual(new DateTime(2015, 12, 12), userUpdated.DateOfBirth);
 
-            Assert.ThrowsException<Exception>(() => { dataRepository.UpdateUser("NOGUID", "nicknameTest", "n_Test@o2.pl", 1200, new DateTime(2000, 9, 14)); });
-            Assert.ThrowsException<Exception>(() => { dataRepository.GetUser("NOGUID"); });
-            Assert.ThrowsException<Exception>(() => { dataRepository.DeleteUser("NOGUID"); });
-        }
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.UpdateUserAsync(userId + 2,
+            "Tom", "t_pokot@gmail.com", 301, new DateTime(2015, 12, 12)));
 
-        [TestMethod]
-        public void ProductTests()
-        {
-            dataRepository.AddProduct("d3daae3a-a914-4d37-839a-b26c6e634652", "Assassin's Creed Valhalla", 239.99, 18);
+        await _dataRepository.DeleteUserAsync(userId);
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetUserAsync(userId));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.DeleteUserAsync(userId));
+    }
 
-            Assert.AreEqual("d3daae3a-a914-4d37-839a-b26c6e634652", dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").guid);
-            Assert.AreEqual("Assassin's Creed Valhalla", dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").name);
-            Assert.AreEqual(239.99, dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").price);
-            Assert.AreEqual(18, dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").pegi);
+    [TestMethod]
+    public async Task ProductTests()
+    {
+        int productId = 2;
 
-            Assert.ThrowsException<Exception>(() => { dataRepository.AddProduct("d3daae3a-a914-4d37-839a-b26c6e634652", "Diablo 3", 339.99, 18); }); // already exists
+        await _dataRepository.AddProductAsync(productId, "Assassin's Creed Valhalla", 240, 18);
 
-            dataRepository.UpdateProduct("d3daae3a-a914-4d37-839a-b26c6e634652", "SimCity 3000", 79.99, 3);
+        IProduct product = await _dataRepository.GetProductAsync(productId);
 
-            Assert.AreEqual("SimCity 3000", dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").name);
-            Assert.AreEqual(79.99, dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").price);
-            Assert.AreEqual(3, dataRepository.GetProduct("d3daae3a-a914-4d37-839a-b26c6e634652").pegi);
- 
-            Assert.IsTrue(dataRepository.CheckIfProductExists("d3daae3a-a914-4d37-839a-b26c6e634652"));
-            Assert.AreEqual(1, dataRepository.GetProductCount());
-            Assert.IsTrue(dataRepository.GetAllProducts().ContainsKey("d3daae3a-a914-4d37-839a-b26c6e634652"));
+        Assert.IsNotNull(product);
+        Assert.AreEqual(productId, product.Id);
+        Assert.AreEqual("Assassin's Creed Valhalla", product.Name);
+        Assert.AreEqual(240, product.Price);
+        Assert.AreEqual(18, product.Pegi);
 
-            Assert.IsFalse(dataRepository.CheckIfProductExists(System.Guid.NewGuid().ToString()));
+        Assert.IsNotNull(await _dataRepository.GetAllProductsAsync());
+        Assert.IsTrue(await _dataRepository.GetProductsCountAsync() > 0);
 
-            dataRepository.DeleteProduct("d3daae3a-a914-4d37-839a-b26c6e634652");
-            Assert.AreEqual(0, dataRepository.GetProductCount());
-            Assert.IsFalse(dataRepository.GetAllProducts().ContainsKey("d3daae3a-a914-4d37-839a-b26c6e634652"));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetProductAsync(12));
 
-            Assert.ThrowsException<Exception>(() => { dataRepository.UpdateProduct("NOGUID", "Assassin's Creed Valhalla", 239.99, 18); });
-            Assert.ThrowsException<Exception>(() => { dataRepository.GetProduct("NOGUID"); });
-            Assert.ThrowsException<Exception>(() => { dataRepository.DeleteProduct("NOGUID"); });
-        }
+        await _dataRepository.UpdateProductAsync(productId, "Cyberpunk 2077", 300, 15);
 
-        [TestMethod]
-        public void StateTests()
-        {
-            dataRepository.AddProduct("d3daae3a-a914-4d37-839a-b26c6e634652", "Assassin's Creed Valhalla", 239.99, 18);
-            dataRepository.AddState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1", "d3daae3a-a914-4d37-839a-b26c6e634652", 10);
-            
-            Assert.AreEqual("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1", dataRepository.GetState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1").guid);
-            Assert.AreEqual("d3daae3a-a914-4d37-839a-b26c6e634652", dataRepository.GetState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1").productGuid);
-            Assert.AreEqual(10, dataRepository.GetState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1").productQuantity);
+        IProduct productUpdated = await _dataRepository.GetProductAsync(productId);
 
-            Assert.ThrowsException<Exception>(() => { dataRepository.AddState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1", "1a75e2e6-01fc-4a27-9aca-0b933cf59d84", 100); });
+        Assert.IsNotNull(productUpdated);
+        Assert.AreEqual(productId, productUpdated.Id);
+        Assert.AreEqual("Cyberpunk 2077", productUpdated.Name);
+        Assert.AreEqual(300, productUpdated.Price);
+        Assert.AreEqual(15, productUpdated.Pegi);
 
-            Assert.AreEqual(1, dataRepository.GetStateCount());
-            Assert.IsTrue(dataRepository.GetAllStates().ContainsKey("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1"));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.UpdateProductAsync(12, "Cyberpunk 2077", 300, 15));
 
-            Assert.AreSame(dataRepository.GetState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1"), dataRepository.GetProductState("d3daae3a-a914-4d37-839a-b26c6e634652"));
-            Assert.ThrowsException<Exception>(() => { dataRepository.GetProductState("NOGUID"); });
+        await _dataRepository.DeleteProductAsync(productId);
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetProductAsync(productId));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.DeleteProductAsync(productId));
+    }
 
-            dataRepository.DeleteState("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1");
-            Assert.AreEqual(0, dataRepository.GetStateCount());
-            Assert.IsFalse(dataRepository.GetAllStates().ContainsKey("0a24ee26-7a3c-4d26-964c-22a1ff38cdb1"));
-        
-            Assert.ThrowsException<Exception>(() => { dataRepository.GetState("NOGUID"); });
-            Assert.ThrowsException<Exception>(() => { dataRepository.DeleteState("NOGUID"); });
-        }
+    [TestMethod]
+    public async Task StateTests()
+    {
+        int productId = 3;
+        int stateId = 3;
+
+        await _dataRepository.AddProductAsync(productId, "Assassin's Creed Valhalla", 240, 18);
+
+        IProduct product = await _dataRepository.GetProductAsync(productId);
+
+        await _dataRepository.AddStateAsync(stateId, productId, 12);
+
+        IState state = await _dataRepository.GetStateAsync(stateId);
+
+        Assert.IsNotNull(state);
+        Assert.AreEqual(stateId, state.Id);
+        Assert.AreEqual(productId, state.productId);
+        Assert.AreEqual(12, state.productQuantity);
+
+        Assert.IsNotNull(await _dataRepository.GetAllStatesAsync());
+        Assert.IsTrue(await _dataRepository.GetStatesCountAsync() > 0);
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetStateAsync(stateId + 2));
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.AddStateAsync(stateId, 13, 12));
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.AddStateAsync(stateId, productId, -1));
+
+        await _dataRepository.UpdateStateAsync(stateId, productId, 9);
+
+        IState stateUpdated = await _dataRepository.GetStateAsync(stateId);
+
+        Assert.IsNotNull(stateUpdated);
+        Assert.AreEqual(stateId, stateUpdated.Id);
+        Assert.AreEqual(productId, stateUpdated.productId);
+        Assert.AreEqual(9, stateUpdated.productQuantity);
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.UpdateStateAsync(stateId + 2, productId, 12));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.UpdateStateAsync(stateId, 13, 12));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.UpdateStateAsync(stateId, productId, -12));
+
+        await _dataRepository.DeleteStateAsync(stateId);
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.GetStateAsync(stateId));
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.DeleteStateAsync(stateId));
+
+        await _dataRepository.DeleteProductAsync(productId);
+    }
+
+    [TestMethod]
+    public async Task EventTests()
+    {
+        int purchaseEventId = 4;
+        int userId = 4;
+        int productId = 4;
+        int stateId = 4;
+
+        await _dataRepository.AddProductAsync(productId, "Assassin's Creed Valhalla", 240, 18);
+        await _dataRepository.AddStateAsync(stateId, productId, 12);
+        await _dataRepository.AddUserAsync(userId, "John", "m_gapcio@gmail.com", 2100, new DateTime(2000, 12, 25));
+
+        IProduct product = await _dataRepository.GetProductAsync(productId);
+        IState state = await _dataRepository.GetStateAsync(stateId);
+        IUser user = await _dataRepository.GetUserAsync(userId);
+
+        await _dataRepository.AddEventAsync(purchaseEventId, stateId, userId, "PurchaseEvent");
+
+        IEvent purchaseEvent = await _dataRepository.GetEventAsync(purchaseEventId, "PurchaseEvent");
+
+        Assert.IsNotNull(purchaseEvent);
+        Assert.AreEqual(purchaseEventId, purchaseEvent.Id);
+        Assert.AreEqual(stateId, purchaseEvent.stateId);
+        Assert.AreEqual(userId, purchaseEvent.userId);
+
+        Assert.IsNotNull(await _dataRepository.GetAllEventsAsync());
+        Assert.IsTrue(await _dataRepository.GetEventsCountAsync() > 0);
+
+        await _dataRepository.UpdateEventAsync(purchaseEventId, stateId, userId, "PurchaseEvent", null);
+
+        IEvent eventUpdated = await _dataRepository.GetEventAsync(purchaseEventId, "PurchaseEvent");
+
+        Assert.IsNotNull(eventUpdated);
+        Assert.AreEqual(purchaseEventId, eventUpdated.Id);
+        Assert.AreEqual(stateId, eventUpdated.stateId);
+        Assert.AreEqual(userId, eventUpdated.userId);
+
+        await _dataRepository.DeleteEventAsync(purchaseEventId);
+        await _dataRepository.DeleteStateAsync(stateId);
+        await _dataRepository.DeleteProductAsync(productId);
+        await _dataRepository.DeleteUserAsync(userId);
+    }
+
+    [TestMethod]
+    public async Task EventsActionTest()
+    {
+        int userId1 = 5;
+        int stateId1 = 5;
+        int purchaseEventId1 = 5;
+        int productId1 = 5;
+
+        await _dataRepository.AddProductAsync(productId1, "Assassin's Creed Valhalla", 240, 18);
+        await _dataRepository.AddStateAsync(stateId1, productId1, 12);
+        await _dataRepository.AddUserAsync(userId1, "John", "m_gapcio@gmail.com", 300, new DateTime(2000, 12, 25));
+        await _dataRepository.AddEventAsync(purchaseEventId1, stateId1, userId1, "PurchaseEvent");
+
+        Assert.AreEqual(60, (await _dataRepository.GetUserAsync(userId1)).Balance);
+        Assert.AreEqual(11, (await _dataRepository.GetStateAsync(stateId1)).productQuantity);
+
+        await _dataRepository.DeleteEventAsync(purchaseEventId1);
+        await _dataRepository.DeleteStateAsync(stateId1);
+        await _dataRepository.DeleteProductAsync(productId1);
+        await _dataRepository.DeleteUserAsync(userId1);
+
+        int userId2 = 5;
+        int stateId2 = 5;
+        int purchaseEventId2 = 5;
+        int productId2 = 5;
+
+        await _dataRepository.AddProductAsync(productId2, "Assassin's Creed Valhalla", 240, 18);
+        await _dataRepository.AddStateAsync(stateId2, productId2, 12);
+        await _dataRepository.AddUserAsync(userId2, "John", "m_gapcio@gmail.com", 300, new DateTime(2012, 12, 25));
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.AddEventAsync(purchaseEventId2, stateId2, userId2, "PurchaseEvent"));
+
+        await _dataRepository.DeleteStateAsync(stateId2);
+        await _dataRepository.DeleteProductAsync(productId2);
+        await _dataRepository.DeleteUserAsync(userId2);
+
+        int userId3 = 5;
+        int stateId3 = 5;
+        int purchaseEventId3 = 5;
+        int productId3 = 5;
+
+        await _dataRepository.AddProductAsync(productId3, "Assassin's Creed Valhalla", 240, 18);
+        await _dataRepository.AddStateAsync(stateId3, productId3, 0);
+        await _dataRepository.AddUserAsync(userId3, "John", "m_gapcio@gmail.com", 300, new DateTime(2000, 12, 25));
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.AddEventAsync(purchaseEventId3, stateId3, userId3, "PurchaseEvent"));
+
+        await _dataRepository.DeleteStateAsync(stateId3);
+        await _dataRepository.DeleteProductAsync(productId3);
+        await _dataRepository.DeleteUserAsync(userId3);
+
+        int userId4 = 5;
+        int stateId4 = 5;
+        int purchaseEventId4 = 5;
+        int productId4 = 5;
+
+        await _dataRepository.AddProductAsync(productId4, "Assassin's Creed Valhalla", 240, 18);
+        await _dataRepository.AddStateAsync(stateId4, productId4, 2);
+        await _dataRepository.AddUserAsync(userId4, "John", "m_gapcio@gmail.com", 120, new DateTime(2000, 12, 25));
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.AddEventAsync(purchaseEventId4, stateId4, userId4, "PurchaseEvent"));
+
+        await _dataRepository.DeleteStateAsync(stateId4);
+        await _dataRepository.DeleteProductAsync(productId4);
+        await _dataRepository.DeleteUserAsync(userId4);
+
+        int userId5 = 5;
+        int stateId5 = 5;
+        int purchaseEventId5 = 5;
+        int returnEventId5 = 6;
+        int productId5 = 5;
+
+        await _dataRepository.AddProductAsync(productId5, "Assassin's Creed Valhalla", 240, 18);
+        await _dataRepository.AddStateAsync(stateId5, productId5, 2);
+        await _dataRepository.AddUserAsync(userId5, "John", "m_gapcio@gmail.com", 300, new DateTime(2000, 12, 25));
+
+        await _dataRepository.AddEventAsync(purchaseEventId5, stateId5, userId5, "PurchaseEvent");
+        await _dataRepository.AddEventAsync(returnEventId5, stateId5, userId5, "ReturnEvent");
+
+        Assert.AreEqual(300, (await _dataRepository.GetUserAsync(userId5)).Balance);
+        Assert.AreEqual(2, (await _dataRepository.GetStateAsync(stateId5)).productQuantity);
+
+        await _dataRepository.DeleteEventAsync(returnEventId5);
+        await _dataRepository.DeleteEventAsync(purchaseEventId5);
+        await _dataRepository.DeleteStateAsync(stateId5);
+        await _dataRepository.DeleteProductAsync(productId5);
+        await _dataRepository.DeleteUserAsync(userId5);
+
+        int userId6 = 7;
+        int stateId6 = 7;
+        int returnEventId6 = 7;
+        int productId6 = 7;
+
+        await _dataRepository.AddProductAsync(productId6, "Assassin's Creed Valhalla", 240, 18);
+        await _dataRepository.AddStateAsync(stateId6, productId6, 2);
+        await _dataRepository.AddUserAsync(userId6, "John", "m_gapcio@gmail.com", 300, new DateTime(2000, 12, 25));
+
+        await Assert.ThrowsExceptionAsync<Exception>(async () => await _dataRepository.AddEventAsync(returnEventId6, stateId6, userId6, "ReturnEvent"));
+
+        Assert.AreEqual(300, (await _dataRepository.GetUserAsync(userId6)).Balance);
+        Assert.AreEqual(2, (await _dataRepository.GetStateAsync(stateId6)).productQuantity);
+
+
+        await _dataRepository.DeleteStateAsync(stateId6);
+        await _dataRepository.DeleteProductAsync(productId6);
+        await _dataRepository.DeleteUserAsync(userId6);
+
+        int userId7 = 8;
+        int stateId7 = 8;
+        int supplyEventId7 = 8;
+        int productId7 = 8;
+
+        await _dataRepository.AddProductAsync(productId7, "Assassin's Creed Valhalla", 240, 18);
+        await _dataRepository.AddStateAsync(stateId7, productId7, 2);
+        await _dataRepository.AddUserAsync(userId7, "John", "m_gapcio@gmail.com", 300, new DateTime(2000, 12, 25));
+
+        await _dataRepository.AddEventAsync(supplyEventId7, stateId7, userId7, "SupplyEvent", 12);
+
+        Assert.AreEqual(14, (await _dataRepository.GetStateAsync(stateId7)).productQuantity);
+
+        await _dataRepository.DeleteEventAsync(supplyEventId7);
+        await _dataRepository.DeleteStateAsync(stateId7);
+        await _dataRepository.DeleteProductAsync(productId7);
+        await _dataRepository.DeleteUserAsync(userId7);
     }
 }
