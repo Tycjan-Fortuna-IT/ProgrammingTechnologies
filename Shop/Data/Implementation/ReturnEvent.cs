@@ -36,7 +36,9 @@ internal class ReturnEvent : IEvent
             IEvent even in 
                  from even in events.Values 
                  from stat in states.Values 
-                    where even.stateId == stat.Id && stat.productId == product.Id 
+                    where even.userId == user.Id &&
+                          even.stateId == stat.Id && 
+                          stat.productId == product.Id 
                  select even
         )
             if (even is PurchaseEvent)
