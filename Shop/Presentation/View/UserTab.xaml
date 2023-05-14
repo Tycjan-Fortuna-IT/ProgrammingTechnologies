@@ -1,4 +1,4 @@
-﻿<Window x:Class="Presentation.UserTab"
+﻿<Window x:Class="Presentation.View.UserTab"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -43,7 +43,7 @@
                             <Border BorderBrush="LightGray" BorderThickness="1" d:LayoutOverrides="Width, Height"/>
                         </ScrollViewer>
                     </GroupBox>
-                    <Button Height="22"  Width="60" Name="returnButton" Click="returnGame" Grid.Row="1" Margin="442,323,52,10">Return</Button>
+                    <Button Height="22"  Width="60" Name="returnButton" Grid.Row="1" Margin="442,323,52,10">Return</Button>
                 </Grid>
             </TabItem>
             <TabItem Header="Moderator">

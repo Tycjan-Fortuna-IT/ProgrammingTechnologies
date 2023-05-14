@@ -1,35 +1,28 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows.Input;
 
 namespace Presentation.ViewModel
 {
     public partial class MainWindowViewModel : IViewModel
     {
-        private IViewModel _selectedViewModel;
+        private IViewModel _selectedViewModel { get; set; }
 
-        public ICommand StartAppCommand;
 
-        public ICommand ExitAppCommand;
-        
         public MainWindowViewModel()
         {
-            this.StartAppCommand = new UpdateViewModel(this);
+            this._selectedViewModel = new HomeViewModel();
         }
 
-        public IViewModel SelectedViewModel
+        public new IViewModel SelectedViewModel
         {
             get => _selectedViewModel;
             set
             {
                 _selectedViewModel = value;
+
                 OnPropertyChanged(nameof(SelectedViewModel));
             }
-        }
-
-        public void switchView()
-        {
-            _selectedViewModel = new ShopTabViewModel();
-            //_selectedViewModel.Show();
         }
     }
 }

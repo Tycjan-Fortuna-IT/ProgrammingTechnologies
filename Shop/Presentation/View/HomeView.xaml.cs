@@ -10,19 +10,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Presentation.ViewModel;
 
 namespace Presentation.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for HomeView.xaml
     /// </summary>
-    public partial class UserTab : Window
+    public partial class HomeView : UserControl
     {
-        public UserTab()
+        public HomeView()
         {
             InitializeComponent();
+
+            this.DataContext = new HomeViewModel();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Presentation.ViewModel;
 using System.Windows;
 
-namespace Presentation
+namespace Presentation.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -11,6 +11,7 @@ namespace Presentation
         public MainWindow()
         {
             InitializeComponent();
+
             this.DataContext = new MainWindowViewModel();
         }
 
