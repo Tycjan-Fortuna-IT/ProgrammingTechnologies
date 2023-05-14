@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Presentation.ViewModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Presentation
 {
@@ -23,16 +11,17 @@ namespace Presentation
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new MainWindowViewModel();
         }
 
-        private void startApp(object sender, RoutedEventArgs e)
-        {
-            // zmiana widokow
-        }
+        //private void startApp(object sender, RoutedEventArgs e)
+        //{
+            
+        //}
 
-        private void exitApp(object sender, RoutedEventArgs e)
-        {
+        //private void exitApp(object sender, RoutedEventArgs e)
+        //{
 
-        }
+        //}
     }
 }

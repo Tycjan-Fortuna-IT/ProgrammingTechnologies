@@ -6,12 +6,16 @@
         xmlns:local="clr-namespace:Presentation.ViewModel"
         mc:Ignorable="d"
         Title="GameStacc" Height="450" Width="800">
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
     <Grid Background="MintCream">
+        <ContentControl Content="{Binding SelectedViewModel}"/>
         <Image Source="/Images/logo.png" Height="200" Width="200" Margin="211,58,389,176"/>
         <TextBlock TextWrapping="Wrap" Text="GameStacc" FontSize="32" FontWeight="ExtraBold" TextAlignment="Center" Height="NaN" Margin="372,152,222,238" Width="NaN"/>
         <TextBlock TextWrapping="Wrap" Text="Everything for gamers" FontSize="16" FontWeight="DemiBold" TextAlignment="Center" Height="NaN" Margin="372,196,222,196" Width="NaN"/>
-        <Button Height="NaN" Width="NaN" Background="LightCyan" BorderBrush="DarkCyan" Name="startButton" Click="startApp" Margin="320,269,320,134">Start</Button>
-        <Button Height="NaN" Width="NaN" Background="MistyRose" BorderBrush="PaleVioletRed" Name="exitButton" Click="exitApp" Margin="320,315,320,88">Exit</Button>
+        <Button Height="NaN" Width="NaN" Background="LightCyan" BorderBrush="DarkCyan" Name="startButton" Command="{Binding StartAppCommand}" Margin="320,269,320,134">Start</Button>
+        <Button Height="NaN" Width="NaN" Background="MistyRose" BorderBrush="PaleVioletRed" Name="exitButton" Command="{Binding ExitAppCommand}" Margin="320,315,320,88">Exit</Button>
         <TextBlock TextWrapping="Wrap" Text="TF and PK © 2023" TextAlignment="Center" Margin="300,397,300,10" Height="NaN" Width="NaN"/>
         <Separator HorizontalAlignment="Center" Height="33" Margin="0,359,0,0" VerticalAlignment="Top" Width="50"/>
     </Grid>
