@@ -24,5 +24,15 @@ namespace Presentation
         {
             InitializeComponent();
         }
+
+        private void startApp(object sender, RoutedEventArgs e)
+        {
+            // zmiana widokow
+        }
+
+        private void exitApp(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
