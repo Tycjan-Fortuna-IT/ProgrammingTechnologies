@@ -9,6 +9,4 @@ public interface IEvent
     int userId { get; set; }
 
     DateTime occurrenceDate { get; set; }
-
-    Task Action(IDataRepository dataRepository);
 }

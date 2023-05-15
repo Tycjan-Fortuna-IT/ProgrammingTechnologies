@@ -179,19 +179,74 @@ internal class DataRepository : IDataRepository
     {
         IEvent newEvent;
 
+        IUser user = await this.GetUserAsync(userId);
+        IState state = await this.GetStateAsync(stateId);
+        IProduct product = await this.GetProductAsync(state.productId);
+
         switch (type)
         {
             case "PurchaseEvent":
-                newEvent = new PurchaseEvent(id, stateId, userId, DateTime.Now); break;
+                newEvent = new PurchaseEvent(id, stateId, userId, DateTime.Now);
+
+                if (DateTime.Now.Year - user.DateOfBirth.Year < product.Pegi)
+                    throw new Exception("You are not old enough to purchase this game!");
+
+                if (state.productQuantity == 0)
+                    throw new Exception("Product unavailable, please check later!");
+
+                if (user.Balance < product.Price)
+                    throw new Exception("Not enough money to purchase this product!");
+
+                await this.UpdateStateAsync(stateId, product.Id, state.productQuantity - 1);
+                await this.UpdateUserAsync(userId, user.Nickname, user.Email, user.Balance - product.Price, user.DateOfBirth);
+
+                break;
+
             case "ReturnEvent":
-                newEvent = new ReturnEvent(id, stateId, userId, DateTime.Now); break;
+                newEvent = new ReturnEvent(id, stateId, userId, DateTime.Now);
+
+                Dictionary<int, IEvent> events = await this.GetAllEventsAsync();
+                Dictionary<int, IState> states = await this.GetAllStatesAsync();
+
+                int copiesBought = 0;
+
+                foreach
+                (
+                    IEvent even in
+                    from even in events.Values
+                    from stat in states.Values
+                    where even.userId == user.Id &&
+                          even.stateId == stat.Id &&
+                          stat.productId == product.Id
+                    select even
+                )
+                    if (even is PurchaseEvent)
+                        copiesBought++;
+                    else if (even is ReturnEvent)
+                        copiesBought--;
+
+                copiesBought--;
+
+                if (copiesBought < 0)
+                    throw new Exception("You do not own this product!");
+
+                await this.UpdateStateAsync(stateId, product.Id, state.productQuantity + 1);
+                await this.UpdateUserAsync(userId, user.Nickname, user.Email, user.Balance + product.Price, user.DateOfBirth);
+
+                break;
             case "SupplyEvent":
-                newEvent = new SupplyEvent(id, stateId, userId, DateTime.Now, quantity); break;
+                newEvent = new SupplyEvent(id, stateId, userId, DateTime.Now, quantity);
+
+                if (quantity <= 0)
+                    throw new Exception("Can not supply with this amount!");
+
+                await this.UpdateStateAsync(stateId, product.Id, state.productQuantity + quantity);
+
+                break;
+
             default:
                 throw new Exception("This event type does not exist!");
         }
-
-        await newEvent.Action(this);
 
         await this._context.AddEventAsync(newEvent, type);
     }
