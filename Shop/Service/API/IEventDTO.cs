@@ -1,6 +1,6 @@
-﻿namespace Data.API;
+﻿namespace Service.API;
 
-public interface IEvent
+public interface IEventDTO
 {
     int Id { get; set; }
 
