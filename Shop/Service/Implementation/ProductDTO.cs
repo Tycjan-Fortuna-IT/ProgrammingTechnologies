@@ -16,7 +16,7 @@ internal class ProductDTO : IProductDTO
     {
         this.Id = id;
         this.Name = name;
-        this.Price = pegi;
+        this.Price = price;
         this.Pegi = pegi;
     }
 }

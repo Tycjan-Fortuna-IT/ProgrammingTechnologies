@@ -1,9 +1,15 @@
 ﻿using Data.API;
+using Service.Implementation;
 
 namespace Service.API;
 
 public interface IStateCRUD
 {
+    static IStateCRUD CreateStateCRUD(IDataRepository? dataRepository)
+    {
+        return new StateCRUD(dataRepository ?? IDataRepository.CreateDatabase());
+    }
+
     Task AddStateAsync(int id, int productId, int productQuantity);
 
     Task<IStateDTO> GetStateAsync(int id);

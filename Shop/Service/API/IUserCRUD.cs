@@ -1,7 +1,15 @@
-﻿namespace Service.API;
+﻿using Data.API;
+using Service.Implementation;
+
+namespace Service.API;
 
 public interface IUserCRUD
 {
+    static IUserCRUD CreateUserCRUD(IDataRepository? dataRepository)
+    {
+        return new UserCRUD(dataRepository ?? IDataRepository.CreateDatabase());
+    }
+
     Task AddUserAsync(int id, string nickname, string email, double balance, DateTime dateOfBirth);
 
     Task<IUserDTO> GetUserAsync(int id);

@@ -1,9 +1,15 @@
 ﻿using Data.API;
+using Service.Implementation;
 
 namespace Service.API;
 
 public interface IProductCRUD
 {
+    static IProductCRUD CreateProductCRUD(IDataRepository? dataRepository)
+    {
+        return new ProductCRUD(dataRepository ?? IDataRepository.CreateDatabase());
+    }
+
     Task AddProductAsync(int id, string name, double price, int pegi);
 
     Task<IProductDTO> GetProductAsync(int id);
