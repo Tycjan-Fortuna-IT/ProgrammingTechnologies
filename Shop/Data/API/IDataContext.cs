@@ -2,14 +2,6 @@
 
 public interface IDataContext
 {
-    public IQueryable<IUser> Users { get; }
-
-    public IQueryable<IProduct> Products { get; }
-
-    public IQueryable<IState> States { get; }
-
-    public IQueryable<IEvent> Events { get; }
-
     #region User CRUD
 
     Task AddUserAsync(IUser user);

@@ -1,100 +1,102 @@
 ﻿using Data.API;
-using Data.Implementation.DTO;
-using Microsoft.EntityFrameworkCore;
+using Data.Database;
 
 namespace Data.Implementation;
 
-internal partial class DataContext : DbContext, IDataContext
+internal partial class DataContext : IDataContext
 {
     public DataContext()
     {
 
     }
 
-    protected virtual DbSet<DTO.User> users { get; set; }
+    private readonly string ConnectionString =
+        "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\tycja\\Desktop\\ProgrammingTechnologies\\Shop\\Data\\Database\\Shop.mdf;Integrated Security=True";
 
-    protected virtual DbSet<DTO.Product> products { get; set; }
-
-    protected virtual DbSet<DTO.State> states { get; set; }
-
-    protected virtual DbSet<DTO.Event> events { get; set; }
-
-    public IQueryable<IUser> Users => users.Cast<IUser>();
-
-    public IQueryable<IProduct> Products => products.Cast<IProduct>();
-
-    public IQueryable<IState> States => states.Cast<IState>();
-
-    public IQueryable<IEvent> Events => events.Cast<IEvent>();
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=shop;Integrated Security=True;TrustServerCertificate=true");
-    
     #region User CRUD
 
     public async Task AddUserAsync(IUser user)
     {
-        DTO.User userEntity = new DTO.User()
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Id = user.Id,
-            Nickname = user.Nickname,
-            Email = user.Email,
-            Balance = user.Balance,
-            DateOfBirth = user.DateOfBirth,
-        };
+            Database.User entity = new Database.User()
+            {
+                id = user.Id,
+                nickname = user.Nickname,
+                email = user.Email,
+                balance = (decimal)user.Balance,
+                dateOfBirth = user.DateOfBirth,
+            };
 
-        await this.users.AddAsync(userEntity);
-        await this.SaveChangesAsync();
+            context.Users.InsertOnSubmit(entity);
+
+            await Task.Run(() => context.SubmitChanges());
+        }
     }
 
     public async Task<IUser?> GetUserAsync(int id)
     {
-        DTO.User? user = await Task.Run(() =>
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            IQueryable<DTO.User> query =
-                from u in users
-                where u.Id == id
-                select u;
+            Database.User? user = await Task.Run(() =>
+            {
+                IQueryable<Database.User> query =
+                    from u in context.Users
+                    where u.id == id
+                    select u;
 
-            return query.FirstOrDefault();
-        });
-
-        return user is not null ? new User(user.Id, user.Nickname, user.Email, (double)user.Balance, user.DateOfBirth) : null;
+                return query.FirstOrDefault();
+            });
+        
+            return user is not null ? new User(user.id, user.nickname, user.email, (double)user.balance, user.dateOfBirth) : null;
+        }
     }
 
     public async Task UpdateUserAsync(IUser user)
     {
-        DTO.User current = await this.users.FirstAsync(u => u.Id == user.Id);
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            Database.User current = context.Users.FirstOrDefault(u => u.id == user.Id)!;
 
-        current.Nickname = user.Nickname;
-        current.Email = user.Email;
-        current.Balance = user.Balance;
-        current.DateOfBirth = user.DateOfBirth;
+            current.nickname = user.Nickname;
+            current.email = user.Email;
+            current.balance = (decimal)user.Balance;
+            current.dateOfBirth = user.DateOfBirth;
 
-        await this.SaveChangesAsync();
+            await Task.Run(() => context.SubmitChanges());
+        }
     }
 
     public async Task DeleteUserAsync(int id)
     {
-        DTO.User toDelete = await this.users.FirstAsync(u => u.Id == id);
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            Database.User toDelete = context.Users.FirstOrDefault(u => u.id == id)!;
 
-        this.users.Remove(toDelete);
+            context.Users.DeleteOnSubmit(toDelete);
 
-        await this.SaveChangesAsync();
+            await Task.Run(() => context.SubmitChanges());
+        }
     }
 
     public async Task<Dictionary<int, IUser>> GetAllUsersAsync()
     {
-        IQueryable<IUser> usersQuery = from u in this.users
-            select
-                new User(u.Id, u.Nickname, u.Email, (double)u.Balance, u.DateOfBirth) as IUser;
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            IQueryable<IUser> usersQuery = from u in context.Users
+                select
+                    new User(u.id, u.nickname, u.email, (double)u.balance, u.dateOfBirth) as IUser;
 
-        return await usersQuery.ToDictionaryAsync(u => u.Id);
+            return await Task.Run(() => usersQuery.ToDictionary(k => k.Id));
+        }
     }
 
     public async Task<int> GetUsersCountAsync()
     {
-        return await this.users.CountAsync();
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            return await Task.Run(() => context.Users.Count());
+        }
     }
 
     #endregion
@@ -104,65 +106,84 @@ internal partial class DataContext : DbContext, IDataContext
 
     public async Task AddProductAsync(IProduct product)
     {
-        DTO.Product productEntity = new DTO.Product()
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Id = product.Id,
-            Name = product.Name,
-            Price = product.Price,
-            Pegi = product.Pegi,
-        };
+            Database.Product entity = new Database.Product()
+            {
+                id = product.Id,
+                name = product.Name,
+                price = product.Price,
+                pegi = product.Pegi,
+            };
 
-        await this.products.AddAsync(productEntity);
-        await this.SaveChangesAsync();
+            context.Products.InsertOnSubmit(entity);
+
+            await Task.Run(() => context.SubmitChanges());
+        }
     }
 
     public async Task<IProduct?> GetProductAsync(int id)
     {
-        DTO.Product? product = await Task.Run(() =>
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            IQueryable<DTO.Product> query =
-                from u in products
-                where u.Id == id
-                select u;
+            Database.Product? product = await Task.Run(() =>
+            {
+                IQueryable<Database.Product> query =
+                    from p in context.Products
+                    where p.id == id
+                    select p;
 
-            return query.FirstOrDefault();
-        });
+                return query.FirstOrDefault();
+            });
 
-        return product is not null ? new Game(product.Id, product.Name, (double)product.Price, product.Pegi) : null;
+            return product is not null ? new Game(product.id, product.name, (double)product.price, product.pegi) : null;
+        }
     }
 
     public async Task UpdateProductAsync(IProduct product)
     {
-        DTO.Product current = await this.products.FirstAsync(p => p.Id == product.Id);
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            Database.Product current = context.Products.FirstOrDefault(p => p.id == product.Id)!;
 
-        current.Name = product.Name;
-        current.Price = product.Price;
-        current.Pegi = product.Pegi;
+            current.name = product.Name;
+            current.price = product.Price;
+            current.pegi = product.Pegi;
 
-        await this.SaveChangesAsync();
+            await Task.Run(() => context.SubmitChanges());
+        }
     }
 
     public async Task DeleteProductAsync(int id)
     {
-        DTO.Product toDelete = await this.products.FirstAsync(p => p.Id == id);
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            Database.Product toDelete = context.Products.FirstOrDefault(p => p.id == id)!;
 
-        this.products.Remove(toDelete);
+            context.Products.DeleteOnSubmit(toDelete);
 
-        await this.SaveChangesAsync();
+            await Task.Run(() => context.SubmitChanges());
+        }
     }
 
     public async Task<Dictionary<int, IProduct>> GetAllProductsAsync()
     {
-        IQueryable<IProduct> productQuery = from p in this.products
-            select
-                new Game(p.Id, p.Name, (double)p.Price, p.Pegi) as IProduct;
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            IQueryable<IProduct> productQuery = from p in context.Products
+                select
+                    new Game(p.id, p.name, (double)p.price, p.pegi) as IProduct;
 
-        return await productQuery.ToDictionaryAsync(p => p.Id);
+            return await Task.Run(() => productQuery.ToDictionary(k => k.Id));
+        }
     }
 
     public async Task<int> GetProductsCountAsync()
     {
-        return await this.products.CountAsync();
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            return await Task.Run(() => context.Products.Count());
+        }
     }
 
     #endregion
@@ -172,63 +193,82 @@ internal partial class DataContext : DbContext, IDataContext
 
     public async Task AddStateAsync(IState state)
     {
-        DTO.State stateEntity = new DTO.State()
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Id = state.Id,
-            ProductId = state.productId,
-            ProductQuantity = state.productQuantity
-        };
+            Database.State entity = new Database.State()
+            {
+                id = state.Id,
+                productId = state.productId,
+                productQuantity = state.productQuantity
+            };
 
-        await this.states.AddAsync(stateEntity);
-        await this.SaveChangesAsync();
+            context.States.InsertOnSubmit(entity);
+
+            await Task.Run(() => context.SubmitChanges());
+        }
     }
 
     public async Task<IState?> GetStateAsync(int id)
     {
-        DTO.State? state = await Task.Run(() =>
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            IQueryable<DTO.State> query =
-                from s in states
-                where s.Id == id
-                select s;
+            Database.State? state = await Task.Run(() =>
+            {
+                IQueryable<Database.State> query =
+                    from s in context.States
+                    where s.id == id
+                    select s;
 
-            return query.FirstOrDefault();
-        });
+                return query.FirstOrDefault();
+            });
 
-        return state is not null ? new State(state.Id, state.ProductId, state.ProductQuantity) : null;
+            return state is not null ? new State(state.id, state.productId, state.productQuantity) : null;
+        }
     }
 
     public async Task UpdateStateAsync(IState state)
     {
-        DTO.State current = await this.states.FirstAsync(s => s.Id == state.Id);
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            Database.State current = context.States.FirstOrDefault(s => s.id == state.Id)!;
 
-        current.ProductId = state.productId;
-        current.ProductQuantity = state.productQuantity;
+            current.productId = state.productId;
+            current.productQuantity = state.productQuantity;
 
-        await this.SaveChangesAsync();
+            await Task.Run(() => context.SubmitChanges());
+        }
     }
 
     public async Task DeleteStateAsync(int id)
     {
-        DTO.State toDelete = await this.states.FirstAsync(s => s.Id == id);
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            Database.State toDelete = context.States.FirstOrDefault(s => s.id == id)!;
 
-        this.states.Remove(toDelete);
+            context.States.DeleteOnSubmit(toDelete);
 
-        await this.SaveChangesAsync();
+            await Task.Run(() => context.SubmitChanges());
+        }
     }
 
     public async Task<Dictionary<int, IState>> GetAllStatesAsync()
     {
-        IQueryable<IState> stateQuery = from s in this.states
-            select
-                new State(s.Id, s.ProductId, s.ProductQuantity) as IState;
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            IQueryable<IState> stateQuery = from s in context.States
+                select
+                    new State(s.id, s.productId, s.productQuantity) as IState;
 
-        return await stateQuery.ToDictionaryAsync(p => p.Id);
+            return await Task.Run(() => stateQuery.ToDictionary(k => k.Id));
+        }
     }
 
     public async Task<int> GetStatesCountAsync()
     {
-        return await this.states.CountAsync();
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            return await Task.Run(() => context.States.Count());
+        }
     }
 
     #endregion
@@ -238,83 +278,103 @@ internal partial class DataContext : DbContext, IDataContext
 
     public async Task AddEventAsync(IEvent even, string type)
     {
-        DTO.Event eventEntity = new DTO.Event()
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Id = even.Id,
-            StateId = even.stateId,
-            UserId = even.userId,
-            OccurrenceDate = even.occurrenceDate,
-            Type = type,
-        };
+            Database.Event entity = new Database.Event()
+            {
+                id = even.Id,
+                stateId = even.stateId,
+                userId = even.userId,
+                occurrenceDate = even.occurrenceDate,
+                type = type,
+            };
 
-        await this.events.AddAsync(eventEntity);
-        await this.SaveChangesAsync();
+            context.Events.InsertOnSubmit(entity);
+
+            await Task.Run(() => context.SubmitChanges());
+        }
     }    
 
     public async Task<IEvent?> GetEventAsync(int id, string type)
     {
-        DTO.Event? even = await Task.Run(() =>
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            IQueryable<DTO.Event> query =
-                from e in events
-                where e.Id == id
-                select e;
+            Database.Event? even = await Task.Run(() =>
+            {
+                IQueryable<Database.Event> query =
+                    from e in context.Events
+                    where e.id == id
+                    select e;
 
-            return query.FirstOrDefault();
-        });
+                return query.FirstOrDefault();
+            });
 
-        IEvent newEvent;
+            IEvent newEvent;
 
-        if (even is null)
-            return null;
+            if (even is null)
+                return null;
 
-        switch (type)
-        {
-            case "PurchaseEvent":
-                newEvent = new PurchaseEvent(even.Id, even.StateId, even.UserId, even.OccurrenceDate); break;
-            case "ReturnEvent":
-                newEvent = new ReturnEvent(even.Id, even.StateId, even.UserId, even.OccurrenceDate); break;
-            case "SupplyEvent":
-                newEvent = new SupplyEvent(even.Id, even.StateId, even.UserId, even.OccurrenceDate, (int)even.Quantity!); break;
-            default:
-                throw new Exception("This event type does not exist!");
+            switch (type)
+            {
+                case "PurchaseEvent":
+                    newEvent = new PurchaseEvent(even.id, even.stateId, even.userId, even.occurrenceDate); break;
+                case "ReturnEvent":
+                    newEvent = new ReturnEvent(even.id, even.stateId, even.userId, even.occurrenceDate); break;
+                case "SupplyEvent":
+                    newEvent = new SupplyEvent(even.id, even.stateId, even.userId, even.occurrenceDate, (int)even.quantity!); break;
+                default:
+                    throw new Exception("This event type does not exist!");
+            }
+
+            return newEvent;
         }
-
-        return newEvent;
+        
     }    
 
     public async Task UpdateEventAsync(IEvent even)
     {
-        DTO.Event current = await this.events.FirstAsync(e => e.Id == even.Id);
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            Database.Event current = context.Events.FirstOrDefault(e => e.id == even.Id)!;
 
-        current.StateId = even.stateId;
-        current.UserId = even.userId;
-        current.OccurrenceDate = even.occurrenceDate;
+            current.stateId = even.stateId;
+            current.userId = even.userId;
+            current.occurrenceDate = even.occurrenceDate;
 
-        await this.SaveChangesAsync();
+            await Task.Run(() => context.SubmitChanges());
+        }
     }    
 
     public async Task DeleteEventAsync(int id)
     {
-        DTO.Event toDelete = await this.events.FirstAsync(e => e.Id == id);
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            Database.Event toDelete = context.Events.FirstOrDefault(e => e.id == id)!;
 
-        this.events.Remove(toDelete);
+            context.Events.DeleteOnSubmit(toDelete);
 
-        await this.SaveChangesAsync();
+            await Task.Run(() => context.SubmitChanges());
+        }
     }    
 
     public async Task<Dictionary<int, IEvent>> GetAllEventsAsync()
     {
-        IQueryable<IEvent> stateQuery = from e in this.events
-            select
-                new PurchaseEvent(e.Id, e.StateId, e.UserId, e.OccurrenceDate) as IEvent;
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            IQueryable<IEvent> eventQuery = from e in context.Events
+                select
+                    new PurchaseEvent(e.id, e.stateId, e.userId, e.occurrenceDate) as IEvent;
 
-        return await stateQuery.ToDictionaryAsync(p => p.Id);
+            return await Task.Run(() => eventQuery.ToDictionary(k => k.Id));
+        }
     }    
 
     public async Task<int> GetEventsCountAsync()
     {
-        return await this.events.CountAsync();
+        using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
+        {
+            return await Task.Run(() => context.Events.Count());
+        }
     }    
 
     #endregion
@@ -343,96 +403,5 @@ internal partial class DataContext : DbContext, IDataContext
     }
 
     #endregion
-
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<DTO.Event>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Events__3213E83F3E076BCD");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.OccurrenceDate)
-                .HasColumnType("date")
-                .HasColumnName("occurrenceDate");
-            entity.Property(e => e.Quantity).HasColumnName("quantity");
-            entity.Property(e => e.StateId).HasColumnName("stateId");
-            entity.Property(e => e.Type)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("type");
-            entity.Property(e => e.UserId).HasColumnName("userId");
-
-            entity.HasOne(d => d.State).WithMany(p => p.Events)
-                .HasForeignKey(d => d.StateId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Events_States");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Events)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Events_Users");
-        });
-
-        modelBuilder.Entity<DTO.Product>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Products__3213E83FC55FC57C");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.Name)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("name");
-            entity.Property(e => e.Pegi).HasColumnName("pegi");
-            entity.Property(e => e.Price).HasColumnName("price");
-        });
-
-        modelBuilder.Entity<DTO.State>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__States__3213E83F3C8408B8");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.ProductId).HasColumnName("productId");
-            entity.Property(e => e.ProductQuantity).HasColumnName("productQuantity");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.States)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_States_Products");
-        });
-
-        modelBuilder.Entity<DTO.User>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3213E83FE0EF376A");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.Balance)
-                .HasColumnType("decimal(18, 0)")
-                .HasColumnName("balance");
-            entity.Property(e => e.DateOfBirth)
-                .HasColumnType("date")
-                .HasColumnName("dateOfBirth");
-            entity.Property(e => e.Email)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("email");
-            entity.Property(e => e.Nickname)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("nickname");
-        });
-
-        OnModelCreatingPartial(modelBuilder);
-    }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
 
