@@ -18,7 +18,7 @@ namespace Presentation.View
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class ModTab : Window
+    public partial class ModTab : UserControl
     {
         public ModTab()
         {
