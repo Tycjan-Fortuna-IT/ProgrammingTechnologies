@@ -7,17 +7,71 @@
              xmlns:viewmodels="clr-namespace:Presentation.ViewModel"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <UserControl.DataContext>
         <viewmodels:HomeViewModel/>
     </UserControl.DataContext>
 
     <Grid Background="MintCream">
-        <Image Source="/Images/logo.png" Height="200" Width="200" Margin="211,58,389,176"/>
-        <TextBlock TextWrapping="Wrap" Text="GameStacc" FontSize="32" FontWeight="ExtraBold" TextAlignment="Center" Height="NaN" Margin="372,152,222,238" Width="NaN"/>
-        <TextBlock TextWrapping="Wrap" Text="Everything for gamers" FontSize="16" FontWeight="DemiBold" TextAlignment="Center" Height="NaN" Margin="372,196,222,196" Width="NaN"/>
-        <Button Height="NaN" Width="NaN" Background="LightCyan" BorderBrush="DarkCyan" Name="startButton" Command="{Binding StartAppCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="320,253,320,150">Start</Button>
-        <Button Height="NaN" Width="NaN" Background="MistyRose" BorderBrush="PaleVioletRed" Name="exitButton" Margin="320,315,320,88">Exit</Button>
-        <TextBlock TextWrapping="Wrap" Text="TF and PK © 2023" TextAlignment="Center" Margin="300,397,300,10" Height="NaN" Width="NaN"/>
-        <Separator HorizontalAlignment="Center" Height="33" Margin="0,359,0,0" VerticalAlignment="Top" Width="50"/>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="130"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="265*"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" 
+                    Orientation="Horizontal">
+            <Image
+                Source="/Images/logo.png" 
+                Height="200" Width="200"
+                HorizontalAlignment="Left"/>
+            <TextBlock 
+                Width="200" Margin="-40,100,0,0"  
+                Text="GameStacc" 
+                TextAlignment="Center" TextWrapping="Wrap" 
+                FontSize="32" FontWeight="ExtraBold"/>
+            <TextBlock 
+                Width="200" Margin="-200,140,0,0" 
+                Text="Everything for gamers" 
+                TextAlignment="Center" TextWrapping="Wrap"
+                FontSize="16" FontWeight="DemiBold"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" 
+                    HorizontalAlignment="Center">
+            <Button 
+                Height="40" Width="140" Margin="0,15,0,0" 
+                Name="startButton" Content="Start"
+                Command="{Binding StartAppCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                Background="LightCyan" BorderBrush="DarkCyan"/>
+            <Button 
+                Height="40" Width="140" Margin="0,15,0,0"
+                Name="exitButton" Content="Exit"
+                
+                Background="MistyRose" BorderBrush="PaleVioletRed"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Grid.Column="1" 
+                    HorizontalAlignment="Center">
+            <Separator 
+                Height="5" Width="50" Margin="0,0,0,0"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Grid.Column="1"
+                    HorizontalAlignment="Center">
+            <TextBlock 
+                Height="20" Margin="0,0,0,0"  
+                Text="TF and PK © 2023" 
+                TextWrapping="Wrap"/>
+        </StackPanel>
+
     </Grid>
 </UserControl>
