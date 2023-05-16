@@ -9,8 +9,53 @@
         <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
             <views:HomeView/>
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewmodels:ShopTabViewModel}">
             <views:ShopTab/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:UserTabViewModel}">
+            <views:UserTab/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ModTabViewModel}">
+            <views:ModTab/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ModTabCreateUserViewModel}">
+            <views:ModTabCreateUser/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ModTabCreateProductViewModel}">
+            <views:ModTabCreateProduct/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ModTabCreateEventViewModel}">
+            <views:ModTabCreateEvent/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ModTabUpdateUserViewModel}">
+            <views:ModTabUpdateUser/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ModTabUpdateProductViewModel}">
+            <views:ModTabUpdateProduct/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ModTabUpdateEventViewModel}">
+            <views:ModTabUpdateEvent/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ModTabDeleteUserViewModel}">
+            <views:ModTabDeleteUser/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ModTabDeleteProductViewModel}">
+            <views:ModTabDeleteProduct/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ModTabDeleteEventViewModel}">
+            <views:ModTabDeleteEvent/>
         </DataTemplate>
     </Application.Resources>
 </Application>
