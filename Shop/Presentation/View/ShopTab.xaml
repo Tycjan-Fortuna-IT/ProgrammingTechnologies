@@ -3,49 +3,143 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:Presentation.View;assembly=YourAssemblyName"
+             xmlns:local="clr-namespace:Presentation.View;assembly=Presentation"
              xmlns:viewmodels="clr-namespace:Presentation.ViewModel"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
+
     <UserControl.DataContext>
         <viewmodels:ShopTabViewModel/>
     </UserControl.DataContext>
 
     <Grid Background="MintCream">
-        <TabControl HorizontalAlignment="Left" Height="414" Margin="220,0,0,0" VerticalAlignment="Center" Width="570">
-            <TabItem Header="Shop">
-                <Grid Height="370" Margin="10,0,10,0" Width="NaN">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30*"/>
-                        <RowDefinition Height="39*"/>
-                        <RowDefinition Height="301*"/>
-                    </Grid.RowDefinitions>
-                    <Label Margin="370,2,0,0" Grid.Row="0" Height="NaN" Width="NaN">User:</Label>
-                    <ComboBox Name="userChoice" Width="120" Height="NaN" Grid.Row="0" Margin="410,5,0,5" HorizontalAlignment="Left"/>
-                    <TextBox Name="searchBar" Grid.Row="1" BorderBrush="LightGray" BorderThickness="1" Margin="0,7,240,7" Height="NaN" Width="NaN" />
-                    <Button Height="NaN" Width="NaN" Name="searchButton" Click="searchDatabaseGames" Grid.Row="1" Margin="314,8,180,8">Search</Button>
-                    <ScrollViewer Grid.Row="2" Margin="0,3,150,3" Height="NaN" Width="NaN">
-                        <Border BorderBrush="LightGray" BorderThickness="1" d:LayoutOverrides="Width, Height"/>
-                    </ScrollViewer>
-                    <Button Height="22"  Width="50" Name="purchaseButton" Click="purchaseGame" Grid.Row="2" Margin="432,28,62,249">Buy</Button>
-                </Grid>
-            </TabItem>
-            <TabItem Header="User">
-                <Grid Background="#FFE5E5E5" Height="NaN" Margin="0,-51,-82,-55" Width="0" HorizontalAlignment="Right">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="23*"/>
-                        <ColumnDefinition Width="356*"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Moderator">
-                <Grid Background="#FFE5E5E5" HorizontalAlignment="Right"/>
-            </TabItem>
-        </TabControl>
-        <TextBlock TextWrapping="Wrap" Text="GameStacc" FontSize="32" FontWeight="ExtraBold" TextAlignment="Center" Height="NaN" Margin="10,167,584,225" Width="NaN"/>
-        <TextBlock TextWrapping="Wrap" Text="Everything for gamers" FontSize="16" FontWeight="DemiBold" TextAlignment="Center" Height="NaN" Margin="10,209,584,183" Width="NaN"/>
-        <TextBlock TextWrapping="Wrap" Text="TF and PK © 2023" TextAlignment="Center" Margin="10,365,584,42" Height="NaN" Width="NaN"/>
-        <Image Source="/Images/logo.png" Margin="17,27,591,267" Height="NaN" Width="NaN"/>
-        <Separator HorizontalAlignment="Left" Height="33" Margin="87,332,0,0" VerticalAlignment="Top" Width="50"/>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="400"/>
+            <RowDefinition Height="15"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="265*"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" 
+                    VerticalAlignment="Center">
+            <Image 
+                Height="200" Width="200" Margin="0,0,0,0"
+                Source="/Images/logo.png"/>
+            <TextBlock 
+                Height="40" Margin="0,-30,0,0"
+                Text="GameStacc"
+                TextAlignment="Center" TextWrapping="Wrap"
+                FontSize="32" FontWeight="ExtraBold"/>
+            <TextBlock 
+                Height="25" Margin="0,0,0,0"
+                Text="Everything for gamers"
+                TextAlignment="Center" TextWrapping="Wrap" 
+                FontSize="16" FontWeight="DemiBold"/>
+            <Separator 
+                Height="10" Width="50" Margin="0,110,0,0"
+                HorizontalAlignment="Center"/>
+            <TextBlock Height="20" Margin="0,0,0,0"
+                       Text="TF and PK © 2023"
+                       TextAlignment="Center" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="2" 
+                    HorizontalAlignment="Left">
+            <TabControl Height="400" Width="560" Margin="0,0,0,0">
+                <TabItem Header="Shop">
+                    <Grid Height="370" Margin="10,0,10,0">
+                        
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="38"/>
+                            <RowDefinition Height="255"/>
+                            <RowDefinition Height="20*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0"
+                                    HorizontalAlignment="Right">
+                            <Label Margin="0,2,0,0"
+                                   Content="User:"/>
+                            <ComboBox Height="21" Width="120" Margin="40,-27,0,0"
+                                      Name="userChoice"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1"
+                                    Height="20" Width="320"
+                                    HorizontalAlignment="Left">
+                            <TextBox Height="20" Width="240" Margin="0,0,0,0"
+                                     HorizontalAlignment="Left"
+                                     Name="searchBar"
+                                     BorderBrush="LightGray" BorderThickness="1"/>
+                            <Button Height="20" Width="60" Margin="250,-20,0,0"
+                                    Name="searchButton" Content="Search"
+                                    Click="searchDatabaseGames"
+                                    Background="WhiteSmoke" BorderBrush="DarkGray"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2">
+                            <GroupBox Height="250" Width="270" Margin="0,0,0,0"
+                                      HorizontalAlignment="Left"
+                                      Header="Shop Library">
+                                <ScrollViewer Margin="0,5,0,0">
+                                    <Border BorderBrush="LightGray" BorderThickness="1" 
+                                            d:LayoutOverrides="Width, Height"/>
+                                </ScrollViewer>
+                            </GroupBox>
+
+                            <GroupBox Height="250" Width="220" Margin="0,-250,10,0"
+                                      HorizontalAlignment="Right"  
+                                      Header="Information about the game">
+                                <StackPanel Margin="0,5,0,0"
+                                            VerticalAlignment="Top">
+                                    <Label Content="Name:"/>
+                                    <TextBox Height="20" Width="120" Margin="50,0,10,0" 
+                                             Text="placeholder"
+                                             TextWrapping="Wrap"
+                                             BorderBrush="White"/>
+
+                                    <Label Content="Price:"/>
+                                    <TextBox Height="20" Width="120" Margin="50,0,10,0" 
+                                             Text="placeholder"
+                                             TextWrapping="Wrap"
+                                             BorderBrush="White"/>
+                                    
+                                    <Label Content="PEGI:"/>
+                                    <TextBox Height="20" Width="120" Margin="50,0,10,0" 
+                                             Text="placeholder"
+                                             TextWrapping="Wrap"
+                                             BorderBrush="White"/>
+                                    
+                                    <Label Content="Quantity:"/>
+                                    <TextBox Height="20" Width="120" Margin="50,0,10,0" 
+                                             Text="placeholder"
+                                             TextWrapping="Wrap"
+                                             BorderBrush="White"/>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+
+                        <Button 
+                            Grid.Row="3" 
+                            Height="22" Width="50" Margin="0,0,30,0"
+                            HorizontalAlignment="Right"
+                            Name="purchaseButton" Content="Buy"
+                            Click="purchaseGame"
+                            Background="WhiteSmoke" BorderBrush="DarkGray"/>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem Header="User"/>
+                
+                <TabItem Header="Moderator"/>
+                
+            </TabControl>
+        </StackPanel>
     </Grid>
 </UserControl>
