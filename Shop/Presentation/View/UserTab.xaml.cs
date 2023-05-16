@@ -18,11 +18,16 @@ namespace Presentation.View
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class UserTab : Window
+    public partial class UserTab : UserControl
     {
         public UserTab()
         {
             InitializeComponent();
+        }
+
+        private void returnGame(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
