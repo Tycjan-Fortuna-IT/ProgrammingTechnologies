@@ -15,8 +15,8 @@
     <Grid Background="MintCream">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="400"/>
+            <RowDefinition Height="27"/>
+            <RowDefinition Height="375"/>
             <RowDefinition Height="15"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -26,114 +26,124 @@
             <ColumnDefinition Width="10"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" 
+        <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,5,0,0">
+            <Label Margin="0,-2,270,0"
+                   HorizontalAlignment="Right"
+                   Content="Switch view:"/>
+            <Button Height="22" Width="50" Margin="0,-26,200,0"
+                    HorizontalAlignment="Right"
+                    Name="switchUserTabViewButton" Content="User"
+                    Command="{Binding SwitchUserTabViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    Background="Honeydew" BorderBrush="DarkGray"/>
+            <Button Height="22" Width="50" Margin="0,-26,130,0"
+                    HorizontalAlignment="Right"
+                    Name="switchShopTabViewButton" Content="Shop"
+                    Command="{Binding SwitchShopTabViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    Background="Honeydew" BorderBrush="DarkGray"/>
+            <Button Height="22" Width="80" Margin="0,-26,30,0"
+                    HorizontalAlignment="Right"
+                    Name="switchModTabViewButton" Content="Moderator"
+                    Command="{Binding SwitchModTabViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    Background="Honeydew" BorderBrush="DarkGray"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="1"
                     VerticalAlignment="Center">
-            <Image 
-                Height="200" Width="200" Margin="0,0,0,0"
-                Source="/Images/logo.png"/>
-            <TextBlock 
-                Height="40" Margin="0,-30,0,0"
-                Text="GameStacc"
-                TextAlignment="Center" TextWrapping="Wrap"
-                FontSize="32" FontWeight="ExtraBold"/>
-            <TextBlock 
-                Height="25" Margin="0,0,0,0"
-                Text="Everything for gamers"
-                TextAlignment="Center" TextWrapping="Wrap" 
-                FontSize="16" FontWeight="DemiBold"/>
-            <Separator 
-                Height="10" Width="50" Margin="0,110,0,0"
-                HorizontalAlignment="Center"/>
-            <TextBlock Height="20" Margin="0,0,0,0"
+            <Image Height="200" Width="200"
+                   Source="/Images/logo.png"/>
+            <TextBlock Height="40" Margin="0,-30,0,0"
+                       Text="GameStacc"
+                       TextAlignment="Center" TextWrapping="Wrap"
+                       FontSize="32" FontWeight="ExtraBold"/>
+            <TextBlock Height="25"
+                       Text="Everything for gamers"
+                       TextAlignment="Center" TextWrapping="Wrap" 
+                       FontSize="16" FontWeight="DemiBold"/>
+            <Separator Height="10" Width="50" Margin="0,110,0,0"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Height="20"
                        Text="TF and PK © 2023"
                        TextAlignment="Center" TextWrapping="Wrap"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="2" 
-                    HorizontalAlignment="Left">
-            <TabControl Height="400" Width="560" Margin="0,0,0,0">
-                <TabItem Header="Shop"/>
+                    Width="570" Margin="0,5,0,0"
+                    HorizontalAlignment="Left"
+                    Background="White">
 
-                <TabItem Header="User"/>
+            <Grid Height="370" Margin="10,5,10,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="260"/>
+                    <RowDefinition Height="20*"/>
+                </Grid.RowDefinitions>
 
-                <TabItem Header="Moderator">
-                    <Grid Height="370" Margin="10,0,10,0">
+                <StackPanel Grid.Row="0">
+                    <Label Margin="0,2,0,0"
+                           Content="Choose an action:"/>
+                    <RadioButton Margin="120,-20,0,0"
+                                 Content="Create"/>
+                    <RadioButton Margin="220,-20,0,0"
+                                 Content="Update"/>
+                    <RadioButton Margin="320,-20,0,0" 
+                                 Content="Delete"/>
+                </StackPanel>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="260"/>
-                            <RowDefinition Height="20*"/>
-                        </Grid.RowDefinitions>
+                <StackPanel Grid.Row="1">
+                    <Label Margin="0,2,0,0"
+                           Content="Choose:"/>
+                    <RadioButton Margin="120,-20,0,0"
+                                 Content="User"/>
+                    <RadioButton Margin="220,-20,0,0" 
+                                 Content="Product"/>
+                    <RadioButton Margin="320,-20,0,0"
+                                 Content="Event"/>
+                </StackPanel>
 
-                        <StackPanel Grid.Row="0"
-                                    HorizontalAlignment="Left">
-                            <Label Margin="0,2,0,0" 
-                                   Content="Choose an action:"/>
-                            <RadioButton Margin="120,-20,0,0" 
-                                         Content="Create"/>
-                            <RadioButton Margin="220,-20,0,0" 
-                                         Content="Update"/>
-                            <RadioButton Margin="320,-20,0,0" 
-                                         Content="Delete"/>
+                <StackPanel Grid.Row="2" Margin="0,5,0,0">
+                    <GroupBox Height="250" Width="320" Margin="0,0,10,0"
+                              HorizontalAlignment="Left"
+                              Header="Information">
+                        <StackPanel Margin="0,5,0,0"
+                                    VerticalAlignment="Top">
+                            <Label Content="Name:"/>
+                            <TextBox Height="20" Width="200" Margin="0,-24,5,0"
+                                     HorizontalAlignment="Right"
+                                     Text="placeholder"
+                                     TextWrapping="Wrap"
+                                     BorderBrush="White"/>
+
+                            <Label Content="Price:"/>
+                            <TextBox Height="20" Width="200" Margin="0,-24,5,0"
+                                     HorizontalAlignment="Right"
+                                     Text="placeholder"
+                                     TextWrapping="Wrap"
+                                     BorderBrush="White"/>
+
+                            <Label Content="PEGI:"/>
+                            <TextBox Height="20" Width="200" Margin="0,-24,5,0" 
+                                     HorizontalAlignment="Right"
+                                     Text="placeholder"
+                                     TextWrapping="Wrap"
+                                     BorderBrush="White"/>
+
+                            <Label Content="Quantity:"/>
+                            <TextBox Height="20" Width="200" Margin="0,-24,5,0" 
+                                     HorizontalAlignment="Right"
+                                     Text="placeholder"
+                                     TextWrapping="Wrap"
+                                     BorderBrush="White"/>
                         </StackPanel>
-
-                        <StackPanel Grid.Row="1"
-                                    HorizontalAlignment="Left">
-                            <Label Margin="0,2,0,0" 
-                                   Content="Choose:"/>
-                            <RadioButton Margin="120,-20,0,0" 
-                                         Content="User"/>
-                            <RadioButton Margin="220,-20,0,0" 
-                                         Content="Product"/>
-                            <RadioButton Margin="320,-20,0,0" 
-                                         Content="Event"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Row="2" Margin="0,5,0,0">
-                            <GroupBox Height="250" Width="320" Margin="0,0,10,0"
-                                      HorizontalAlignment="Left"  
-                                      Header="Information">
-                                <StackPanel Margin="0,5,0,0"
-                                            VerticalAlignment="Top">
-                                    <Label Content="Name:"/>
-                                    <TextBox Height="20" Width="200" Margin="0,-24,5,0" 
-                                             HorizontalAlignment="Right"
-                                             Text="placeholder"
-                                             TextWrapping="Wrap"
-                                             BorderBrush="White"/>
-
-                                    <Label Content="Price:"/>
-                                    <TextBox Height="20" Width="200" Margin="0,-24,5,0" 
-                                             HorizontalAlignment="Right"
-                                             Text="placeholder"
-                                             TextWrapping="Wrap"
-                                             BorderBrush="White"/>
-
-                                    <Label Content="PEGI:"/>
-                                    <TextBox Height="20" Width="200" Margin="0,-24,5,0" 
-                                             HorizontalAlignment="Right"
-                                             Text="placeholder"
-                                             TextWrapping="Wrap"
-                                             BorderBrush="White"/>
-
-                                    <Label Content="Quantity:"/>
-                                    <TextBox Height="20" Width="200" Margin="0,-24,5,0" 
-                                             HorizontalAlignment="Right"
-                                             Text="placeholder"
-                                             TextWrapping="Wrap"
-                                             BorderBrush="White"/>
-                                </StackPanel>
-                            </GroupBox>
-                            <Button Height="22" Width="60" Margin="340,-420,0,0"
-                                    HorizontalAlignment="Left"
-                                    Name="createProductButton" Content="Create"
-                                    
-                                    Background="WhiteSmoke" BorderBrush="DarkGray"/>
-                        </StackPanel>
-                    </Grid>
-                </TabItem>
-            </TabControl>
+                    </GroupBox>
+                    
+                    <Button Height="22" Width="60" Margin="340,-420,0,0"
+                            HorizontalAlignment="Left"
+                            Name="createProductButton" Content="Create"
+                            Command="{Binding CreateProductCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            Background="WhiteSmoke" BorderBrush="DarkGray"/>
+                </StackPanel>
+            </Grid>
         </StackPanel>
     </Grid>
 </UserControl>
