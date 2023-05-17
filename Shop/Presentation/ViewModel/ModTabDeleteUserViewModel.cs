@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
+using Presentation.ViewModel.Command;
 
 namespace Presentation.ViewModel
 {
-    public partial class ModTabDeleteUserViewModel : IViewModel
+    public class ModTabDeleteUserViewModel : IViewModel
     {
         public ModTabDeleteUserViewModel()
         {

@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
+using Presentation.ViewModel.Command;
 
 namespace Presentation.ViewModel
 {
-    public partial class ModTabUpdateProductViewModel : IViewModel
+    public class ModTabUpdateProductViewModel : IViewModel
     {
         public ModTabUpdateProductViewModel()
         {

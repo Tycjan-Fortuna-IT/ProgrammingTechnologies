@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
+using Presentation.ViewModel.Command;
 
 namespace Presentation.ViewModel
 {
-    public partial class ModTabCreateProductViewModel : IViewModel
+    public class ModTabCreateProductViewModel : IViewModel
     {
         public ModTabCreateProductViewModel()
         {
