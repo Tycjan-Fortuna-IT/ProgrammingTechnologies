@@ -55,7 +55,7 @@
             <Button 
                 Height="40" Width="140" Margin="0,15,0,0"
                 Name="exitButton" Content="Exit"
-                
+                Command="{Binding ExitAppCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}"
                 Background="MistyRose" BorderBrush="PaleVioletRed"/>
         </StackPanel>
 
