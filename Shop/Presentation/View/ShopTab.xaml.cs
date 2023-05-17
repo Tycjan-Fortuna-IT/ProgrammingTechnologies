@@ -24,15 +24,5 @@ namespace Presentation.View
         {
             InitializeComponent();
         }
-
-        private void searchDatabaseGames(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void purchaseGame(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
