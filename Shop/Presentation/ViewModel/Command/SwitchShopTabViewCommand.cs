@@ -1,20 +1,22 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Windows;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows;
 using System.Windows.Input;
+using System.Diagnostics;
 
-namespace Presentation.ViewModel
+namespace Presentation.ViewModel.Command
 {
-    class UpdateViewModelCommand : ICommand
+    public class SwitchShopTabViewCommand : ICommand
     {
-        private IViewModel _viewModel;
-
         public event EventHandler CanExecuteChanged;
 
-        public UpdateViewModelCommand(IViewModel viewModel) 
+        public SwitchShopTabViewCommand()
         {
-            this._viewModel = viewModel;
+            
         }
 
         public bool CanExecute(object parameter)
@@ -24,7 +26,7 @@ namespace Presentation.ViewModel
 
         public void Execute(object parameter)
         {
-            //Trace.WriteLine("text");
+            Trace.WriteLine("text");
             var userControl = parameter as UserControl;
             var parentWindow = Window.GetWindow(userControl);
 
