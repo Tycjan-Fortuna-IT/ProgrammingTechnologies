@@ -1,6 +1,6 @@
-﻿namespace Data.API;
+﻿namespace Service.API;
 
-public interface IUser
+public interface IUserDTO
 {
     int Id { get; set; }
 

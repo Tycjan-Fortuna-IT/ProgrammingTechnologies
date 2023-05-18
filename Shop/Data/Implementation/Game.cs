@@ -1,23 +1,22 @@
 ﻿using Data.API;
 
-namespace Data.Implementation
+namespace Data.Implementation;
+
+internal class Game : IProduct
 {
-    internal class Game : IProduct
+    public Game(int id, string name, double price, int pegi)
     {
-        public Game(string? guid, string name, double price, int pegi)
-        {
-            this.guid = guid ?? System.Guid.NewGuid().ToString();
-            this.name = name;
-            this.price = price;
-            this.pegi = pegi;
-        }
-
-        public string guid { get; }
-
-        public string name { get; set; }
-
-        public double price { get; set; }
-
-        public int pegi { get; set; }
+        this.Id = id;
+        this.Name = name;
+        this.Price = price;
+        this.Pegi = pegi;
     }
+
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public double Price { get; set; }
+
+    public int Pegi { get; set; }
 }

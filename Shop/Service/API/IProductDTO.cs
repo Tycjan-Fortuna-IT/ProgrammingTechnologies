@@ -1,6 +1,6 @@
-﻿namespace Data.API;
+﻿namespace Service.API;
 
-public interface IProduct
+public interface IProductDTO
 {
     int Id { get; set; }
 

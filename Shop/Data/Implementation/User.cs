@@ -1,30 +1,25 @@
 ﻿using Data.API;
 
-namespace Data.Implementation
+namespace Data.Implementation;
+
+internal class User : IUser
 {
-    internal class User : IUser
+    public User(int id, string nickname, string email, double balance, DateTime dateOfBirth)
     {
-        public User(string? guid, string nickname, string email, double balance, DateTime dateOfBirth, 
-            Dictionary<string, IProduct>? productLibrary = null)
-        {
-            this.guid = guid ?? System.Guid.NewGuid().ToString();
-            this.nickname = nickname;
-            this.email = email;
-            this.balance = balance;
-            this.dateOfBirth = dateOfBirth;
-            this.productLibrary = productLibrary ?? new Dictionary<string, IProduct>();
-        }
-
-        public string guid { get; }
-
-        public string nickname { get; set; }
-
-        public string email { get; set; }
-
-        public double balance { get; set; } = 0;
-
-        public DateTime dateOfBirth { get; set; }
-
-        public Dictionary<string, IProduct> productLibrary { get; set; }
+        this.Id = id;
+        this.Nickname = nickname;
+        this.Email = email;
+        this.Balance = balance;
+        this.DateOfBirth = dateOfBirth;
     }
+
+    public int Id { get; set; }
+
+    public string Nickname { get; set; }
+
+    public string Email { get; set; }
+
+    public double Balance { get; set; } = 0;
+
+    public DateTime DateOfBirth { get; set; }
 }

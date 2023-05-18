@@ -1,11 +1,10 @@
-﻿namespace Data.API
+﻿namespace Data.API;
+
+public interface IState
 {
-    public interface IState
-    {
-        string guid { get; }
+    int Id { get; set; }
 
-        string productGuid { get; }
+    int productId { get; set; }
 
-        int productQuantity{ get; set; }   
-    }
+    int productQuantity{ get; set; }   
 }

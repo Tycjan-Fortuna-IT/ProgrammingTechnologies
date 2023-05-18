@@ -1,13 +1,84 @@
-﻿namespace Data.API
+﻿namespace Data.API;
+
+public interface IDataContext
 {
-    public interface IDataContext
-    {
-        public Dictionary<string, IUser> users { get; set; }
+    #region User CRUD
 
-        public Dictionary<string, IProduct> products { get; set; }
+    Task AddUserAsync(IUser user);
 
-        public Dictionary<string, IState> states { get; set; }
+    Task<IUser?> GetUserAsync(int id);
 
-        public Dictionary<string, IEvent> events { get; set; }
-    }
+    Task UpdateUserAsync(IUser user);
+
+    Task DeleteUserAsync(int id);
+
+    Task<Dictionary<int, IUser>> GetAllUsersAsync();
+
+    Task<int> GetUsersCountAsync();
+
+    #endregion User CRUD
+
+
+    #region Product CRUD
+
+    Task AddProductAsync(IProduct product);
+
+    Task<IProduct?> GetProductAsync(int id);
+
+    Task UpdateProductAsync(IProduct product);
+
+    Task DeleteProductAsync(int id);
+
+    Task<Dictionary<int, IProduct>> GetAllProductsAsync();
+
+    Task<int> GetProductsCountAsync();
+
+    #endregion
+
+
+    #region State CRUD
+
+    Task AddStateAsync(IState state);
+
+    Task<IState?> GetStateAsync(int id);
+
+    Task UpdateStateAsync(IState state);
+
+    Task DeleteStateAsync(int id);
+
+    Task<Dictionary<int, IState>> GetAllStatesAsync();
+
+    Task<int> GetStatesCountAsync();
+
+    #endregion
+
+
+    #region Event CRUD
+
+    Task AddEventAsync(IEvent even, string type);
+
+    Task<IEvent?> GetEventAsync(int id, string type);
+
+    Task UpdateEventAsync(IEvent even);
+
+    Task DeleteEventAsync(int id);
+
+    Task<Dictionary<int, IEvent>> GetAllEventsAsync();
+
+    Task<int> GetEventsCountAsync();
+
+    #endregion
+
+
+    #region Utils
+
+    Task<bool> CheckIfUserExists(int id);
+
+    Task<bool> CheckIfProductExists(int id);
+
+    Task<bool> CheckIfStateExists(int id);
+
+    Task<bool> CheckIfEventExists(int id, string type);
+
+    #endregion
 }
