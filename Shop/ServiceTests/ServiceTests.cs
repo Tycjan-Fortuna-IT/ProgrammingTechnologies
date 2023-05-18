@@ -1,5 +1,4 @@
 ﻿using Data.API;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Service.API;
 
 namespace ServiceTests;
@@ -7,7 +6,7 @@ namespace ServiceTests;
 [TestClass]
 public class ServiceTests
 {
-    private readonly IDataRepository _repository = IDataRepository.CreateDatabase();
+    private readonly IDataRepository _repository = new FakeDataRepository();
 
     [TestMethod]
     public async Task UserServiceTests()

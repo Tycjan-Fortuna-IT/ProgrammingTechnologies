@@ -75,17 +75,4 @@ public interface IDataRepository
     Task<int> GetEventsCountAsync();
 
     #endregion
-
-
-    #region Utils
-
-    Task<bool> CheckIfUserExists(int id);
-
-    Task<bool> CheckIfProductExists(int id);
-
-    Task<bool> CheckIfStateExists(int id);
-
-    Task<bool> CheckIfEventExists(int id, string type);
-
-    #endregion
 }
