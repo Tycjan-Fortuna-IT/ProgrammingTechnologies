@@ -3,7 +3,7 @@ using Data.Database;
 
 namespace Data.Implementation;
 
-internal partial class DataContext : IDataContext
+internal class DataContext : IDataContext
 {
     public DataContext()
     {
@@ -56,12 +56,12 @@ internal partial class DataContext : IDataContext
     {
         using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Database.User current = context.Users.FirstOrDefault(u => u.id == user.Id)!;
+            Database.User toUpdate = (from u in context.Users where u.id == user.Id select u).FirstOrDefault()!;
 
-            current.nickname = user.Nickname;
-            current.email = user.Email;
-            current.balance = (decimal)user.Balance;
-            current.dateOfBirth = user.DateOfBirth;
+            toUpdate.nickname = user.Nickname;
+            toUpdate.email = user.Email;
+            toUpdate.balance = (decimal)user.Balance;
+            toUpdate.dateOfBirth = user.DateOfBirth;
 
             await Task.Run(() => context.SubmitChanges());
         }
@@ -71,7 +71,7 @@ internal partial class DataContext : IDataContext
     {
         using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Database.User toDelete = context.Users.FirstOrDefault(u => u.id == id)!;
+            Database.User toDelete = (from u in context.Users where u.id == id select u).FirstOrDefault()!;
 
             context.Users.DeleteOnSubmit(toDelete);
 
@@ -144,11 +144,11 @@ internal partial class DataContext : IDataContext
     {
         using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Database.Product current = context.Products.FirstOrDefault(p => p.id == product.Id)!;
+            Database.Product toUpdate = (from p in context.Products where p.id == product.Id select p).FirstOrDefault()!;
 
-            current.name = product.Name;
-            current.price = product.Price;
-            current.pegi = product.Pegi;
+            toUpdate.name = product.Name;
+            toUpdate.price = product.Price;
+            toUpdate.pegi = product.Pegi;
 
             await Task.Run(() => context.SubmitChanges());
         }
@@ -158,7 +158,7 @@ internal partial class DataContext : IDataContext
     {
         using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Database.Product toDelete = context.Products.FirstOrDefault(p => p.id == id)!;
+            Database.Product toDelete = (from p in context.Products where p.id == id select p).FirstOrDefault()!;
 
             context.Products.DeleteOnSubmit(toDelete);
 
@@ -230,10 +230,10 @@ internal partial class DataContext : IDataContext
     {
         using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Database.State current = context.States.FirstOrDefault(s => s.id == state.Id)!;
+            Database.State toUpdate = (from s in context.States where s.id == state.Id select s).FirstOrDefault()!;
 
-            current.productId = state.productId;
-            current.productQuantity = state.productQuantity;
+            toUpdate.productId = state.productId;
+            toUpdate.productQuantity = state.productQuantity;
 
             await Task.Run(() => context.SubmitChanges());
         }
@@ -243,7 +243,7 @@ internal partial class DataContext : IDataContext
     {
         using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Database.State toDelete = context.States.FirstOrDefault(s => s.id == id)!;
+            Database.State toDelete = (from s in context.States where s.id == id select s).FirstOrDefault()!;
 
             context.States.DeleteOnSubmit(toDelete);
 
@@ -335,11 +335,11 @@ internal partial class DataContext : IDataContext
     {
         using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Database.Event current = context.Events.FirstOrDefault(e => e.id == even.Id)!;
+            Database.Event toUpdate = (from e in context.Events where e.id == even.Id select e).FirstOrDefault()!;
 
-            current.stateId = even.stateId;
-            current.userId = even.userId;
-            current.occurrenceDate = even.occurrenceDate;
+            toUpdate.stateId = even.stateId;
+            toUpdate.userId = even.userId;
+            toUpdate.occurrenceDate = even.occurrenceDate;
 
             await Task.Run(() => context.SubmitChanges());
         }
@@ -349,7 +349,7 @@ internal partial class DataContext : IDataContext
     {
         using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
-            Database.Event toDelete = context.Events.FirstOrDefault(e => e.id == id)!;
+            Database.Event toDelete = (from e in context.Events where e.id == id select e).FirstOrDefault()!;
 
             context.Events.DeleteOnSubmit(toDelete);
 
