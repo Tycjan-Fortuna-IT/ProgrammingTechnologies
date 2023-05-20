@@ -1,5 +1,4 @@
 ﻿using Data.API;
-using Data.Database;
 using Service.API;
 
 namespace Service.Implementation;
@@ -23,9 +22,9 @@ internal class EventCRUD : IEventCRUD
         await this._repository.AddEventAsync(id, stateId, userId, type, quantity);
     }
 
-    public async Task<IEventDTO> GetEventAsync(int id, string type)
+    public async Task<IEventDTO> GetEventAsync(int id)
     {
-        return this.Map(await this._repository.GetEventAsync(id, type));
+        return this.Map(await this._repository.GetEventAsync(id));
     }
 
     public async Task UpdateEventAsync(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity)

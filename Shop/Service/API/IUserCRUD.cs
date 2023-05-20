@@ -5,7 +5,7 @@ namespace Service.API;
 
 public interface IUserCRUD
 {
-    static IUserCRUD CreateUserCRUD(IDataRepository? dataRepository)
+    static IUserCRUD CreateUserCRUD(IDataRepository? dataRepository = null)
     {
         return new UserCRUD(dataRepository ?? IDataRepository.CreateDatabase());
     }
