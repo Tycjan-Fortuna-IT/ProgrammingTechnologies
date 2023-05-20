@@ -245,7 +245,7 @@ internal class DataRepository : IDataRepository
         await this._context.AddEventAsync(newEvent);
     }
 
-    public async Task<IEvent> GetEventAsync(int id, string type)
+    public async Task<IEvent> GetEventAsync(int id)
     {
         IEvent? even = await this._context.GetEventAsync(id);
 

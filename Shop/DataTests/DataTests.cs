@@ -151,7 +151,7 @@ public class DataTests
 
         await _dataRepository.AddEventAsync(purchaseEventId, stateId, userId, "PurchaseEvent");
 
-        IEvent purchaseEvent = await _dataRepository.GetEventAsync(purchaseEventId, "PurchaseEvent");
+        IEvent purchaseEvent = await _dataRepository.GetEventAsync(purchaseEventId);
 
         Assert.IsNotNull(purchaseEvent);
         Assert.AreEqual(purchaseEventId, purchaseEvent.Id);
@@ -163,7 +163,7 @@ public class DataTests
 
         await _dataRepository.UpdateEventAsync(purchaseEventId, stateId, userId, DateTime.Now,  "PurchaseEvent", null);
 
-        IEvent eventUpdated = await _dataRepository.GetEventAsync(purchaseEventId, "PurchaseEvent");
+        IEvent eventUpdated = await _dataRepository.GetEventAsync(purchaseEventId);
 
         Assert.IsNotNull(eventUpdated);
         Assert.AreEqual(purchaseEventId, eventUpdated.Id);
