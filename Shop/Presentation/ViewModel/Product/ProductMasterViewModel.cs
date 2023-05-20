@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Data.API;
-using Presentation.ViewModel;
-using Service.API;
+using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
@@ -24,7 +19,7 @@ internal class ProductMasterViewModel : IViewModel
 
     public ICommand RemoveProduct { get; set; }
 
-    private IProductCRUD _service { get; set; }
+    private readonly IProductModelOperation _modelOperation;
 
     private ObservableCollection<ProductDetailViewModel> _products;
 
@@ -124,7 +119,7 @@ internal class ProductMasterViewModel : IViewModel
         this.RemoveProduct = new OnClickCommand(e => this.DeleteProduct());
 
         this.Products = new ObservableCollection<ProductDetailViewModel>();
-        this._service = IProductCRUD.CreateProductCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IProductModelOperation.CreateModelOperation();
 
         this.IsProductSelected = false;
 
@@ -146,9 +141,9 @@ internal class ProductMasterViewModel : IViewModel
     {
         Task.Run(async () =>
         {
-            int lastId = await this._service.GetProductsCountAsync() + 1;
+            int lastId = await this._modelOperation.GetCountAsync() + 1;
 
-            await this._service.AddProductAsync(lastId, this.Name, this.Price, this.Pegi);
+            await this._modelOperation.AddAsync(lastId, this.Name, this.Price, this.Pegi);
 
             this.LoadProducts();
         });
@@ -158,7 +153,7 @@ internal class ProductMasterViewModel : IViewModel
     {
         Task.Run(async () =>
         {
-            await this._service.DeleteProductAsync(this.SelectedDetailViewModel.Id);
+            await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
             this.LoadProducts();
         });
@@ -166,13 +161,13 @@ internal class ProductMasterViewModel : IViewModel
 
     private async void LoadProducts()
     {
-        Dictionary<int, IProductDTO> Products = (await this._service.GetAllProductsAsync());
+        Dictionary<int, IProductModel> Products = await this._modelOperation.GetAllAsync();
 
         Application.Current.Dispatcher.Invoke(() =>
         {
             this._products.Clear();
             
-            foreach (IProductDTO p in Products.Values)
+            foreach (IProductModel p in Products.Values)
             {
                 this._products.Add(new ProductDetailViewModel(p.Id, p.Name, p.Price, p.Pegi));
             }

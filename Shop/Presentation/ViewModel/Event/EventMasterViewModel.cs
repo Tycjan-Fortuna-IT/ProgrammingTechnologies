@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
@@ -26,7 +27,7 @@ internal class EventMasterViewModel : IViewModel
 
     public ICommand RemoveEvent { get; set; }
 
-    private IEventCRUD _service { get; set; }
+    private readonly IEventModelOperation _modelOperation;
 
     private ObservableCollection<EventDetailViewModel> _events;
 
@@ -128,7 +129,7 @@ internal class EventMasterViewModel : IViewModel
         this.RemoveEvent = new OnClickCommand(e => this.DeleteEvent());
 
         this.Events = new ObservableCollection<EventDetailViewModel>();
-        this._service = IEventCRUD.CreateEventCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IEventModelOperation.CreateModelOperation();
 
         this.IsEventSelected = false;
 
@@ -165,9 +166,9 @@ internal class EventMasterViewModel : IViewModel
     {
         Task.Run(async () =>
         {
-            int lastId = await this._service.GetEventsCountAsync() + 1;
+            int lastId = await this._modelOperation.GetCountAsync() + 1;
 
-            await this._service.AddEventAsync(lastId, this.StateId, this.UserId, "PurchaseEvent");
+            await this._modelOperation.AddAsync(lastId, this.StateId, this.UserId, "PurchaseEvent");
 
             this.LoadEvents();
         });
@@ -177,9 +178,9 @@ internal class EventMasterViewModel : IViewModel
     {
         Task.Run(async () =>
         {
-            int lastId = await this._service.GetEventsCountAsync() + 1;
+            int lastId = await this._modelOperation.GetCountAsync() + 1;
 
-            await this._service.AddEventAsync(lastId, this.StateId, this.UserId, "ReturnEvent");
+            await this._modelOperation.AddAsync(lastId, this.StateId, this.UserId, "ReturnEvent");
 
             this.LoadEvents();
         });
@@ -189,9 +190,9 @@ internal class EventMasterViewModel : IViewModel
     {
         Task.Run(async () =>
         {
-            int lastId = await this._service.GetEventsCountAsync() + 1;
+            int lastId = await this._modelOperation.GetCountAsync() + 1;
 
-            await this._service.AddEventAsync(lastId, this.StateId, this.UserId, "SupplyEvent", this.Quantity);
+            await this._modelOperation.AddAsync(lastId, this.StateId, this.UserId, "SupplyEvent", this.Quantity);
 
             this.LoadEvents();
         });
@@ -201,7 +202,7 @@ internal class EventMasterViewModel : IViewModel
     {
         Task.Run(async () =>
         {
-            await this._service.DeleteEventAsync(this.SelectedDetailViewModel.Id);
+            await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
             this.LoadEvents();
         });
@@ -209,13 +210,13 @@ internal class EventMasterViewModel : IViewModel
 
     private async void LoadEvents()
     {
-        Dictionary<int, IEventDTO> Events = (await this._service.GetAllEventsAsync());
+        Dictionary<int, IEventModel> Events = (await this._modelOperation.GetAllAsync());
 
         Application.Current.Dispatcher.Invoke(() =>
         {
             this._events.Clear();
 
-            foreach (IEventDTO e in Events.Values)
+            foreach (IEventModel e in Events.Values)
             {
                 this._events.Add(new EventDetailViewModel(e.Id, e.stateId, e.userId, e.occurrenceDate, e.Type, e.Quantity));
             }

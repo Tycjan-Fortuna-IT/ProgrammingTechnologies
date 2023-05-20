@@ -1,9 +1,6 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
-using Presentation.ViewModel;
+﻿using System.Threading.Tasks;
 using System.Windows.Input;
-using Service.API;
-using Data.API;
+using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
@@ -11,7 +8,7 @@ internal class ProductDetailViewModel : IViewModel
 {
     public ICommand UpdateProduct { get; set; }
 
-    private IProductCRUD _service { get; set; }
+    private readonly IProductModelOperation _modelOperation;
 
     private int _id;
 
@@ -65,7 +62,7 @@ internal class ProductDetailViewModel : IViewModel
     {
         this.UpdateProduct = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._service = IProductCRUD.CreateProductCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IProductModelOperation.CreateModelOperation();
     }
 
     public ProductDetailViewModel(int id, string name, double price, int pegi)
@@ -77,14 +74,14 @@ internal class ProductDetailViewModel : IViewModel
 
         this.UpdateProduct = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._service = IProductCRUD.CreateProductCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IProductModelOperation.CreateModelOperation();
     }
 
     private void Update()
     {
         Task.Run(() =>
         {
-            this._service.UpdateProductAsync(this.Id, this.Name, this.Price, this.Pegi);
+            this._modelOperation.UpdateAsync(this.Id, this.Name, this.Price, this.Pegi);
         });
     }
 

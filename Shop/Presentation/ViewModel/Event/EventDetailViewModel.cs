@@ -1,8 +1,7 @@
-﻿using Service.API;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Data.API;
+using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
@@ -10,7 +9,7 @@ internal class EventDetailViewModel : IViewModel
 {
     public ICommand UpdateEvent { get; set; }
 
-    private IEventCRUD _service { get; set; }
+    private readonly IEventModelOperation _modelOperation;
 
     private int _id;
 
@@ -88,14 +87,14 @@ internal class EventDetailViewModel : IViewModel
     {
         this.UpdateEvent = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._service = IEventCRUD.CreateEventCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IEventModelOperation.CreateModelOperation();
     }
 
     public EventDetailViewModel(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity)
     {
         this.UpdateEvent = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._service = IEventCRUD.CreateEventCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IEventModelOperation.CreateModelOperation();
 
         this.Id = id;
         this.StateId = stateId;
@@ -109,7 +108,7 @@ internal class EventDetailViewModel : IViewModel
     {
         Task.Run(() =>
         {
-            this._service.UpdateEventAsync(this.Id, this.StateId, this.UserId, this.OccurrenceDate, this.Type, this.Quantity);
+            this._modelOperation.UpdateAsync(this.Id, this.StateId, this.UserId, this.OccurrenceDate, this.Type, this.Quantity);
         });
     }
 

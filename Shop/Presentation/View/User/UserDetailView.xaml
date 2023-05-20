@@ -80,7 +80,7 @@
                 </TextBox>
                 <Label Content="DateOfBirth:"/>
                 <TextBox Height="20" Width="120" Margin="50,0,10,0"
-                         Text="{Binding DateOfBirth , ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding DateOfBirth , ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:MM/dd/yyyy}}"
                          TextWrapping="Wrap"
                          BorderBrush="Gray">
                     <Validation.ErrorTemplate>

@@ -4,9 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Data.API;
-using Presentation.ViewModel;
-using Service.API;
+using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
@@ -22,7 +20,7 @@ internal class UserMasterViewModel : IViewModel
 
     public ICommand RemoveUser { get; set; }
 
-    private IUserCRUD _service { get; set; }
+    private readonly IUserModelOperation _modelOperation;
 
     private ObservableCollection<UserDetailViewModel> _users;
 
@@ -134,7 +132,7 @@ internal class UserMasterViewModel : IViewModel
         this.RemoveUser = new OnClickCommand(e => this.DeleteUser());
 
         this.Users = new ObservableCollection<UserDetailViewModel>();
-        this._service = IUserCRUD.CreateUserCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IUserModelOperation.CreateModelOperation();
 
         this.IsUserSelected = false;
 
@@ -155,9 +153,9 @@ internal class UserMasterViewModel : IViewModel
     {
         Task.Run(async () =>
         {
-            int lastId = await this._service.GetUsersCountAsync() + 1;
+            int lastId = await this._modelOperation.GetCountAsync() + 1;
 
-            await this._service.AddUserAsync(lastId, this.Nickname, this.Email, this.Balance, this.DateOfBirth);
+            await this._modelOperation.AddAsync(lastId, this.Nickname, this.Email, this.Balance, this.DateOfBirth);
 
             this.LoadUsers();
         });
@@ -167,7 +165,7 @@ internal class UserMasterViewModel : IViewModel
     {
         Task.Run(async () =>
         {
-            await this._service.DeleteUserAsync(this.SelectedDetailViewModel.Id);
+            await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
             this.LoadUsers();
         });
@@ -175,13 +173,13 @@ internal class UserMasterViewModel : IViewModel
 
     private async void LoadUsers()
     {
-        Dictionary<int, IUserDTO> Users = (await this._service.GetAllUsersAsync());
+        Dictionary<int, IUserModel> Users = await this._modelOperation.GetAllAsync();
 
         Application.Current.Dispatcher.Invoke(() =>
         {
             this._users.Clear();
 
-            foreach (IUserDTO u in Users.Values)
+            foreach (IUserModel u in Users.Values)
             {
                 this._users.Add(new UserDetailViewModel(u.Id, u.Nickname, u.Email, u.Balance, u.DateOfBirth));
             }

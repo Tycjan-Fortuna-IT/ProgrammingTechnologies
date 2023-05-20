@@ -1,8 +1,7 @@
 ﻿using System;
-using Service.API;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Data.API;
+using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
@@ -10,7 +9,7 @@ internal class UserDetailViewModel : IViewModel
 {
     public ICommand UpdateUser { get; set; }
 
-    private IUserCRUD _service { get; set; }
+    private readonly IUserModelOperation _modelOperation;
 
     private int _id;
 
@@ -76,7 +75,7 @@ internal class UserDetailViewModel : IViewModel
     {
         this.UpdateUser = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._service = IUserCRUD.CreateUserCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IUserModelOperation.CreateModelOperation();
     }
 
     public UserDetailViewModel(int id, string nickname, string email, double balance, DateTime dateOfBirth)
@@ -89,14 +88,14 @@ internal class UserDetailViewModel : IViewModel
 
         this.UpdateUser = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._service = IUserCRUD.CreateUserCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IUserModelOperation.CreateModelOperation();
     }
 
     private void Update()
     {
         Task.Run(() =>
         {
-            this._service.UpdateUserAsync(this.Id, this.Nickname, this.Email, this.Balance, this.DateOfBirth);
+            this._modelOperation.UpdateAsync(this.Id, this.Nickname, this.Email, this.Balance, this.DateOfBirth);
         });
     }
 

@@ -1,6 +1,4 @@
-﻿using Data.API;
-using Presentation.ViewModel;
-using Service.API;
+﻿using Presentation.Model.API;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -21,7 +19,7 @@ internal class StateMasterViewModel : IViewModel
 
     public ICommand RemoveState { get; set; }
 
-    private IStateCRUD _service { get; set; }
+    private readonly IStateModelOperation _modelOperation;
 
     private ObservableCollection<StateDetailViewModel> _states;
 
@@ -121,7 +119,7 @@ internal class StateMasterViewModel : IViewModel
         this.RemoveState = new OnClickCommand(e => this.DeleteState());
 
         this.States = new ObservableCollection<StateDetailViewModel>();
-        this._service = IStateCRUD.CreateStateCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IStateModelOperation.CreateModelOperation();
 
         this.IsStateSelected = false;
 
@@ -141,9 +139,9 @@ internal class StateMasterViewModel : IViewModel
     {
         Task.Run(async () =>
         {
-            int lastId = await this._service.GetStatesCountAsync() + 1;
+            int lastId = await this._modelOperation.GetCountAsync() + 1;
 
-            await this._service.AddStateAsync(lastId, this.ProductId, this.ProductQuantity);
+            await this._modelOperation.AddAsync(lastId, this.ProductId, this.ProductQuantity);
 
             this.LoadStates();
         });
@@ -153,7 +151,7 @@ internal class StateMasterViewModel : IViewModel
     {
         Task.Run(async () =>
         {
-            await this._service.DeleteStateAsync(this.SelectedDetailViewModel.Id);
+            await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
             this.LoadStates();
         });
@@ -161,13 +159,13 @@ internal class StateMasterViewModel : IViewModel
 
     private async void LoadStates()
     {
-        Dictionary<int, IStateDTO> States = (await this._service.GetAllStatesAsync());
+        Dictionary<int, IStateModel> States = await this._modelOperation.GetAllAsync();
 
         Application.Current.Dispatcher.Invoke(() =>
         {
             this._states.Clear();
 
-            foreach (IStateDTO s in States.Values)
+            foreach (IStateModel s in States.Values)
             {
                 this._states.Add(new StateDetailViewModel(s.Id, s.productId, s.productQuantity));
             }

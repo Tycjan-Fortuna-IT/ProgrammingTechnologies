@@ -1,7 +1,6 @@
-﻿using Service.API;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Input;
-using Data.API;
+using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
@@ -9,7 +8,7 @@ internal class StateDetailViewModel : IViewModel
 {
     public ICommand UpdateState { get; set; }
 
-    private IStateCRUD _service { get; set; }
+    private readonly IStateModelOperation _modelOperation;
 
     private int _id;
 
@@ -51,7 +50,7 @@ internal class StateDetailViewModel : IViewModel
     {
         this.UpdateState = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._service = IStateCRUD.CreateStateCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IStateModelOperation.CreateModelOperation();
     }
 
     public StateDetailViewModel(int id, int productId, int productQuantity)
@@ -62,14 +61,14 @@ internal class StateDetailViewModel : IViewModel
 
         this.UpdateState = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._service = IStateCRUD.CreateStateCRUD(IDataRepository.CreateDatabase());
+        this._modelOperation = IStateModelOperation.CreateModelOperation();
     }
 
     private void Update()
     {
         Task.Run(() =>
         {
-            this._service.UpdateStateAsync(this.Id, this.ProductId, this.ProductQuantity);
+            this._modelOperation.UpdateAsync(this.Id, this.ProductId, this.ProductQuantity);
         });
     }
 
