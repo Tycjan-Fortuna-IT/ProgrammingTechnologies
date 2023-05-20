@@ -28,9 +28,9 @@ internal class EventCRUD : IEventCRUD
         return this.Map(await this._repository.GetEventAsync(id, type));
     }
 
-    public async Task UpdateEventAsync(int id, int stateId, int userId, string type, int? quantity)
+    public async Task UpdateEventAsync(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity)
     {
-        await this._repository.UpdateEventAsync(id, stateId, userId, type, quantity);
+        await this._repository.UpdateEventAsync(id, stateId, userId, occurrenceDate, type, quantity);
     }
 
     public async Task DeleteEventAsync(int id)

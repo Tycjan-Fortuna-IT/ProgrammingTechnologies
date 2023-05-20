@@ -18,7 +18,11 @@ internal class EventMasterViewModel : IViewModel
 
     public ICommand SwitchToStateMasterPage { get; set; }
 
-    public ICommand CreateEvent { get; set; }
+    public ICommand PurchaseEvent { get; set; }
+
+    public ICommand ReturnEvent { get; set; }
+
+    public ICommand SupplyEvent { get; set; }
 
     public ICommand RemoveEvent { get; set; }
 
@@ -118,7 +122,9 @@ internal class EventMasterViewModel : IViewModel
         this.SwitchToStateMasterPage = new SwitchViewCommand("StateMasterView");
         this.SwitchToProductMasterPage = new SwitchViewCommand("ProductMasterView");
 
-        this.CreateEvent = new OnClickCommand(e => this.StoreEvent(), c => this.CanStoreEvent());
+        this.PurchaseEvent = new OnClickCommand(e => this.StorePurchaseEvent(), c => this.CanPurchaseEvent());
+        this.ReturnEvent = new OnClickCommand(e => this.StoreReturnEvent(), c => this.CanReturnEvent());
+        this.SupplyEvent = new OnClickCommand(e => this.StoreSupplyEvent(), c => this.CanSupplyEvent());
         this.RemoveEvent = new OnClickCommand(e => this.DeleteEvent());
 
         this.Events = new ObservableCollection<EventDetailViewModel>();
@@ -129,7 +135,7 @@ internal class EventMasterViewModel : IViewModel
         Task.Run(this.LoadEvents);
     }
 
-    private bool CanStoreEvent()
+    private bool CanPurchaseEvent()
     {
         return !(
             string.IsNullOrWhiteSpace(this.StateId.ToString()) ||
@@ -137,7 +143,49 @@ internal class EventMasterViewModel : IViewModel
         );
     }
 
-    private void StoreEvent()
+    private bool CanReturnEvent()
+    {
+        return !(
+            string.IsNullOrWhiteSpace(this.StateId.ToString()) ||
+            string.IsNullOrWhiteSpace(this.UserId.ToString())
+        );
+    }
+
+    private bool CanSupplyEvent()
+    {
+        return !(
+            string.IsNullOrWhiteSpace(this.StateId.ToString()) ||
+            string.IsNullOrWhiteSpace(this.UserId.ToString()) ||
+            string.IsNullOrEmpty(this.Quantity.ToString()) ||
+            this.Quantity < 1
+        );
+    }
+
+    private void StorePurchaseEvent()
+    {
+        Task.Run(async () =>
+        {
+            int lastId = await this._service.GetEventsCountAsync() + 1;
+
+            await this._service.AddEventAsync(lastId, this.StateId, this.UserId, "PurchaseEvent");
+
+            this.LoadEvents();
+        });
+    }
+
+    private void StoreReturnEvent()
+    {
+        Task.Run(async () =>
+        {
+            int lastId = await this._service.GetEventsCountAsync() + 1;
+
+            await this._service.AddEventAsync(lastId, this.StateId, this.UserId, "ReturnEvent");
+
+            this.LoadEvents();
+        });
+    }
+
+    private void StoreSupplyEvent()
     {
         Task.Run(async () =>
         {

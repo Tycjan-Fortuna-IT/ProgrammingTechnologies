@@ -66,7 +66,7 @@ public interface IDataRepository
 
     Task<IEvent> GetEventAsync(int id, string type);
 
-    Task UpdateEventAsync(int id, int stateId, int userId, string type, int? quantity);
+    Task UpdateEventAsync(int id, int stateId, int userId, DateTime occurenceDate, string type, int? quantity);
 
     Task DeleteEventAsync(int id);
 

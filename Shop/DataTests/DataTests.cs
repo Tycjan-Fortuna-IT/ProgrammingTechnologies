@@ -161,7 +161,7 @@ public class DataTests
         Assert.IsNotNull(await _dataRepository.GetAllEventsAsync());
         Assert.IsTrue(await _dataRepository.GetEventsCountAsync() > 0);
 
-        await _dataRepository.UpdateEventAsync(purchaseEventId, stateId, userId, "PurchaseEvent", null);
+        await _dataRepository.UpdateEventAsync(purchaseEventId, stateId, userId, DateTime.Now,  "PurchaseEvent", null);
 
         IEvent eventUpdated = await _dataRepository.GetEventAsync(purchaseEventId, "PurchaseEvent");
 

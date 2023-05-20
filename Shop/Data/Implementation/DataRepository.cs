@@ -255,9 +255,9 @@ internal class DataRepository : IDataRepository
         return even;
     }
 
-    public async Task UpdateEventAsync(int id, int stateId, int userId, string type, int? quantity)
+    public async Task UpdateEventAsync(int id, int stateId, int userId, DateTime occurenceDate, string type, int? quantity)
     {
-        IEvent newEvent = new Event(id, stateId, userId, DateTime.Now, type, quantity);
+        IEvent newEvent = new Event(id, stateId, userId, occurenceDate, type, quantity);
 
         if (!await this.CheckIfEventExists(newEvent.Id, type))
             throw new Exception("This event does not exist");

@@ -80,7 +80,7 @@
 
                 <Label Content="Occurrence Date:"/>
                 <TextBox Height="20" Width="120" Margin="50,0,10,0"
-                         Text="{Binding OccurrenceDate , ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding OccurrenceDate , ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:dd/MM/yyyy}}"
                          TextWrapping="Wrap"
                          BorderBrush="Gray">
                     <Validation.ErrorTemplate>

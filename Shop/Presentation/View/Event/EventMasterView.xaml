@@ -126,8 +126,12 @@
 
                 </StackPanel>
 
-                <Button Content="Create" Margin="207,308,114,44" Background="CornflowerBlue"
-                        Command="{Binding CreateEvent}"/>
+                <Button Content="Return" Margin="226,283,95,70" Background="CornflowerBlue"
+                        Command="{Binding ReturnEvent}"/>
+                <Button Content="Supply" Margin="226,320,95,32" Background="CornflowerBlue"
+                        Command="{Binding SupplyEvent}"/>
+                <Button Content="Purchase" Margin="226,245,95,107" Background="CornflowerBlue"
+                        Command="{Binding PurchaseEvent}"/>
             </Grid>
             <Grid Height="100"/>
         </StackPanel>

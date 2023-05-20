@@ -1,6 +1,8 @@
 ﻿using Service.API;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Data.API;
 
 namespace Presentation.ViewModel;
 
@@ -84,11 +86,17 @@ internal class EventDetailViewModel : IViewModel
 
     public EventDetailViewModel()
     {
+        this.UpdateEvent = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
+        this._service = IEventCRUD.CreateEventCRUD(IDataRepository.CreateDatabase());
     }
 
     public EventDetailViewModel(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity)
     {
+        this.UpdateEvent = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
+
+        this._service = IEventCRUD.CreateEventCRUD(IDataRepository.CreateDatabase());
+
         this.Id = id;
         this.StateId = stateId;
         this.UserId = userId;
@@ -97,19 +105,18 @@ internal class EventDetailViewModel : IViewModel
         this.Quantity = quantity;
     }
 
-    //private void Update()
-    //{
-    //    Task.Run(() =>
-    //    {
-    //        this._service.UpdateEventAsync(this.Id, this.StateId);
-    //    });
-    //}
+    private void Update()
+    {
+        Task.Run(() =>
+        {
+            this._service.UpdateEventAsync(this.Id, this.StateId, this.UserId, this.OccurrenceDate, this.Type, this.Quantity);
+        });
+    }
 
-    //private bool CanUpdate()
-    //{
-    //    return !(
-    //        string.IsNullOrWhiteSpace(this.ProductQuantity.ToString()) ||
-    //        this.ProductQuantity < 0
-    //    );
-    //}
+    private bool CanUpdate()
+    {
+        return !(
+            string.IsNullOrWhiteSpace(this.OccurrenceDate.ToString())
+        );
+    }
 }
