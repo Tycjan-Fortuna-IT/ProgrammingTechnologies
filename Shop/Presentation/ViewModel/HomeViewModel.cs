@@ -25,7 +25,7 @@ namespace Presentation.ViewModel
 
         public HomeViewModel()
         {
-            this.StartAppCommand = new UpdateViewModelCommand(this);
+            this.StartAppCommand = new SwitchViewCommand("ProductMasterView");
 
             this.ExitAppCommand = new CloseApplicationCommand();
         }
