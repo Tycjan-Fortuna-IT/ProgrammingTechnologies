@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
@@ -21,6 +22,8 @@ internal class UserMasterViewModel : IViewModel
     public ICommand RemoveUser { get; set; }
 
     private readonly IUserModelOperation _modelOperation;
+
+    private readonly IErrorInformer _informer;
 
     private ObservableCollection<UserDetailViewModel> _users;
 
@@ -122,7 +125,7 @@ internal class UserMasterViewModel : IViewModel
         }
     }
 
-    public UserMasterViewModel()
+    public UserMasterViewModel(IUserModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.SwitchToProductMasterPage = new SwitchViewCommand("ProductMasterView");
         this.SwitchToStateMasterPage = new SwitchViewCommand("StateMasterView");
@@ -132,7 +135,9 @@ internal class UserMasterViewModel : IViewModel
         this.RemoveUser = new OnClickCommand(e => this.DeleteUser());
 
         this.Users = new ObservableCollection<UserDetailViewModel>();
-        this._modelOperation = IUserModelOperation.CreateModelOperation();
+
+        this._modelOperation = model ?? IUserModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
 
         this.IsUserSelected = false;
 
@@ -158,6 +163,8 @@ internal class UserMasterViewModel : IViewModel
             await this._modelOperation.AddAsync(lastId, this.Nickname, this.Email, this.Balance, this.DateOfBirth);
 
             this.LoadUsers();
+
+            this._informer.InformSuccess("User successfully created!");
         });
     }
 
@@ -168,6 +175,8 @@ internal class UserMasterViewModel : IViewModel
             await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
             this.LoadUsers();
+
+            this._informer.InformSuccess("User successfully deleted!");
         });
     }
 

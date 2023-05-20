@@ -8,7 +8,12 @@
              mc:Ignorable="d" 
              Width="220" Height="320">
     <UserControl.DataContext>
-        <viewmodel:StateDetailViewModel/>
+        <ObjectDataProvider ObjectType="viewmodel:StateDetailViewModel">
+            <ObjectDataProvider.ConstructorParameters>
+                <x:Null/>
+                <x:Null/>
+            </ObjectDataProvider.ConstructorParameters>
+        </ObjectDataProvider>
     </UserControl.DataContext>
 
     <Grid Background="White" Margin="0,0,0,86">

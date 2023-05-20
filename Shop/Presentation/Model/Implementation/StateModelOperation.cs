@@ -31,7 +31,7 @@ internal class StateModelOperation : IStateModelOperation
 
     public async Task UpdateAsync(int id, int productId, int productQuantity)
     {
-        await this._stateCrud.AddStateAsync(id, productId, productQuantity);
+        await this._stateCrud.UpdateStateAsync(id, productId, productQuantity);
     }
 
     public async Task DeleteAsync(int id)

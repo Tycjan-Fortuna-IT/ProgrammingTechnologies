@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
@@ -20,6 +21,8 @@ internal class ProductMasterViewModel : IViewModel
     public ICommand RemoveProduct { get; set; }
 
     private readonly IProductModelOperation _modelOperation;
+
+    private readonly IErrorInformer _informer;
 
     private ObservableCollection<ProductDetailViewModel> _products;
 
@@ -109,7 +112,7 @@ internal class ProductMasterViewModel : IViewModel
         }
     }
 
-    public ProductMasterViewModel()
+    public ProductMasterViewModel(IProductModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.SwitchToUserMasterPage = new SwitchViewCommand("UserMasterView");
         this.SwitchToStateMasterPage = new SwitchViewCommand("StateMasterView");
@@ -119,7 +122,9 @@ internal class ProductMasterViewModel : IViewModel
         this.RemoveProduct = new OnClickCommand(e => this.DeleteProduct());
 
         this.Products = new ObservableCollection<ProductDetailViewModel>();
-        this._modelOperation = IProductModelOperation.CreateModelOperation();
+
+        this._modelOperation = model ?? IProductModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
 
         this.IsProductSelected = false;
 
@@ -146,6 +151,8 @@ internal class ProductMasterViewModel : IViewModel
             await this._modelOperation.AddAsync(lastId, this.Name, this.Price, this.Pegi);
 
             this.LoadProducts();
+
+            this._informer.InformSuccess("Product added successfully!");
         });
     }
 
@@ -156,6 +163,8 @@ internal class ProductMasterViewModel : IViewModel
             await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
             this.LoadProducts();
+
+            this._informer.InformSuccess("Product deleted successfully!");
         });
     }
 

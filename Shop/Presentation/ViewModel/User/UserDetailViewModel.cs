@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
@@ -10,6 +11,8 @@ internal class UserDetailViewModel : IViewModel
     public ICommand UpdateUser { get; set; }
 
     private readonly IUserModelOperation _modelOperation;
+
+    private readonly IErrorInformer _informer;
 
     private int _id;
 
@@ -71,14 +74,15 @@ internal class UserDetailViewModel : IViewModel
         }
     }
 
-    public UserDetailViewModel()
+    public UserDetailViewModel(IUserModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.UpdateUser = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._modelOperation = IUserModelOperation.CreateModelOperation();
+        this._modelOperation = model ?? IUserModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
     }
 
-    public UserDetailViewModel(int id, string nickname, string email, double balance, DateTime dateOfBirth)
+    public UserDetailViewModel(int id, string nickname, string email, double balance, DateTime dateOfBirth, IUserModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.Id = id;
         this.Nickname = nickname;
@@ -88,7 +92,8 @@ internal class UserDetailViewModel : IViewModel
 
         this.UpdateUser = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._modelOperation = IUserModelOperation.CreateModelOperation();
+        this._modelOperation = model ?? IUserModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
     }
 
     private void Update()
@@ -96,6 +101,8 @@ internal class UserDetailViewModel : IViewModel
         Task.Run(() =>
         {
             this._modelOperation.UpdateAsync(this.Id, this.Nickname, this.Email, this.Balance, this.DateOfBirth);
+
+            this._informer.InformSuccess("User successfully updated!");
         });
     }
 

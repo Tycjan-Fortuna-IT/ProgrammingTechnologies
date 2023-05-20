@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
@@ -10,6 +11,8 @@ internal class EventDetailViewModel : IViewModel
     public ICommand UpdateEvent { get; set; }
 
     private readonly IEventModelOperation _modelOperation;
+
+    private readonly IErrorInformer _informer;
 
     private int _id;
 
@@ -83,18 +86,20 @@ internal class EventDetailViewModel : IViewModel
         }
     }
 
-    public EventDetailViewModel()
+    public EventDetailViewModel(IEventModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.UpdateEvent = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
         this._modelOperation = IEventModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
     }
 
-    public EventDetailViewModel(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity)
+    public EventDetailViewModel(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity, IEventModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.UpdateEvent = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
         this._modelOperation = IEventModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
 
         this.Id = id;
         this.StateId = stateId;
@@ -106,9 +111,11 @@ internal class EventDetailViewModel : IViewModel
 
     private void Update()
     {
-        Task.Run(() =>
+        Task.Run(async () =>
         {
-            this._modelOperation.UpdateAsync(this.Id, this.StateId, this.UserId, this.OccurrenceDate, this.Type, this.Quantity);
+            await this._modelOperation.UpdateAsync(this.Id, this.StateId, this.UserId, this.OccurrenceDate, this.Type, this.Quantity);
+
+            this._informer.InformSuccess("Event successfully updated!");
         });
     }
 

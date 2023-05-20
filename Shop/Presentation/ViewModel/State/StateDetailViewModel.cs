@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
@@ -9,6 +10,8 @@ internal class StateDetailViewModel : IViewModel
     public ICommand UpdateState { get; set; }
 
     private readonly IStateModelOperation _modelOperation;
+
+    private readonly IErrorInformer _informer;
 
     private int _id;
 
@@ -46,14 +49,15 @@ internal class StateDetailViewModel : IViewModel
         }
     }
 
-    public StateDetailViewModel()
+    public StateDetailViewModel(IStateModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.UpdateState = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
         this._modelOperation = IStateModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
     }
 
-    public StateDetailViewModel(int id, int productId, int productQuantity)
+    public StateDetailViewModel(int id, int productId, int productQuantity, IStateModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.Id = id;
         this.ProductId = productId;
@@ -62,6 +66,7 @@ internal class StateDetailViewModel : IViewModel
         this.UpdateState = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
         this._modelOperation = IStateModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
     }
 
     private void Update()
@@ -69,6 +74,8 @@ internal class StateDetailViewModel : IViewModel
         Task.Run(() =>
         {
             this._modelOperation.UpdateAsync(this.Id, this.ProductId, this.ProductQuantity);
+
+            this._informer.InformSuccess("State successfully updated!");
         });
     }
 

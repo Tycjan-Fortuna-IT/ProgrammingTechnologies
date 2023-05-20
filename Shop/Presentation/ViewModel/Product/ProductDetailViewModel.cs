@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
@@ -9,6 +10,8 @@ internal class ProductDetailViewModel : IViewModel
     public ICommand UpdateProduct { get; set; }
 
     private readonly IProductModelOperation _modelOperation;
+
+    private readonly IErrorInformer _informer;
 
     private int _id;
 
@@ -58,14 +61,15 @@ internal class ProductDetailViewModel : IViewModel
         }
     }
 
-    public ProductDetailViewModel()
+    public ProductDetailViewModel(IProductModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.UpdateProduct = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._modelOperation = IProductModelOperation.CreateModelOperation();
+        this._modelOperation = model ?? IProductModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
     }
 
-    public ProductDetailViewModel(int id, string name, double price, int pegi)
+    public ProductDetailViewModel(int id, string name, double price, int pegi, IProductModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.Id = id;
         this.Name = name;
@@ -74,7 +78,8 @@ internal class ProductDetailViewModel : IViewModel
 
         this.UpdateProduct = new OnClickCommand(e => this.Update(), c => this.CanUpdate());
 
-        this._modelOperation = IProductModelOperation.CreateModelOperation();
+        this._modelOperation = model ?? IProductModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
     }
 
     private void Update()
@@ -82,6 +87,8 @@ internal class ProductDetailViewModel : IViewModel
         Task.Run(() =>
         {
             this._modelOperation.UpdateAsync(this.Id, this.Name, this.Price, this.Pegi);
+
+            this._informer.InformSuccess("Product successfully updated!");
         });
     }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using Service.API;
-using System.Diagnostics;
 
 namespace Presentation.Model.Implementation;
 

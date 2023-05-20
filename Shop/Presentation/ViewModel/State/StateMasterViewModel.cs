@@ -1,4 +1,5 @@
-﻿using Presentation.Model.API;
+﻿using Presentation.API;
+using Presentation.Model.API;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -20,6 +21,8 @@ internal class StateMasterViewModel : IViewModel
     public ICommand RemoveState { get; set; }
 
     private readonly IStateModelOperation _modelOperation;
+
+    private readonly IErrorInformer _informer;
 
     private ObservableCollection<StateDetailViewModel> _states;
 
@@ -109,7 +112,7 @@ internal class StateMasterViewModel : IViewModel
         }
     }
 
-    public StateMasterViewModel()
+    public StateMasterViewModel(IStateModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.SwitchToUserMasterPage = new SwitchViewCommand("UserMasterView");
         this.SwitchToProductMasterPage = new SwitchViewCommand("ProductMasterView");
@@ -119,7 +122,9 @@ internal class StateMasterViewModel : IViewModel
         this.RemoveState = new OnClickCommand(e => this.DeleteState());
 
         this.States = new ObservableCollection<StateDetailViewModel>();
+
         this._modelOperation = IStateModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
 
         this.IsStateSelected = false;
 
@@ -144,6 +149,8 @@ internal class StateMasterViewModel : IViewModel
             await this._modelOperation.AddAsync(lastId, this.ProductId, this.ProductQuantity);
 
             this.LoadStates();
+
+            this._informer.InformSuccess("State successfully created!");
         });
     }
 
@@ -154,6 +161,8 @@ internal class StateMasterViewModel : IViewModel
             await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
             this.LoadStates();
+
+            this._informer.InformSuccess("State successfully deleted!");
         });
     }
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Presentation.Model.API;
+using Presentation.API;
 
 namespace Presentation.ViewModel;
 
@@ -28,6 +29,8 @@ internal class EventMasterViewModel : IViewModel
     public ICommand RemoveEvent { get; set; }
 
     private readonly IEventModelOperation _modelOperation;
+
+    private readonly IErrorInformer _informer;
 
     private ObservableCollection<EventDetailViewModel> _events;
 
@@ -117,7 +120,7 @@ internal class EventMasterViewModel : IViewModel
         }
     }
 
-    public EventMasterViewModel()
+    public EventMasterViewModel(IEventModelOperation? model = null, IErrorInformer? informer = null)
     {
         this.SwitchToUserMasterPage = new SwitchViewCommand("UserMasterView");
         this.SwitchToStateMasterPage = new SwitchViewCommand("StateMasterView");
@@ -129,7 +132,9 @@ internal class EventMasterViewModel : IViewModel
         this.RemoveEvent = new OnClickCommand(e => this.DeleteEvent());
 
         this.Events = new ObservableCollection<EventDetailViewModel>();
+
         this._modelOperation = IEventModelOperation.CreateModelOperation();
+        this._informer = informer ?? new PopupErrorInformer();
 
         this.IsEventSelected = false;
 
@@ -171,6 +176,8 @@ internal class EventMasterViewModel : IViewModel
             await this._modelOperation.AddAsync(lastId, this.StateId, this.UserId, "PurchaseEvent");
 
             this.LoadEvents();
+
+            this._informer.InformSuccess("Event successfully created!");
         });
     }
 
@@ -183,6 +190,8 @@ internal class EventMasterViewModel : IViewModel
             await this._modelOperation.AddAsync(lastId, this.StateId, this.UserId, "ReturnEvent");
 
             this.LoadEvents();
+
+            this._informer.InformSuccess("Event successfully created!");
         });
     }
 
@@ -195,6 +204,8 @@ internal class EventMasterViewModel : IViewModel
             await this._modelOperation.AddAsync(lastId, this.StateId, this.UserId, "SupplyEvent", this.Quantity);
 
             this.LoadEvents();
+
+            this._informer.InformSuccess("Event successfully created!");
         });
     }
 
@@ -205,6 +216,8 @@ internal class EventMasterViewModel : IViewModel
             await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
             this.LoadEvents();
+
+            this._informer.InformSuccess("Event successfully deleted!");
         });
     }
 
