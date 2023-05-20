@@ -9,53 +9,29 @@
         <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
             <views:HomeView/>
         </DataTemplate>
-        
-        <DataTemplate DataType="{x:Type viewmodels:ShopTabViewModel}">
-            <views:ShopTab/>
+        <DataTemplate DataType="{x:Type viewmodels:ProductMasterViewModel}">
+            <views:ProductMasterView/>
         </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:UserTabViewModel}">
-            <views:UserTab/>
+        <DataTemplate DataType="{x:Type viewmodels:ProductDetailViewModel}">
+            <views:ProductDetailView/>
         </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:ModTabViewModel}">
-            <views:ModTab/>
+        <DataTemplate DataType="{x:Type viewmodels:UserDetailViewModel}">
+            <views:UserDetailView/>
         </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:ModTabCreateUserViewModel}">
-            <views:ModTabCreateUser/>
+        <DataTemplate DataType="{x:Type viewmodels:UserMasterViewModel}">
+            <views:UserMasterView/>
         </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:ModTabCreateProductViewModel}">
-            <views:ModTabCreateProduct/>
+        <DataTemplate DataType="{x:Type viewmodels:StateMasterViewModel}">
+            <views:StateMasterView/>
         </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:ModTabCreateEventViewModel}">
-            <views:ModTabCreateEvent/>
+        <DataTemplate DataType="{x:Type viewmodels:StateDetailViewModel}">
+            <views:StateDetailView/>
         </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:ModTabUpdateUserViewModel}">
-            <views:ModTabUpdateUser/>
+        <DataTemplate DataType="{x:Type viewmodels:EventMasterViewModel}">
+            <views:EventMasterView/>
         </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:ModTabUpdateProductViewModel}">
-            <views:ModTabUpdateProduct/>
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:ModTabUpdateEventViewModel}">
-            <views:ModTabUpdateEvent/>
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:ModTabDeleteUserViewModel}">
-            <views:ModTabDeleteUser/>
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:ModTabDeleteProductViewModel}">
-            <views:ModTabDeleteProduct/>
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewmodels:ModTabDeleteEventViewModel}">
-            <views:ModTabDeleteEvent/>
+        <DataTemplate DataType="{x:Type viewmodels:EventDetailViewModel}">
+            <views:EventDetailView/>
         </DataTemplate>
     </Application.Resources>
 </Application>
