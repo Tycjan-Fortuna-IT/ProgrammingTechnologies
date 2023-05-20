@@ -1,5 +1,6 @@
 ﻿using Data.API;
 using Service.API;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ServiceTests;
 
