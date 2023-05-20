@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Data.API;
-using Presentation.ViewModel.Command;
+using Presentation.ViewModel;
 using Service.API;
 
 namespace Presentation.ViewModel;

@@ -8,5 +8,7 @@ public interface IEvent
 
     int userId { get; set; }
 
+    //string Type { get; set; }
+
     DateTime occurrenceDate { get; set; }
 }

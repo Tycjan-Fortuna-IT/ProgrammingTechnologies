@@ -1,5 +1,5 @@
 ﻿using Data.API;
-using Presentation.ViewModel.Command;
+using Presentation.ViewModel;
 using Service.API;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
-using Presentation.ViewModel.Command;
+using Presentation.ViewModel;
 using System.Windows.Input;
 using Service.API;
 using Data.API;
