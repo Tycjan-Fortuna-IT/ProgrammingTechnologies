@@ -9,4 +9,8 @@ public interface IEventDTO
     int userId { get; set; }
 
     DateTime occurrenceDate { get; set; }
+
+    string Type { get; set; }
+
+    int? Quantity { get; set; }
 }

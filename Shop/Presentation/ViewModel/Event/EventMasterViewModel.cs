@@ -169,7 +169,7 @@ internal class EventMasterViewModel : IViewModel
 
             foreach (IEventDTO e in Events.Values)
             {
-                this._events.Add(new EventDetailViewModel(e.Id, e.stateId, e.userId, e.occurrenceDate));
+                this._events.Add(new EventDetailViewModel(e.Id, e.stateId, e.userId, e.occurrenceDate, e.Type, e.Quantity));
             }
         });
 

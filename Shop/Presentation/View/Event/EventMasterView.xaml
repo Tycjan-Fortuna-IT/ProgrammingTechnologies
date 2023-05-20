@@ -63,16 +63,17 @@
                     >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Id" Width="80" DisplayMemberBinding="{Binding Id}" />
+                            <GridViewColumn Header="Id" Width="140" DisplayMemberBinding="{Binding Id}" />
+                            <GridViewColumn Header="Type" Width="140" DisplayMemberBinding="{Binding Type}" />
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Grid Grid.ColumnSpan="2" Visibility="{Binding IsStateDetailVisible}">
+                <Grid Grid.ColumnSpan="2" Visibility="{Binding IsEventDetailVisible}">
                     <view:EventDetailView
-                        Margin="320,24,10,79"
+                        Margin="320,10,10,-35"
                         DataContext="{Binding SelectedDetailViewModel}"
                         />
-                    <Button Content="Delete" Background="IndianRed" HorizontalAlignment="Left" Margin="385,253,0,0" VerticalAlignment="Top" Height="26" Width="90"
+                    <Button Content="Delete" Background="IndianRed" HorizontalAlignment="Left" Margin="385,320,0,0" VerticalAlignment="Top" Height="26" Width="90"
                         Command="{Binding RemoveEvent}"/>
                 </Grid>
                 <StackPanel Margin="16,193,202,0"

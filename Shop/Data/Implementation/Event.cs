@@ -2,15 +2,16 @@
 
 namespace Data.Implementation;
 
-internal class SupplyEvent : IEvent
+internal class Event : IEvent
 {
-    public SupplyEvent(int id, int stateId, int userId, DateTime occurrenceDate, int quantity)
+    public Event(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity = null)
     {
         this.Id = id;
         this.stateId = stateId;
         this.userId = userId;
-        this.quantity = quantity;
         this.occurrenceDate = occurrenceDate;
+        this.Type = type;
+        this.Quantity = quantity;
     }
 
     public int Id { get; set; }
@@ -21,6 +22,7 @@ internal class SupplyEvent : IEvent
 
     public DateTime occurrenceDate { get; set; }
 
-    public int quantity { get; set; }
+    public string Type { get; set; }
 
+    public int? Quantity { get; set; }
 }

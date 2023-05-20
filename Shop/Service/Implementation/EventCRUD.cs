@@ -15,7 +15,7 @@ internal class EventCRUD : IEventCRUD
 
     public IEventDTO Map(IEvent even)
     {
-        return new EventDTO(even.Id, even.stateId, even.userId, even.occurrenceDate);
+        return new EventDTO(even.Id, even.stateId, even.userId, even.occurrenceDate, even.Type, even.Quantity);
     }
 
     public async Task AddEventAsync(int id, int stateId, int userId, string type, int quantity = 0)

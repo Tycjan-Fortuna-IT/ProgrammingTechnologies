@@ -55,9 +55,9 @@ public interface IDataContext
 
     #region Event CRUD
 
-    Task AddEventAsync(IEvent even, string type);
+    Task AddEventAsync(IEvent even);
 
-    Task<IEvent?> GetEventAsync(int id, string type);
+    Task<IEvent?> GetEventAsync(int id);
 
     Task UpdateEventAsync(IEvent even);
 

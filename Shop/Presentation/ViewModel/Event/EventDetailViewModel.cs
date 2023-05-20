@@ -58,17 +58,43 @@ internal class EventDetailViewModel : IViewModel
         }
     }
 
+    private string _type;
+
+    public string Type
+    {
+        get => _type;
+        set
+        {
+            _type = value;
+            OnPropertyChanged(nameof(Type));
+        }
+    }
+
+    private int? _quantity;
+
+    public int? Quantity
+    {
+        get => _quantity;
+        set
+        {
+            _quantity = value;
+            OnPropertyChanged(nameof(Quantity));
+        }
+    }
+
     public EventDetailViewModel()
     {
 
     }
 
-    public EventDetailViewModel(int id, int stateId, int userId, DateTime occurrenceDate)
+    public EventDetailViewModel(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity)
     {
         this.Id = id;
         this.StateId = stateId;
         this.UserId = userId;
         this.OccurrenceDate = occurrenceDate;
+        this.Type = type;
+        this.Quantity = quantity;
     }
 
     //private void Update()

@@ -276,7 +276,7 @@ internal class DataContext : IDataContext
 
     #region Event CRUD
 
-    public async Task AddEventAsync(IEvent even, string type)
+    public async Task AddEventAsync(IEvent even)
     {
         using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
@@ -286,7 +286,8 @@ internal class DataContext : IDataContext
                 stateId = even.stateId,
                 userId = even.userId,
                 occurrenceDate = even.occurrenceDate,
-                type = type,
+                type = even.Type,
+                quantity = even.Quantity
             };
 
             context.Events.InsertOnSubmit(entity);
@@ -295,7 +296,7 @@ internal class DataContext : IDataContext
         }
     }    
 
-    public async Task<IEvent?> GetEventAsync(int id, string type)
+    public async Task<IEvent?> GetEventAsync(int id)
     {
         using (ShopDataContext context = new ShopDataContext(this.ConnectionString))
         {
@@ -309,24 +310,7 @@ internal class DataContext : IDataContext
                 return query.FirstOrDefault();
             });
 
-            IEvent newEvent;
-
-            if (even is null)
-                return null;
-
-            switch (type)
-            {
-                case "PurchaseEvent":
-                    newEvent = new PurchaseEvent(even.id, even.stateId, even.userId, even.occurrenceDate); break;
-                case "ReturnEvent":
-                    newEvent = new ReturnEvent(even.id, even.stateId, even.userId, even.occurrenceDate); break;
-                case "SupplyEvent":
-                    newEvent = new SupplyEvent(even.id, even.stateId, even.userId, even.occurrenceDate, (int)even.quantity!); break;
-                default:
-                    throw new Exception("This event type does not exist!");
-            }
-
-            return newEvent;
+            return even is not null ? new Event(even.id, even.stateId, even.userId, even.occurrenceDate, even.type, even.quantity) : null;
         }
         
     }    
@@ -340,6 +324,8 @@ internal class DataContext : IDataContext
             toUpdate.stateId = even.stateId;
             toUpdate.userId = even.userId;
             toUpdate.occurrenceDate = even.occurrenceDate;
+            toUpdate.type = even.Type;
+            toUpdate.quantity = even.Quantity;
 
             await Task.Run(() => context.SubmitChanges());
         }
@@ -363,7 +349,7 @@ internal class DataContext : IDataContext
         {
             IQueryable<IEvent> eventQuery = from e in context.Events
                 select
-                    new PurchaseEvent(e.id, e.stateId, e.userId, e.occurrenceDate) as IEvent;
+                    new Event(e.id, e.stateId, e.userId, e.occurrenceDate, e.type, e.quantity) as IEvent;
 
             return await Task.Run(() => eventQuery.ToDictionary(k => k.Id));
         }
@@ -399,7 +385,7 @@ internal class DataContext : IDataContext
 
     public async Task<bool> CheckIfEventExists(int id, string type)
     {
-        return (await this.GetEventAsync(id, type)) != null;
+        return (await this.GetEventAsync(id)) != null;
     }
 
     #endregion

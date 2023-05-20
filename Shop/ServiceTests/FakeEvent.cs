@@ -4,7 +4,7 @@ namespace ServiceTests;
 
 internal class FakeEvent : IEvent
 {
-    public FakeEvent(int id, int stateId, int userId, string type, int quantity = 0)
+    public FakeEvent(int id, int stateId, int userId, string type, int? quantity = 0)
     {
         this.Id = id;
         this.stateId = stateId;
@@ -24,5 +24,5 @@ internal class FakeEvent : IEvent
 
     public string Type { get; set; }
 
-    public int Quantity { get; set; }
+    public int? Quantity { get; set; }
 }

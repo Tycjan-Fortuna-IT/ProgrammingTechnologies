@@ -8,7 +8,9 @@ public interface IEvent
 
     int userId { get; set; }
 
-    //string Type { get; set; }
-
     DateTime occurrenceDate { get; set; }
+
+    public string Type { get; set; }
+
+    public int? Quantity { get; set; }
 }

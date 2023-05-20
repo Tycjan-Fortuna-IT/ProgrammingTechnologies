@@ -68,7 +68,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Grid Grid.ColumnSpan="2" Visibility="{Binding IStateDetailVisible}">
+                <Grid Grid.ColumnSpan="2" Visibility="{Binding IsStateDetailVisible}">
                     <view:StateDetailView
                         Margin="320,24,10,79"
                         DataContext="{Binding SelectedDetailViewModel}"
