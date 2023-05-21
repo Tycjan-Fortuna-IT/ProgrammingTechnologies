@@ -1,28 +1,23 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Input;
+﻿namespace Presentation.ViewModel;
 
-namespace Presentation.ViewModel
+internal class MainWindowViewModel : IViewModel
 {
-    public partial class MainWindowViewModel : IViewModel
+    private IViewModel _selectedViewModel { get; set; }
+
+
+    public MainWindowViewModel()
     {
-        private IViewModel _selectedViewModel { get; set; }
+        this._selectedViewModel = new HomeViewModel();
+    }
 
-
-        public MainWindowViewModel()
+    public new IViewModel SelectedViewModel
+    {
+        get => _selectedViewModel;
+        set
         {
-            this._selectedViewModel = new HomeViewModel();
-        }
+            _selectedViewModel = value;
 
-        public new IViewModel SelectedViewModel
-        {
-            get => _selectedViewModel;
-            set
-            {
-                _selectedViewModel = value;
-
-                OnPropertyChanged(nameof(SelectedViewModel));
-            }
+            OnPropertyChanged(nameof(SelectedViewModel));
         }
     }
 }

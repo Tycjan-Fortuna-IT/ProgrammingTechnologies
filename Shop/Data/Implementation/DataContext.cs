@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Data.API;
+﻿using Data.API;
 using Data.Database;
 
 namespace Data.Implementation;

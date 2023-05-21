@@ -1,18 +1,17 @@
 ﻿using System.ComponentModel;
 
-namespace Presentation.ViewModel
+namespace Presentation.ViewModel;
+
+internal class IViewModel : INotifyPropertyChanged
 {
-    public class IViewModel : INotifyPropertyChanged
+    public IViewModel SelectedViewModel;
+
+    public IViewModel Parent { get; private set; }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged(string propertyName)
     {
-        public IViewModel SelectedViewModel;
-
-        public IViewModel Parent { get; private set; }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
