@@ -1,17 +1,27 @@
-﻿using Data.API;
+﻿using System.Diagnostics;
+using Data.API;
 using Data.Database;
 
 namespace Data.Implementation;
 
 internal class DataContext : IDataContext
 {
-    public DataContext()
+    public DataContext(string? connectionString = null)
     {
-
+        if (connectionString is null)
+        {
+            string _projectRootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName;
+            string _DBRelativePath = @"Data\Database\Shop.mdf";
+            string _DBPath = Path.Combine(_projectRootDir, _DBRelativePath);
+            this.ConnectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={_DBPath};Integrated Security = True; Connect Timeout = 30;";
+        }
+        else
+        {
+            this.ConnectionString = connectionString;
+        }
     }
 
-    private readonly string ConnectionString =
-        "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\tycja\\Desktop\\ProgrammingTechnologies\\Shop\\Data\\Database\\Shop.mdf;Integrated Security=True";
+    private readonly string ConnectionString;
 
     #region User CRUD
 

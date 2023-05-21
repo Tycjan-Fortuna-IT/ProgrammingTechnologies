@@ -1,7 +1,14 @@
-﻿namespace Data.API;
+﻿using Data.Implementation;
+
+namespace Data.API;
 
 public interface IDataContext
 {
+    static IDataContext CreateContext(string? connectionString = null)
+    {
+        return new DataContext(connectionString);
+    }
+
     #region User CRUD
 
     Task AddUserAsync(IUser user);

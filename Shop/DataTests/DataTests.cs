@@ -1,12 +1,27 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Diagnostics;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Data.API;
 
 namespace DataTests;
 
 [TestClass]
+[DeploymentItem("DatabaseForTests.mdf")]
 public class DataTests
 {
-    private readonly IDataRepository _dataRepository = IDataRepository.CreateDatabase();
+    private static string connectionString;
+
+    private readonly IDataRepository _dataRepository = IDataRepository.CreateDatabase(IDataContext.CreateContext(connectionString));
+
+    [ClassInitialize]
+    public static void ClassInitializeMethod(TestContext context)
+    {
+        string _DBRelativePath = @"DatabaseForTests.mdf";
+        string _projectRootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+        string _DBPath = Path.Combine(_projectRootDir, _DBRelativePath);
+        FileInfo _databaseFile = new FileInfo(_DBPath);
+        Assert.IsTrue(_databaseFile.Exists, $"{Environment.CurrentDirectory}");
+        connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={_DBPath};Integrated Security = True; Connect Timeout = 30;";
+    }
 
     [TestMethod]
     public async Task UserTests()
