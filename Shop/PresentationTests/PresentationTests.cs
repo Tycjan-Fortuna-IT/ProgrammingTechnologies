@@ -3,6 +3,7 @@ using Presentation.Model.API;
 using Presentation.ViewModel;
 using PresentationTest;
 using Service.API;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace PresentationTests;
 
@@ -184,5 +185,71 @@ public class PresentationTests
         Assert.AreEqual("PurchaseEvent", detail.Type);
 
         Assert.IsTrue(detail.UpdateEvent.CanExecute(null));
+    }
+
+    [TestMethod]
+    public void DataFixedGenerationMethodTests()
+    {
+        IGenerator fixedGenerator = new FixedGenerator();
+
+        IUserCRUD fakeUserCrud = new FakeUserCRUD();
+        IUserModelOperation userOperation = IUserModelOperation.CreateModelOperation(fakeUserCrud);
+        IUserMasterViewModel userViewModel = IUserMasterViewModel.CreateViewModel(userOperation, _informer);
+
+        IProductCRUD fakeProductCrud = new FakeProductCRUD();
+        IProductModelOperation productOperation = IProductModelOperation.CreateModelOperation(fakeProductCrud);
+        IProductMasterViewModel productViewModel = IProductMasterViewModel.CreateViewModel(productOperation, _informer);
+
+
+        IStateCRUD fakeStateCrud = new FakeStateCRUD();
+        IStateModelOperation stateOperation = IStateModelOperation.CreateModelOperation(fakeStateCrud);
+        IStateMasterViewModel stateViewModel = IStateMasterViewModel.CreateViewModel(stateOperation, _informer);
+
+        IEventCRUD fakeEventCrud = new FakeEventCRUD();
+        IEventModelOperation eventOperation = IEventModelOperation.CreateModelOperation(fakeEventCrud);
+        IEventMasterViewModel eventViewModel = IEventMasterViewModel.CreateViewModel(eventOperation, _informer);
+
+        fixedGenerator.GenerateUserModels(userViewModel);
+        fixedGenerator.GenerateProductModels(productViewModel);
+        fixedGenerator.GenerateStateModels(stateViewModel);
+        fixedGenerator.GenerateEventModels(eventViewModel);
+
+        Assert.AreEqual(5, userViewModel.Users.Count);
+        Assert.AreEqual(6, productViewModel.Products.Count);
+        Assert.AreEqual(6, stateViewModel.States.Count);
+        Assert.AreEqual(6, eventViewModel.Events.Count);
+    }
+
+    [TestMethod]
+    public void DataRandomGenerationMethodTests()
+    {
+        IGenerator randomGenerator = new RandomGenerator();
+
+        IUserCRUD fakeUserCrud = new FakeUserCRUD();
+        IUserModelOperation userOperation = IUserModelOperation.CreateModelOperation(fakeUserCrud);
+        IUserMasterViewModel userViewModel = IUserMasterViewModel.CreateViewModel(userOperation, _informer);
+
+        IProductCRUD fakeProductCrud = new FakeProductCRUD();
+        IProductModelOperation productOperation = IProductModelOperation.CreateModelOperation(fakeProductCrud);
+        IProductMasterViewModel productViewModel = IProductMasterViewModel.CreateViewModel(productOperation, _informer);
+
+
+        IStateCRUD fakeStateCrud = new FakeStateCRUD();
+        IStateModelOperation stateOperation = IStateModelOperation.CreateModelOperation(fakeStateCrud);
+        IStateMasterViewModel stateViewModel = IStateMasterViewModel.CreateViewModel(stateOperation, _informer);
+
+        IEventCRUD fakeEventCrud = new FakeEventCRUD();
+        IEventModelOperation eventOperation = IEventModelOperation.CreateModelOperation(fakeEventCrud);
+        IEventMasterViewModel eventViewModel = IEventMasterViewModel.CreateViewModel(eventOperation, _informer);
+
+        randomGenerator.GenerateUserModels(userViewModel);
+        randomGenerator.GenerateProductModels(productViewModel);
+        randomGenerator.GenerateStateModels(stateViewModel);
+        randomGenerator.GenerateEventModels(eventViewModel);
+
+        Assert.AreEqual(10, userViewModel.Users.Count);
+        Assert.AreEqual(10, productViewModel.Products.Count);
+        Assert.AreEqual(10, stateViewModel.States.Count);
+        Assert.AreEqual(10, eventViewModel.Events.Count);
     }
 }
