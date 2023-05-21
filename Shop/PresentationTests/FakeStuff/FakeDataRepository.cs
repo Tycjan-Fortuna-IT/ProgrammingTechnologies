@@ -16,7 +16,7 @@ internal class FakeDataRepository
 
     public async Task AddUserAsync(int id, string nickname, string email, double balance, DateTime dateOfBirth)
     {
-        this.Users.Add(id, new FakeUser(id, nickname, email, balance, dateOfBirth));
+        this.Users.Add(id, new FakeUserDTO(id, nickname, email, balance, dateOfBirth));
     }
 
     public async Task<IUserDTO> GetUserAsync(int id)
@@ -59,7 +59,7 @@ internal class FakeDataRepository
 
     public async Task AddProductAsync(int id, string name, double price, int pegi)
     {
-        this.Products.Add(id, new FakeProduct(id, name, price, pegi));
+        this.Products.Add(id, new FakeProductDTO(id, name, price, pegi));
     }
 
     public async Task<IProductDTO> GetProductAsync(int id)
@@ -96,7 +96,7 @@ internal class FakeDataRepository
 
     public async Task AddStateAsync(int id, int productId, int productQuantity)
     {
-        this.States.Add(id, new FakeState(id, productId, productQuantity));
+        this.States.Add(id, new FakeStateDTO(id, productId, productQuantity));
     }
 
     public async Task<IStateDTO> GetStateAsync(int id)
@@ -169,9 +169,9 @@ internal class FakeDataRepository
                           stat.productId == product.Id
                     select even
                 )
-                    if (((FakeEvent)even).Type == "PurchaseEvent")
+                    if (((FakeEventDTO)even).Type == "PurchaseEvent")
                         copiesBought++;
-                    else if (((FakeEvent)even).Type == "ReturnEvent")
+                    else if (((FakeEventDTO)even).Type == "ReturnEvent")
                         copiesBought--;
 
                 copiesBought--;
@@ -193,7 +193,7 @@ internal class FakeDataRepository
                 break;
         }
 
-        this.Events.Add(id, new FakeEvent(id, stateId, userId, type, quantity));
+        this.Events.Add(id, new FakeEventDTO(id, stateId, userId, type, quantity));
     }
 
     public async Task<IEventDTO> GetEventAsync(int id)
@@ -203,11 +203,11 @@ internal class FakeDataRepository
 
     public async Task UpdateEventAsync(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity)
     {
-        ((FakeEvent)this.Events[id]).stateId = stateId;
-        ((FakeEvent)this.Events[id]).userId = userId;
-        ((FakeEvent)this.Events[id]).occurrenceDate = occurrenceDate;
-        ((FakeEvent)this.Events[id]).Type = type;
-        ((FakeEvent)this.Events[id]).Quantity = quantity ?? ((FakeEvent)this.Events[id]).Quantity;
+        ((FakeEventDTO)this.Events[id]).stateId = stateId;
+        ((FakeEventDTO)this.Events[id]).userId = userId;
+        ((FakeEventDTO)this.Events[id]).occurrenceDate = occurrenceDate;
+        ((FakeEventDTO)this.Events[id]).Type = type;
+        ((FakeEventDTO)this.Events[id]).Quantity = quantity ?? ((FakeEventDTO)this.Events[id]).Quantity;
     }
 
     public async Task DeleteEventAsync(int id)

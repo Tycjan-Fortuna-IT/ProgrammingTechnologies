@@ -2,9 +2,9 @@
 
 namespace PresentationTests;
 
-internal class FakeProduct : IProductDTO
+internal class FakeProductDTO : IProductDTO
 {
-    public FakeProduct(int id, string name, double price, int pegi)
+    public FakeProductDTO(int id, string name, double price, int pegi)
     {
         this.Id = id;
         this.Name = name;

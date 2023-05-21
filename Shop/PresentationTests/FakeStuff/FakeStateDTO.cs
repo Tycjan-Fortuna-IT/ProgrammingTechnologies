@@ -2,9 +2,9 @@
 
 namespace PresentationTests;
 
-internal class FakeState : IStateDTO
+internal class FakeStateDTO : IStateDTO
 {
-    public FakeState(int id, int productId, int productQuantity = 0)
+    public FakeStateDTO(int id, int productId, int productQuantity = 0)
     {
         this.Id = id;
         this.productId = productId;

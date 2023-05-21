@@ -2,9 +2,9 @@
 
 namespace PresentationTests;
 
-internal class FakeEvent : IEventDTO
+internal class FakeEventDTO : IEventDTO
 {
-    public FakeEvent(int id, int stateId, int userId, string type, int? quantity = 0)
+    public FakeEventDTO(int id, int stateId, int userId, string type, int? quantity = 0)
     {
         this.Id = id;
         this.stateId = stateId;

@@ -2,9 +2,9 @@
 
 namespace PresentationTests;
 
-internal class FakeUser : IUserDTO
+internal class FakeUserDTO : IUserDTO
 {
-    public FakeUser(int id, string nickname, string email, double balance, DateTime dateOfBirth)
+    public FakeUserDTO(int id, string nickname, string email, double balance, DateTime dateOfBirth)
     {
         this.Id = id;
         this.Nickname = nickname;
