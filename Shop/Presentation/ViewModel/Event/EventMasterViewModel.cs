@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -166,13 +167,20 @@ internal class EventMasterViewModel : IViewModel, IEventMasterViewModel
     {
         Task.Run(async () =>
         {
-            int lastId = await this._modelOperation.GetCountAsync() + 1;
+            try
+            {
+                int lastId = await this._modelOperation.GetCountAsync() + 1;
 
-            await this._modelOperation.AddAsync(lastId, this.StateId, this.UserId, "PurchaseEvent");
+                await this._modelOperation.AddAsync(lastId, this.StateId, this.UserId, "PurchaseEvent");
 
-            this.LoadEvents();
+                this.LoadEvents();
 
-            this._informer.InformSuccess("Event successfully created!");
+                this._informer.InformSuccess("Event successfully created!");
+            }
+            catch (Exception e)
+            {
+                this._informer.InformError(e.Message);
+            }
         });
     }
 

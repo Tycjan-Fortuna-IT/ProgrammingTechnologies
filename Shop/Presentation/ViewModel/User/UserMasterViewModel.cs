@@ -172,11 +172,18 @@ internal class UserMasterViewModel : IViewModel, IUserMasterViewModel
     {
         Task.Run(async () =>
         {
-            await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
+            try
+            {
+                await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
-            this._informer.InformSuccess("User successfully deleted!");
+                this._informer.InformSuccess("User successfully deleted!");
 
-            this.LoadUsers();
+                this.LoadUsers();
+            }
+            catch (Exception e)
+            {
+                this._informer.InformError("Error while deleting user! Remember to remove all associated events!");
+            }
         });
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -152,6 +153,7 @@ internal class ProductMasterViewModel : IViewModel, IProductMasterViewModel
             this.LoadProducts();
 
             this._informer.InformSuccess("Product added successfully!");
+
         });
     }
 
@@ -159,11 +161,18 @@ internal class ProductMasterViewModel : IViewModel, IProductMasterViewModel
     {
         Task.Run(async () =>
         {
-            await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
+            try
+            {
+                await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
-            this.LoadProducts();
+                this.LoadProducts();
 
-            this._informer.InformSuccess("Product deleted successfully!");
+                this._informer.InformSuccess("Product deleted successfully!");
+            }
+            catch (Exception e)
+            {
+                this._informer.InformError("Error while deleting product! Remember to remove all associated states!");
+            }
         });
     }
 

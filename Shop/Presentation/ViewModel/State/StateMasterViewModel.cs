@@ -1,4 +1,5 @@
 ﻿using Presentation.Model.API;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -143,13 +144,20 @@ internal class StateMasterViewModel : IViewModel, IStateMasterViewModel
     {
         Task.Run(async () =>
         {
-            int lastId = await this._modelOperation.GetCountAsync() + 1;
+            try
+            {
+                int lastId = await this._modelOperation.GetCountAsync() + 1;
 
-            await this._modelOperation.AddAsync(lastId, this.ProductId, this.ProductQuantity);
+                await this._modelOperation.AddAsync(lastId, this.ProductId, this.ProductQuantity);
 
-            this.LoadStates();
+                this.LoadStates();
 
-            this._informer.InformSuccess("State successfully created!");
+                this._informer.InformSuccess("State successfully created!");
+            }
+            catch (Exception e)
+            {
+                this._informer.InformError(e.Message);
+            }
         });
     }
 
@@ -157,11 +165,18 @@ internal class StateMasterViewModel : IViewModel, IStateMasterViewModel
     {
         Task.Run(async () =>
         {
-            await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
+            try
+            {
+                await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
-            this.LoadStates();
+                this.LoadStates();
 
-            this._informer.InformSuccess("State successfully deleted!");
+                this._informer.InformSuccess("State successfully deleted!");
+            }
+            catch (Exception e)
+            {
+                this._informer.InformError("Error while deleting state! Remember to remove all associated events!");
+            }
         });
     }
 
