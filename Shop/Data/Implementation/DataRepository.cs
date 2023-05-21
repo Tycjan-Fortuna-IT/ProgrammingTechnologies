@@ -177,17 +177,15 @@ internal class DataRepository : IDataRepository
 
     public async Task AddEventAsync(int id, int stateId, int userId, string type, int quantity = 0)
     {
-        IEvent newEvent;
-
         IUser user = await this.GetUserAsync(userId);
         IState state = await this.GetStateAsync(stateId);
         IProduct product = await this.GetProductAsync(state.productId);
 
+        IEvent newEvent = new Event(id, stateId, userId, DateTime.Now, type, quantity);
+
         switch (type)
         {
             case "PurchaseEvent":
-                newEvent = new PurchaseEvent(id, stateId, userId, DateTime.Now);
-
                 if (DateTime.Now.Year - user.DateOfBirth.Year < product.Pegi)
                     throw new Exception("You are not old enough to purchase this game!");
 
@@ -203,8 +201,6 @@ internal class DataRepository : IDataRepository
                 break;
 
             case "ReturnEvent":
-                newEvent = new ReturnEvent(id, stateId, userId, DateTime.Now);
-
                 Dictionary<int, IEvent> events = await this.GetAllEventsAsync();
                 Dictionary<int, IState> states = await this.GetAllStatesAsync();
 
@@ -220,9 +216,9 @@ internal class DataRepository : IDataRepository
                           stat.productId == product.Id
                     select even
                 )
-                    if (even is PurchaseEvent)
+                    if (even.Type == "PurchaseEvent")
                         copiesBought++;
-                    else if (even is ReturnEvent)
+                    else if (even.Type == "ReturnEvent")
                         copiesBought--;
 
                 copiesBought--;
@@ -235,8 +231,6 @@ internal class DataRepository : IDataRepository
 
                 break;
             case "SupplyEvent":
-                newEvent = new SupplyEvent(id, stateId, userId, DateTime.Now, quantity);
-
                 if (quantity <= 0)
                     throw new Exception("Can not supply with this amount!");
 
@@ -248,12 +242,12 @@ internal class DataRepository : IDataRepository
                 throw new Exception("This event type does not exist!");
         }
 
-        await this._context.AddEventAsync(newEvent, type);
+        await this._context.AddEventAsync(newEvent);
     }
 
-    public async Task<IEvent> GetEventAsync(int id, string type)
+    public async Task<IEvent> GetEventAsync(int id)
     {
-        IEvent? even = await this._context.GetEventAsync(id, type);
+        IEvent? even = await this._context.GetEventAsync(id);
 
         if (even is null)
             throw new Exception("This event does not exist!");
@@ -261,21 +255,9 @@ internal class DataRepository : IDataRepository
         return even;
     }
 
-    public async Task UpdateEventAsync(int id, int stateId, int userId, string type, int? quantity)
+    public async Task UpdateEventAsync(int id, int stateId, int userId, DateTime occurenceDate, string type, int? quantity)
     {
-        IEvent newEvent;
-
-        switch (type)
-        {
-            case "PurchaseEvent":
-                newEvent = new PurchaseEvent(id, stateId, userId, DateTime.Now); break;
-            case "ReturnEvent":
-                newEvent = new ReturnEvent(id, stateId, userId, DateTime.Now); break;
-            case "SupplyEvent":
-                newEvent = new SupplyEvent(id, stateId, userId, DateTime.Now, (int)quantity!); break;
-            default:
-                throw new Exception("This event type does not exist!");
-        }
+        IEvent newEvent = new Event(id, stateId, userId, occurenceDate, type, quantity);
 
         if (!await this.CheckIfEventExists(newEvent.Id, type))
             throw new Exception("This event does not exist");

@@ -12,11 +12,17 @@ internal class EventDTO : IEventDTO
 
     public DateTime occurrenceDate { get; set; }
 
-    public EventDTO(int id, int stateId, int userId, DateTime occurrenceDate)
+    public string Type { get; set; }
+
+    public int? Quantity { get; set; }
+
+    public EventDTO(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity)
     {
         this.Id = id;
         this.stateId = stateId;
         this.userId = userId;
         this.occurrenceDate = occurrenceDate;
+        this.Type = type;
+        this.Quantity = quantity;
     }
 }

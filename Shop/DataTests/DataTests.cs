@@ -4,9 +4,23 @@ using Data.API;
 namespace DataTests;
 
 [TestClass]
+[DeploymentItem("DatabaseForTests.mdf")]
 public class DataTests
 {
-    private readonly IDataRepository _dataRepository = IDataRepository.CreateDatabase();
+    private static string connectionString;
+
+    private readonly IDataRepository _dataRepository = IDataRepository.CreateDatabase(IDataContext.CreateContext(connectionString));
+
+    [ClassInitialize]
+    public static void ClassInitializeMethod(TestContext context)
+    {
+        string _DBRelativePath = @"DatabaseForTests.mdf";
+        string _projectRootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+        string _DBPath = Path.Combine(_projectRootDir, _DBRelativePath);
+        FileInfo _databaseFile = new FileInfo(_DBPath);
+        Assert.IsTrue(_databaseFile.Exists, $"{Environment.CurrentDirectory}");
+        connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={_DBPath};Integrated Security = True; Connect Timeout = 30;";
+    }
 
     [TestMethod]
     public async Task UserTests()
@@ -151,7 +165,7 @@ public class DataTests
 
         await _dataRepository.AddEventAsync(purchaseEventId, stateId, userId, "PurchaseEvent");
 
-        IEvent purchaseEvent = await _dataRepository.GetEventAsync(purchaseEventId, "PurchaseEvent");
+        IEvent purchaseEvent = await _dataRepository.GetEventAsync(purchaseEventId);
 
         Assert.IsNotNull(purchaseEvent);
         Assert.AreEqual(purchaseEventId, purchaseEvent.Id);
@@ -161,9 +175,9 @@ public class DataTests
         Assert.IsNotNull(await _dataRepository.GetAllEventsAsync());
         Assert.IsTrue(await _dataRepository.GetEventsCountAsync() > 0);
 
-        await _dataRepository.UpdateEventAsync(purchaseEventId, stateId, userId, "PurchaseEvent", null);
+        await _dataRepository.UpdateEventAsync(purchaseEventId, stateId, userId, DateTime.Now,  "PurchaseEvent", null);
 
-        IEvent eventUpdated = await _dataRepository.GetEventAsync(purchaseEventId, "PurchaseEvent");
+        IEvent eventUpdated = await _dataRepository.GetEventAsync(purchaseEventId);
 
         Assert.IsNotNull(eventUpdated);
         Assert.AreEqual(purchaseEventId, eventUpdated.Id);

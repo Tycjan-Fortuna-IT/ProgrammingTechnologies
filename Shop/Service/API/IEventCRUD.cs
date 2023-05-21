@@ -5,16 +5,16 @@ namespace Service.API;
 
 public interface IEventCRUD
 {
-    static IEventCRUD CreateEventCRUD(IDataRepository? dataRepository)
+    static IEventCRUD CreateEventCRUD(IDataRepository? dataRepository = null)
     {
         return new EventCRUD(dataRepository ?? IDataRepository.CreateDatabase());
     }
 
     Task AddEventAsync(int id, int stateId, int userId, string type, int quantity = 0);
 
-    Task<IEventDTO> GetEventAsync(int id, string type);
+    Task<IEventDTO> GetEventAsync(int id);
 
-    Task UpdateEventAsync(int id, int stateId, int userId, string type, int? quantity);
+    Task UpdateEventAsync(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity);
 
     Task DeleteEventAsync(int id);
 

@@ -5,7 +5,7 @@ namespace Service.API;
 
 public interface IProductCRUD
 {
-    static IProductCRUD CreateProductCRUD(IDataRepository? dataRepository)
+    static IProductCRUD CreateProductCRUD(IDataRepository? dataRepository = null)
     {
         return new ProductCRUD(dataRepository ?? IDataRepository.CreateDatabase());
     }

@@ -5,7 +5,7 @@ namespace Service.API;
 
 public interface IStateCRUD
 {
-    static IStateCRUD CreateStateCRUD(IDataRepository? dataRepository)
+    static IStateCRUD CreateStateCRUD(IDataRepository? dataRepository = null)
     {
         return new StateCRUD(dataRepository ?? IDataRepository.CreateDatabase());
     }

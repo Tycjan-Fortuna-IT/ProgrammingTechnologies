@@ -191,15 +191,16 @@ internal class FakeDataRepository : IDataRepository
         this.Events.Add(id, new FakeEvent(id, stateId, userId, type, quantity));
     }
 
-    public async Task<IEvent> GetEventAsync(int id, string type)
+    public async Task<IEvent> GetEventAsync(int id)
     {
         return await Task.FromResult(this.Events[id]);
     }
 
-    public async Task UpdateEventAsync(int id, int stateId, int userId, string type, int? quantity)
+    public async Task UpdateEventAsync(int id, int stateId, int userId, DateTime occurrenceDate, string type, int? quantity)
     {
         ((FakeEvent)this.Events[id]).stateId = stateId;
         ((FakeEvent)this.Events[id]).userId = userId;
+        ((FakeEvent)this.Events[id]).occurrenceDate = occurrenceDate;
         ((FakeEvent)this.Events[id]).Type = type;
         ((FakeEvent)this.Events[id]).Quantity = quantity ?? ((FakeEvent)this.Events[id]).Quantity;
     }
