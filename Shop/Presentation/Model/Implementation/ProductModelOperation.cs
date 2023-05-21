@@ -9,9 +9,9 @@ internal class ProductModelOperation : IProductModelOperation
 {
     private IProductCRUD _productCRUD;
 
-    public ProductModelOperation()
+    public ProductModelOperation(IProductCRUD? productCrud = null)
     {
-        this._productCRUD = IProductCRUD.CreateProductCRUD();
+        this._productCRUD = productCrud ?? IProductCRUD.CreateProductCRUD();
     }
 
     private IProductModel Map(IProductDTO product)

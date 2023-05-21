@@ -1,5 +1,4 @@
-﻿using Presentation.API;
-using Presentation.Model.API;
+﻿using Presentation.Model.API;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -8,7 +7,7 @@ using System.Windows.Input;
 
 namespace Presentation.ViewModel;
 
-internal class StateMasterViewModel : IViewModel
+internal class StateMasterViewModel : IViewModel, IStateMasterViewModel
 {
     public ICommand SwitchToUserMasterPage { get; set; }
 
@@ -24,9 +23,9 @@ internal class StateMasterViewModel : IViewModel
 
     private readonly IErrorInformer _informer;
 
-    private ObservableCollection<StateDetailViewModel> _states;
+    private ObservableCollection<IStateDetailViewModel> _states;
 
-    public ObservableCollection<StateDetailViewModel> States
+    public ObservableCollection<IStateDetailViewModel> States
     {
         get => _states;
         set
@@ -98,9 +97,9 @@ internal class StateMasterViewModel : IViewModel
         }
     }
 
-    private StateDetailViewModel _selectedDetailViewModel;
+    private IStateDetailViewModel _selectedDetailViewModel;
 
-    public StateDetailViewModel SelectedDetailViewModel
+    public IStateDetailViewModel SelectedDetailViewModel
     {
         get => _selectedDetailViewModel;
         set
@@ -121,7 +120,7 @@ internal class StateMasterViewModel : IViewModel
         this.CreateState = new OnClickCommand(e => this.StoreState(), c => this.CanStoreState());
         this.RemoveState = new OnClickCommand(e => this.DeleteState());
 
-        this.States = new ObservableCollection<StateDetailViewModel>();
+        this.States = new ObservableCollection<IStateDetailViewModel>();
 
         this._modelOperation = IStateModelOperation.CreateModelOperation();
         this._informer = informer ?? new PopupErrorInformer();

@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
-using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
-internal class ProductDetailViewModel : IViewModel
+internal class ProductDetailViewModel : IViewModel, IProductDetailViewModel
 {
     public ICommand UpdateProduct { get; set; }
 

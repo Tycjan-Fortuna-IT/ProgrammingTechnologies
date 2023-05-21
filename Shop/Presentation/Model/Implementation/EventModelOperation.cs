@@ -10,9 +10,9 @@ internal class EventModelOperation : IEventModelOperation
 {
     private IEventCRUD _eventCRUD;
 
-    public EventModelOperation()
+    public EventModelOperation(IEventCRUD? eventCrud = null)
     {
-        this._eventCRUD = IEventCRUD.CreateEventCRUD();
+        this._eventCRUD = eventCrud ?? IEventCRUD.CreateEventCRUD();
     }
 
     private IEventModel Map(IEventDTO even)

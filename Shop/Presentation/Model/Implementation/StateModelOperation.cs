@@ -9,9 +9,9 @@ internal class StateModelOperation : IStateModelOperation
 {
     private IStateCRUD _stateCrud;
 
-    public StateModelOperation()
+    public StateModelOperation(IStateCRUD? stateCrud = null)
     {
-        this._stateCrud = IStateCRUD.CreateStateCRUD();
+        this._stateCrud = stateCrud ?? IStateCRUD.CreateStateCRUD();
     }
 
     private IStateModel Map(IStateDTO state)

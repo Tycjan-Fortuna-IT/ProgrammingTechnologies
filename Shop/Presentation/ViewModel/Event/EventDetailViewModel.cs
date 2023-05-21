@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
-internal class EventDetailViewModel : IViewModel
+internal class EventDetailViewModel : IViewModel, IEventDetailViewModel
 {
     public ICommand UpdateEvent { get; set; }
 

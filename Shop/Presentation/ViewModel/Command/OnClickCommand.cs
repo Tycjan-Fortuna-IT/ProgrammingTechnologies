@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Presentation.ViewModel;
@@ -24,7 +25,7 @@ internal class OnClickCommand : ICommand
     {
         _execute.Invoke(param);
     }
-
+    
     public event EventHandler CanExecuteChanged
     {
         add => CommandManager.RequerySuggested += value;

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
-internal class UserDetailViewModel : IViewModel
+internal class UserDetailViewModel : IViewModel, IUserDetailViewModel
 {
     public ICommand UpdateUser { get; set; }
 

@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Presentation.Model.Implementation;
+using Service.API;
 
 namespace Presentation.Model.API;
 
 public interface IStateModelOperation
 {
-    static IStateModelOperation CreateModelOperation()
+    static IStateModelOperation CreateModelOperation(IStateCRUD? stateCrud = null)
     {
-        return new StateModelOperation();
+        return new StateModelOperation(stateCrud ?? IStateCRUD.CreateStateCRUD());
     }
 
     Task AddAsync(int id, int productId, int productQuantity);

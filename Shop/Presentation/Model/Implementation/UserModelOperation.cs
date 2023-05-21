@@ -10,9 +10,9 @@ internal class UserModelOperation : IUserModelOperation
 {
     private IUserCRUD _userCRUD;
 
-    public UserModelOperation()
+    public UserModelOperation(IUserCRUD? userCrud)
     {
-        this._userCRUD = IUserCRUD.CreateUserCRUD();
+        this._userCRUD = userCrud ?? IUserCRUD.CreateUserCRUD();
     }
 
     private IUserModel Map(IUserDTO user)

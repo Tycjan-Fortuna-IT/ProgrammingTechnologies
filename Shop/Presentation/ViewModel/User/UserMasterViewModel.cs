@@ -4,12 +4,11 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
-internal class UserMasterViewModel : IViewModel
+internal class UserMasterViewModel : IViewModel, IUserMasterViewModel
 {
     public ICommand SwitchToProductMasterPage { get; set; }
 
@@ -25,9 +24,9 @@ internal class UserMasterViewModel : IViewModel
 
     private readonly IErrorInformer _informer;
 
-    private ObservableCollection<UserDetailViewModel> _users;
+    private ObservableCollection<IUserDetailViewModel> _users;
 
-    public ObservableCollection<UserDetailViewModel> Users
+    public ObservableCollection<IUserDetailViewModel> Users
     {
         get => _users;
         set
@@ -111,9 +110,9 @@ internal class UserMasterViewModel : IViewModel
         }
     }
 
-    private UserDetailViewModel _selectedDetailViewModel;
+    private IUserDetailViewModel _selectedDetailViewModel;
 
-    public UserDetailViewModel SelectedDetailViewModel
+    public IUserDetailViewModel SelectedDetailViewModel
     {
         get => _selectedDetailViewModel;
         set
@@ -134,7 +133,7 @@ internal class UserMasterViewModel : IViewModel
         this.CreateUser = new OnClickCommand(e => this.StoreUser(), c => this.CanStoreUser());
         this.RemoveUser = new OnClickCommand(e => this.DeleteUser());
 
-        this.Users = new ObservableCollection<UserDetailViewModel>();
+        this.Users = new ObservableCollection<IUserDetailViewModel>();
 
         this._modelOperation = model ?? IUserModelOperation.CreateModelOperation();
         this._informer = informer ?? new PopupErrorInformer();
@@ -150,7 +149,8 @@ internal class UserMasterViewModel : IViewModel
             string.IsNullOrWhiteSpace(this.Nickname) ||
             string.IsNullOrWhiteSpace(this.Email) ||
             string.IsNullOrWhiteSpace(this.Balance.ToString()) ||
-            string.IsNullOrWhiteSpace(this.DateOfBirth.ToString())
+            string.IsNullOrWhiteSpace(this.DateOfBirth.ToString()) ||
+            this.Balance < 0
         );
     }
 
@@ -162,9 +162,9 @@ internal class UserMasterViewModel : IViewModel
 
             await this._modelOperation.AddAsync(lastId, this.Nickname, this.Email, this.Balance, this.DateOfBirth);
 
-            this.LoadUsers();
-
             this._informer.InformSuccess("User successfully created!");
+
+            this.LoadUsers();
         });
     }
 
@@ -174,9 +174,9 @@ internal class UserMasterViewModel : IViewModel
         {
             await this._modelOperation.DeleteAsync(this.SelectedDetailViewModel.Id);
 
-            this.LoadUsers();
-
             this._informer.InformSuccess("User successfully deleted!");
+
+            this.LoadUsers();
         });
     }
 

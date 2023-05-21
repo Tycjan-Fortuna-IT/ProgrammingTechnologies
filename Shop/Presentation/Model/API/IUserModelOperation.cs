@@ -8,9 +8,9 @@ namespace Presentation.Model.API;
 
 public interface IUserModelOperation
 {
-    static IUserModelOperation CreateModelOperation()
+    static IUserModelOperation CreateModelOperation(IUserCRUD? userCrud = null)
     {
-        return new UserModelOperation();
+        return new UserModelOperation(userCrud);
     }
 
     Task AddAsync(int id, string nickname, string email, double balance, DateTime dateOfBirth);

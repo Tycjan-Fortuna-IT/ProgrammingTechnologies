@@ -3,12 +3,11 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Presentation.API;
 using Presentation.Model.API;
 
 namespace Presentation.ViewModel;
 
-internal class ProductMasterViewModel : IViewModel
+internal class ProductMasterViewModel : IViewModel, IProductMasterViewModel
 {
     public ICommand SwitchToUserMasterPage { get; set; }
 
@@ -24,9 +23,9 @@ internal class ProductMasterViewModel : IViewModel
 
     private readonly IErrorInformer _informer;
 
-    private ObservableCollection<ProductDetailViewModel> _products;
+    private ObservableCollection<IProductDetailViewModel> _products;
 
-    public ObservableCollection<ProductDetailViewModel> Products
+    public ObservableCollection<IProductDetailViewModel> Products
     {
         get => _products;
         set
@@ -98,9 +97,9 @@ internal class ProductMasterViewModel : IViewModel
         }
     }
 
-    private ProductDetailViewModel _selectedDetailViewModel;
+    private IProductDetailViewModel _selectedDetailViewModel;
 
-    public ProductDetailViewModel SelectedDetailViewModel
+    public IProductDetailViewModel SelectedDetailViewModel
     {
         get => _selectedDetailViewModel;
         set
@@ -121,7 +120,7 @@ internal class ProductMasterViewModel : IViewModel
         this.CreateProduct = new OnClickCommand(e => this.StoreProduct(), c => this.CanStoreProduct());
         this.RemoveProduct = new OnClickCommand(e => this.DeleteProduct());
 
-        this.Products = new ObservableCollection<ProductDetailViewModel>();
+        this.Products = new ObservableCollection<IProductDetailViewModel>();
 
         this._modelOperation = model ?? IProductModelOperation.CreateModelOperation();
         this._informer = informer ?? new PopupErrorInformer();
@@ -137,8 +136,8 @@ internal class ProductMasterViewModel : IViewModel
             string.IsNullOrWhiteSpace(this.Name) ||
             string.IsNullOrWhiteSpace(this.Price.ToString()) ||
             string.IsNullOrEmpty(this.Pegi.ToString()) ||
-            this.Price == 0 ||
-            this.Pegi == 0
+            this.Price <= 0 ||
+            this.Pegi <= 0
         );
     }
 

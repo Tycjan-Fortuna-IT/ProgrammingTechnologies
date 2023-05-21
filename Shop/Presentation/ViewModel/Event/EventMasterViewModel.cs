@@ -1,18 +1,13 @@
-﻿using System;
-using Data.API;
-using Presentation.ViewModel;
-using Service.API;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Presentation.Model.API;
-using Presentation.API;
 
 namespace Presentation.ViewModel;
 
-internal class EventMasterViewModel : IViewModel
+internal class EventMasterViewModel : IViewModel, IEventMasterViewModel
 {
     public ICommand SwitchToUserMasterPage { get; set; }
 
@@ -32,9 +27,9 @@ internal class EventMasterViewModel : IViewModel
 
     private readonly IErrorInformer _informer;
 
-    private ObservableCollection<EventDetailViewModel> _events;
+    private ObservableCollection<IEventDetailViewModel> _events;
 
-    public ObservableCollection<EventDetailViewModel> Events
+    public ObservableCollection<IEventDetailViewModel> Events
     {
         get => _events;
         set
@@ -106,9 +101,9 @@ internal class EventMasterViewModel : IViewModel
         }
     }
 
-    private EventDetailViewModel _selectedDetailViewModel;
+    private IEventDetailViewModel _selectedDetailViewModel;
 
-    public EventDetailViewModel SelectedDetailViewModel
+    public IEventDetailViewModel SelectedDetailViewModel
     {
         get => _selectedDetailViewModel;
         set
@@ -131,7 +126,7 @@ internal class EventMasterViewModel : IViewModel
         this.SupplyEvent = new OnClickCommand(e => this.StoreSupplyEvent(), c => this.CanSupplyEvent());
         this.RemoveEvent = new OnClickCommand(e => this.DeleteEvent());
 
-        this.Events = new ObservableCollection<EventDetailViewModel>();
+        this.Events = new ObservableCollection<IEventDetailViewModel>();
 
         this._modelOperation = IEventModelOperation.CreateModelOperation();
         this._informer = informer ?? new PopupErrorInformer();
